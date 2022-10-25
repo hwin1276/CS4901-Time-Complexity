@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/objects/baby.dart';
-import 'package:iconfont/iconfont.dart';
-import 'package:baby_tracker/baby_card.dart';
-import 'package:baby_tracker/add_baby.dart';
 
 class BabyList extends StatefulWidget {
   const BabyList({Key? key}) : super(key: key);
