@@ -1,3 +1,4 @@
+import 'package:baby_tracker/loginpage.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/home.dart';
 
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      home: const Home(),
+      home: const LoginPage(),
     );
   }
 }
