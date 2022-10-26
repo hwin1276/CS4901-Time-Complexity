@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/objects/baby.dart';
+import 'baby_card.dart';
+
 
 class BabyList extends StatefulWidget {
   const BabyList({Key? key}) : super(key: key);
@@ -29,8 +31,8 @@ class _BabyListState extends State<BabyList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 10, bottom:10),
+              const Padding(
+                padding: EdgeInsets.only(top: 10, bottom:10),
                 child: Text('Babies!',
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.black)
@@ -40,36 +42,7 @@ class _BabyListState extends State<BabyList> {
                 child: ListView.builder(
                   itemCount: babies.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      margin: EdgeInsets.all(20),
-                      height: 150,
-                      decoration: new BoxDecoration(
-                        color: Colors.grey
-                      ),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Row(
-                              children: [
-                                ClipOval(
-                                  child: Container(
-                                    color: Colors.blue[100],
-                                    padding: EdgeInsets.all(10),
-                                    child: Icon(
-                                      Icons.child_care,
-                                      size: 30
-                                    )
-                                  ),
-                                ),
-                                SizedBox(width:10),
-                                Text(babies[index].name),
-                              ]
-                            ),
-                          )
-                        ],
-                      )
-                    );
+                    return BabyCard(baby: babies[index]);
                   },
                 )
               ),
