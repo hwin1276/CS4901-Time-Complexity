@@ -1,7 +1,7 @@
 final String eventTable = 'events';
 
-class eventFields {
-    static final String eventId = '_id';
+class EventFields {
+    static final String childId = 'childId';
     static final String type = 'type';
     static final String startTime = 'startTime';
     static final String inputTime = 'inputTime';
@@ -11,7 +11,7 @@ class eventFields {
 }
 
 class Event {
-    final int? eventId;
+    final int? childId;
     final int type;
     final DateTime startTime;
     final DateTime inputTime;
