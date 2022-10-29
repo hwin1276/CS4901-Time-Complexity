@@ -11,10 +11,6 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Calendar'),
-          centerTitle: true,
-        ),
         body: Center(
             child: Text(
                 'Calendar View to be Added'

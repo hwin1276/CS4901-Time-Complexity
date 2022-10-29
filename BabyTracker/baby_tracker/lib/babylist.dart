@@ -1,3 +1,4 @@
+import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:flutter/material.dart';
 import 'package:baby_tracker/objects/baby.dart';
 import 'package:baby_tracker/pages/calendar.dart';
@@ -49,7 +50,7 @@ class _BabyListState extends State<BabyList> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Calendar()
+                              builder: (context) => const DetailsPages()
                             )
                           );
                         }
