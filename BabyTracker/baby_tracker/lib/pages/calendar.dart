@@ -15,7 +15,13 @@ class _CalendarState extends State<Calendar> {
             child: Text(
                 'Calendar View to be Added'
             )
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+
+          },
+          child: const Icon(Icons.add)
+        ),
     );
   }
 }
