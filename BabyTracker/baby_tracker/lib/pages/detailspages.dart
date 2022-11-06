@@ -2,6 +2,7 @@ import 'package:baby_tracker/pages/calendar.dart';
 import 'package:baby_tracker/pages/eventlist.dart';
 import 'package:baby_tracker/pages/statistics.dart';
 import 'package:flutter/material.dart';
+import '../createevent.dart';
 
 class DetailsPages extends StatelessWidget {
   const DetailsPages({Key? key}) : super(key: key);
@@ -20,6 +21,17 @@ class DetailsPages extends StatelessWidget {
               Tab(text: 'Statistics'),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const CreateEvent()
+                  )
+              );
+            },
+          child: const Icon(Icons.add)
         ),
         body: TabBarView(
           children: [
