@@ -13,14 +13,11 @@ class _EventListState extends State<EventList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            height: 40,
-            width: 200,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: AddAdminUser())
-        );
+      body: Center(
+          child: Text(
+              'Event View to be Added'
+          )
+      ),
+    );
   }
 }
