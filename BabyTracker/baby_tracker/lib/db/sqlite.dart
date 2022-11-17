@@ -1,48 +1,36 @@
-import "dart:io" as io;
 import "package:path/path.dart";
 import 'package:sqflite/sqflite.dart';
-import 'package:path_provider/path_provider.dart';
+import '/Models/events.dart';
+import '/Models/user.dart';
+import '/Models/statistics.dart';
+import '/Models/baby.dart';
 
 // this is the general database for the project 
 
 class SqliteDB {
-    static final SqliteDB _instance = new SqliteDB.internal();
+    static final SqliteDB instance = SqliteDB._init();
 
-    factory SqliteDb() => _instance;
-    static Database _db;
+    static Database? _db;
+
+    SqliteDB._init();
 
     Future<Database> get db async {
-        if (db != null){
-            return _db;
+        if (_db != null){
+            return _db!;
         }
-        _db = await initDb();
-        return _db;
+        _db = await _initDB('babytracker.db');
+        return _db!;
     }
-
-    SqliteDB.internal();
 
     /// initialize DB
 
-    initDb() async {
-        io.Directory documentDirectory = await getApplicationDocumentsDirectory();
-        String path = join(documentDirectory.path, "babyTracker.db");
+    Future<Database> _initDB(String filePath) async {
+    final dbPath = await getDatabasesPath();
+    final path = join(dbPath, filePath);
 
-        var taskDb = 
-            await openDatabase(path, version: 1);
-        return taskDb;
-    }
+    return await openDatabase(path, version: 1, onCreate: _createDB);
+  }
 
-    // Count number of tables in DB
-
-    Future countTable() async {
-        var dbClient = await db;
-        var res = 
-            await dbClient.rawQuery("""SELECT count(*) as count FROM sqlite_master
-            WHERE type = 'table'
-            AND name != 'android_metadata'
-            AND name != 'sqlite_seqence';""");
-        return res[0]['count'];
-    }
 
     // when intitializing the database from other files, call the count table function 
     // which will call getdb and will init database if not already formed. This will init
@@ -67,7 +55,7 @@ class SqliteDB {
 
         Create Table $babyTable (
             ${BabyFields.babyId} $idType,
-            ${BabyFields.name} $name,
+            ${BabyFields.name} $textType,
         )
 
         Create Table $eventTable (
@@ -76,7 +64,7 @@ class SqliteDB {
             ${EventFields.startTime} $textType,
             ${EventFields.inputTime} $textType,
             ${EventFields.endTime} $textType,
-            ${EventFields.amount_food} $textType,
+            ${EventFields.amountFood} $textType,
             ${EventFields.diaperChange} $textType,
         )
 
@@ -86,18 +74,69 @@ class SqliteDB {
             ${StatFields.avgSleepStart} $textType,
             ${StatFields.avgAmountSleep} $textType,
             ${StatFields.avgAmountEaten} $textType,
-            ${StatFields.poopCount} $textType,
-            ${StatFields.peeCount} $textType,
+            ${StatFields.poopCountByWeek} $textType,
+            ${StatFields.peeCountByWeek} $textType,
             ${StatFields.totDiaperChange} $textType,
             ${StatFields.calculatedDate} $textType,
         )
         ''');
     }
 
+    Future<Event> create(Event event) async {
+        final db = await instance.db;
+        final id = await db.insert(eventTable, event.toJson());
+        return event.copy(childId: id);
+    }
+
+    Future<Event> readEvent(int id) async {
+      final db = await instance.db;
+
+      final maps = await db.query(
+        eventTable,
+        columns: EventFields.values,
+        where: '${EventFields.childId} = ?',
+        whereArgs: [id],
+      );
+
+      if (maps.isNotEmpty) {
+        return Event.fromJson(maps.first);
+      } else {
+        throw Exception('ID $id not found');
+      }
+    }
+
+    Future<List<Event>> readAllEvents() async {
+      final db = await instance.db;
+      final orderBy = '${EventFields.inputTime} ASC';
+      final result = await db.query(eventTable, orderBy: orderBy);
+      return result.map((json) => Event.fromJson(json)).toList();
+    }
+
+    Future<int> update(Event event) async {
+      final db = await instance.db;
+
+      return db.update(
+        eventTable,
+        event.toJson(),
+        where: '${EventFields.childId} = ?',
+        whereArgs: [event.childId],
+      );
+    }
+
+    Future<int> delete(int id) async {
+      final db = await instance.db;
+
+      return await db.delete(
+        eventTable,
+        where: '${EventFields.childId} = ?',
+        whereArgs: [id],
+      );
+    }
+
     // a function for closing the database 
     Future close() async {
-        final db = await instance.db;
+        final dbc = await instance.db;
 
-        db.close();
+        dbc.close();
     }
 }
