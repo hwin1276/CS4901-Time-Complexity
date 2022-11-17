@@ -17,7 +17,7 @@ class EventFields {
 
 class Event {
     final int? childId;
-    final int type;
+    final String type;
     final DateTime startTime;
     final DateTime inputTime;
     final DateTime endTime;
@@ -36,7 +36,7 @@ class Event {
 
 Event copy({
     int? childId,
-    int? type,
+    String? type,
     DateTime? startTime,
     DateTime? inputTime,
     DateTime? endTime,
@@ -55,7 +55,7 @@ Event copy({
 
 static Event fromJson(Map<String, Object?> json) => Event(
         childId: json[EventFields.childId] as int?,
-        type: json[EventFields.type] as int,
+        type: json[EventFields.type] as String,
         amountFood: json[EventFields.amountFood] as int,
         startTime: DateTime.parse(json[EventFields.startTime] as String),
         endTime: DateTime.parse(json[EventFields.endTime] as String),
