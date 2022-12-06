@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>721256822688-dlhb7aftc5rq61n5t0s471c08sfko6bj.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.721256822688-dlhb7aftc5rq61n5t0s471c08sfko6bj</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>721256822688-0huf1qfocq4oi32rn568bnl02jc3085t.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAt-anmxhpfeLzSb5dxySM9cIHYITraLBk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>721256822688</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.babyTracker</string>
+	<key>PROJECT_ID</key>
+	<string>babytrackerflutter</string>
+	<key>STORAGE_BUCKET</key>
+	<string>babytrackerflutter.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:721256822688:ios:c8dd3f4b1584af59db16c5</string>
+</dict>
+</plist>
