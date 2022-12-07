@@ -1,3 +1,6 @@
+import 'package:baby_tracker/registerpage.dart';
+import 'package:baby_tracker/widgets/textInputDecoration.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'Models/events.dart';
 import 'home.dart';
@@ -10,6 +13,11 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final formKey = GlobalKey<FormState>();
+  String email = "";
+  String password = "";
+  bool _isLoading = false;
+  //AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -20,102 +28,166 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Stack(
           children: [
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  ClipOval(
-                    child: Container(
-                      width: 150,
-                      height: 150,
-                      color: Colors.pink,
-                      alignment: Alignment.center,
-                      child: const Text(
-                        'logo',
-                        style: TextStyle(
-                          color: Colors.black
-                        )
-                      ),
-                    )
-                  ),
-                  const SizedBox(height:5),
-                  const Text(
-                    'BabyTracker',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                    )
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'Developed by: Kennedy Middlebrooks, \nHung Nguyen, Cecil Nnodim, Hien Pham',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 9
-                    )
-                  ),
-                  const SizedBox(height: 20),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 15),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Email'
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height:10),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal:15),
-                    child: TextField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Password',
-                      )
-                    )
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      ///TODO Make Forgot Password Screen
-                    },
-                    child: const Text('Forgot Password')
-                  ),
-                  Container(
-                    height: 50,
-                    width: 250,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                            builder: (context) => const Home()
+            Form(
+              key: formKey,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ClipOval(
+                      child: Container(
+                        width: 150,
+                        height: 150,
+                        color: Colors.pink,
+                        alignment: Alignment.center,
+                        child: const Text(
+                          'logo',
+                          style: TextStyle(
+                            color: Colors.black
                           )
-                        );
-                      },
-                      child: const Text(
-                        'Login',
-                        style: TextStyle(
-                          color: Colors.white,
-                        )
+                        ),
+                      )
+                    ),
+                    const SizedBox(height:5),
+                    const Text(
+                      'BabyTracker',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                      )
+                    ),
+                    const SizedBox(height: 5),
+                    const Text(
+                      'Developed by: Kennedy Middlebrooks, \nHung Nguyen, Cecil Nnodim, Hien Pham',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 9
+                      )
+                    ),
+                    const SizedBox(height: 20),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        decoration: textInputDecoration.copyWith(
+                          labelText: "Email",
+                          prefixIcon: Icon(
+                            Icons.email,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            email = val;
+                          });
+                        },
+                        validator: (val) {
+                          return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                              .hasMatch(val!) ? null : "Please enter a valid email";
+                        },
                       ),
-                    )
-                  )
-                ],
+                    ),
+                    const SizedBox(height:10),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: TextFormField(
+                        obscureText: true,
+                        decoration: textInputDecoration.copyWith(
+                          labelText: "Password",
+                          prefixIcon: Icon(
+                            Icons.lock,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                        onChanged: (val) {
+                          setState(() {
+                            password = val;
+                          });
+                        },
+                        validator: (val) {
+                          if(val!.length < 6) {
+                            return "Password must be atleast 6 characters";
+                          }
+                          else {
+                            return null;
+                          }
+                        },
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        ///TODO Make Forgot Password Screen
+                      },
+                      child: const Text('Forgot Password')
+                    ),
+                    Container(
+                      height: 50,
+                      width: 250,
+                      decoration: BoxDecoration(
+                        color: Colors.blue,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: TextButton(
+                        onPressed: () {
+                          login();
+                        },
+                        child: const Text(
+                          'Login',
+                          style: TextStyle(
+                            color: Colors.white,
+                          )
+                        ),
+                      )
+                    ),
+                    SizedBox(height: 10),
+                    Text.rich(
+                        TextSpan(
+                            text: "Don't have an account?",
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 14,
+                            ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: "Register here",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  decoration: TextDecoration.underline,
+                                ),
+                                recognizer: TapGestureRecognizer()..onTap = () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const RegisterPage()
+                                    )
+                                  );
+                                },
+                              ),
+                            ]
+                        )
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
         )
       )
     );
+    // Navigator.push(
+    //     context,
+    //     MaterialPageRoute(
+    //         builder: (context) => const Home()
+    //     )
+    // );
+  }
+
+  login() {
+    if(formKey.currentState!.validate()) {
+    }
   }
 // this is temp view for understanding how events are being populated
 //  //  Widget buildEvents() => StaggeredGridView.countBuilder(
