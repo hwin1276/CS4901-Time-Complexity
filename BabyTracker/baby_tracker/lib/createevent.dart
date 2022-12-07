@@ -1,4 +1,7 @@
+import 'package:baby_tracker/Models/events.dart';
 import 'package:flutter/material.dart';
+import 'Models/events.dart';
+import 'db/sqlite.dart';
 
 
 class CreateEvent extends StatefulWidget {
@@ -16,6 +19,8 @@ class _CreateEventState extends State<CreateEvent> {
   final formKey = GlobalKey<FormState>();
   String? dropdownValue;
   int? eventtype;
+  late String eventType;
+  late String desc;
 
 
   @override
@@ -26,6 +31,7 @@ class _CreateEventState extends State<CreateEvent> {
     final minutes = startDateTime.minute.toString().padLeft(2,'0');
     final endHours = endDateTime.hour.toString().padLeft(2,'0');
     final endMinutes = endDateTime.minute.toString().padLeft(2,'0');
+    
 
     return Scaffold(
       appBar: AppBar(
@@ -258,9 +264,11 @@ class _CreateEventState extends State<CreateEvent> {
                       onPressed: () {
                         final isValidForm = formKey.currentState!.validate();
                         if (isValidForm) {
-                          final task = titleController.text;
-                          final description = descriptionController.text;
+                          eventType = titleController.text;
+                          desc= descriptionController.text;
                           //add event to database
+                          addEvent();
+
                         }
                       },
                       child: const Text(
@@ -277,6 +285,20 @@ class _CreateEventState extends State<CreateEvent> {
         ),
       ),
     );
+  }
+
+   Future addEvent() async {
+    final event = Event(
+      childId: 1, // hardcoded for kid 1 
+      inputTime: DateTime.now(),
+      startTime: startDateTime,
+      endTime: endDateTime,
+      type: eventType,
+      diaperChange: desc,
+      amountFood: 0, // also hardcoded
+    );
+
+    await SqliteDB.instance.create(event);
   }
 
   Future<DateTime?> pickDate(dateTime) => showDatePicker (
