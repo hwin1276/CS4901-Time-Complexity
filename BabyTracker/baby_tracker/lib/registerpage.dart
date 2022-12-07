@@ -1,7 +1,11 @@
+import 'package:baby_tracker/service/auth_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'helper/helper_functions.dart';
+import 'home.dart';
 import 'loginpage.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -17,7 +21,7 @@ class _RegisterPageState extends State<RegisterPage> {
   String userName = "";
   String password = "";
   bool _isLoading = false;
-  //AuthService authService = AuthService();
+  AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +29,12 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
           title: const Text('Register Page'),
         ),
-        body: SingleChildScrollView(
+        body: _isLoading ? Center(
+          child: CircularProgressIndicator(
+              color: Theme.of(context).primaryColor
+          ),
+        ) :
+        SingleChildScrollView(
             child: Stack(
               children: [
                 Form(
@@ -200,7 +209,32 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  register() {
+  register() async{
+    if(formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await authService.registerUserWithEmailandPassword(userName, email, password).then((value) async{
+        if(value == true) {
+          // saving the shared preference state
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmailSF(email);
+          await HelperFunctions.saveUserNameSF(userName);
 
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Home()
+              )
+          );
+        }
+        else {
+          showSnackBar(context, Colors.red, value);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
+    }
   }
 }

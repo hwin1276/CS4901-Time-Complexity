@@ -1,15 +1,23 @@
 import 'package:baby_tracker/registerpage.dart';
+import 'package:baby_tracker/service/auth_service.dart';
+import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'Models/events.dart';
+import 'helper/helper_functions.dart';
 import 'home.dart';
 import 'db/sqlite.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
-  _LoginPageState createState() => _LoginPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
@@ -17,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
   String email = "";
   String password = "";
   bool _isLoading = false;
-  //AuthService authService = AuthService();
+  AuthService authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +33,12 @@ class _LoginPageState extends State<LoginPage> {
       appBar: AppBar(
         title: const Text('Login Page'),
       ),
-      body: SingleChildScrollView(
+      body: _isLoading ? Center(
+        child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor
+        ),
+      ) :
+      SingleChildScrollView(
         child: Stack(
           children: [
             Form(
@@ -179,8 +192,33 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  login() {
+  login() async {
     if(formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await authService.loginWithEmailandPassword(email, password).then((value) async {
+        if(value == true) {
+          QuerySnapshot snapshot = await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).gettingUserData(email);
+
+          // saving the shared preferences state
+          await HelperFunctions.saveUserLoggedInStatus(true);
+          await HelperFunctions.saveUserEmailSF(email);
+          await HelperFunctions.saveUserNameSF(snapshot.docs[0]['fullName']);
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const Home()
+              )
+          );
+        } else {
+          showSnackBar(context, Colors.red, value);
+          setState(() {
+            _isLoading = false;
+          });
+        }
+      });
     }
   }
 // this is temp view for understanding how events are being populated
