@@ -98,10 +98,11 @@ class _SettingsState extends State<Settings> {
               ),
               child: TextButton.icon(
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const LoginPage()));
+                          builder: (context) => const LoginPage()),
+                      (route) => false);
                 },
                 icon: Icon(Icons.logout),
                 label: const Text('Sign Out',
