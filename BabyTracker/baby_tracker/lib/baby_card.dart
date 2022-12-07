@@ -75,7 +75,7 @@ class _BabyCardState extends State<BabyCard> {
   }
 
   babyGender() {
-    if (gender == 'male') {
+    if (gender == 'Male') {
       return Container(
           // if male then color = blue
           color: Colors.blue[100],
