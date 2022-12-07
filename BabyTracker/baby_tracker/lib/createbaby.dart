@@ -17,7 +17,7 @@ class _CreateBabyState extends State<CreateBaby> {
       appBar: AppBar(
         title: const Text('Add Baby Profile'),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
