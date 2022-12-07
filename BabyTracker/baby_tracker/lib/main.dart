@@ -7,7 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 // ignore import 'package:flutter_settings_screens/flutter_settings_screens.dart';
 import 'package:flutter/foundation.dart';
-
+import 'package:baby_tracker/home.dart';
 import 'helper/helper_functions.dart';
 
 void main() async {
@@ -64,7 +64,7 @@ class _MyAppState extends State<MyApp> {
           final themeProvider = Provider.of<ThemeProvider>(context);
           return MaterialApp(
             title: 'Baby Tracker Demo',
-            themeMode: themeProvider.themeMowe,
+            themeMode: themeProvider.themeMode,
             theme: MyThemes.lightTheme,
             darkTheme: MyThemes.darkTheme,
             home: _isSignedIn ? const Home() : LoginPage(),
