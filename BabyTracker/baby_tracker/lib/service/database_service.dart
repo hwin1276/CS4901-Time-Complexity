@@ -29,12 +29,26 @@ class DatabaseService {
     return userCollection.doc(uid).snapshots();
   }
 
+  // get baby theme
+  Future getBabyTheme(String babyId) async {
+    DocumentReference d = babyCollection.doc(babyId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['theme'];
+  }
+  // get baby gender
+  Future getBabyGender(String babyId) async {
+    DocumentReference d = babyCollection.doc(babyId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['gender'];
+  }
+
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
     DocumentReference babyDocumentReference = await babyCollection.add({
       "babyName": babyName,
       "admin": "${id}_$userName",
       "gender": gender,
+      "theme": "blue",
       "birthDate": birthDate,
       "caretakers": [],
       "events": [],
