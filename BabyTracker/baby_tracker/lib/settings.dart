@@ -1,5 +1,6 @@
 import 'package:baby_tracker/loginpage.dart';
 import 'package:baby_tracker/objects/theme.dart';
+import 'package:baby_tracker/service/auth_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -31,6 +32,8 @@ GestureDetector buildAccount(BuildContext context, String title) {
 }
 
 class _SettingsState extends State<Settings> {
+  AuthService authService = AuthService();
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -97,7 +100,8 @@ class _SettingsState extends State<Settings> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: TextButton.icon(
-                onPressed: () {
+                onPressed: () async {
+                  await authService.signOut();
                   Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(

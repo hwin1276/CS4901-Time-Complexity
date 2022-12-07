@@ -33,7 +33,7 @@ dependencies:
     sdk: flutter
 
   # state management
-  provider: ^4.3.2+3
+  provider: ^6.0.4
   
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
