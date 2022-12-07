@@ -4,7 +4,7 @@ class Baby {
   late int babyid;
   late int parentid;
   late String name;
-  late bool gender; // true = male , false = female
+  late String gender;
   late String theme;
   List<Event>? events;
 
@@ -19,15 +19,17 @@ class Baby {
   static List<Baby> babyList() {
     return [
       // Sample data for baby list
-      Baby(babyid: 0, parentid: 0, name: 'Frank', gender: true, theme: 'blue'),
-      Baby(babyid: 1, parentid: 0, name: 'John', gender: true, theme: 'green'),
+      Baby(
+          babyid: 0, parentid: 0, name: 'Frank', gender: 'male', theme: 'blue'),
+      Baby(
+          babyid: 1, parentid: 0, name: 'John', gender: 'male', theme: 'green'),
       Baby(
           babyid: 2,
           parentid: 1,
           name: 'Maria',
-          gender: false,
+          gender: 'female',
           theme: 'yellow'),
-      Baby(babyid: 3, parentid: 2, name: 'Dustin', gender: true),
+      Baby(babyid: 3, parentid: 2, name: 'Dustin', gender: 'male'),
     ];
   }
 }

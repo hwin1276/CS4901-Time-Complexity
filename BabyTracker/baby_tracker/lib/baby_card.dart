@@ -40,6 +40,21 @@ class BabyCard extends StatelessWidget {
     }
   }
 
+  gender() {
+    if (baby.gender == 'male') {
+      return Container(
+          // if male then color = blue
+          color: Colors.blue[100],
+          padding: const EdgeInsets.all(10),
+          child: const Icon(Icons.child_care, size: 30));
+    } else {
+      return Container(
+          color: Colors.pink[100], // if female
+          padding: const EdgeInsets.all(10),
+          child: const Icon(Icons.child_care, size: 30));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -70,17 +85,7 @@ class BabyCard extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
-                  ClipOval(
-                      child: baby.gender
-                          ? Container(
-                              // if male then color = blue
-                              color: Colors.blue[100],
-                              padding: const EdgeInsets.all(10),
-                              child: const Icon(Icons.child_care, size: 30))
-                          : Container(
-                              color: Colors.pink[100], // if female
-                              padding: const EdgeInsets.all(10),
-                              child: const Icon(Icons.child_care, size: 30))),
+                  ClipOval(child: gender()),
                   const SizedBox(width: 10),
                   Text(baby.name),
                 ]),
