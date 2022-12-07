@@ -6,7 +6,7 @@ class DatabaseService {
 
   // reference for our collections
   final CollectionReference userCollection = FirebaseFirestore.instance.collection("users"); // if exists enters collections otherwise firebase creates it for us
-  final CollectionReference groupCollection = FirebaseFirestore.instance.collection("groups");
+  final CollectionReference babyCollection = FirebaseFirestore.instance.collection("babies");
 
   // updating the user data
   Future updateUserData(String userName, String email) async {
@@ -22,5 +22,33 @@ class DatabaseService {
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot = await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
+  }
+
+  // get user babies
+  getUserBabies() async {
+    return userCollection.doc(uid).snapshots();
+  }
+
+  // creating a baby
+  Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
+    DocumentReference babyDocumentReference = await babyCollection.add({
+      "babyName": babyName,
+      "admin": "${id}_$userName",
+      "gender": gender,
+      "birthDate": birthDate,
+      "caretakers": [],
+      "events": [],
+      "babyId": "",
+    });
+
+    // update the members
+    await babyDocumentReference.update({
+      "caretakers": FieldValue.arrayUnion(["${uid}_$userName"]),
+      "babyId": babyDocumentReference.id,
+    });
+    DocumentReference userDocumentReference = await userCollection.doc(uid);
+    return await userDocumentReference.update({
+      "babies": FieldValue.arrayUnion(["${babyDocumentReference.id}_$babyName"])
+    });
   }
 }

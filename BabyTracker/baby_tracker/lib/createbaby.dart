@@ -1,3 +1,8 @@
+import 'package:baby_tracker/helper/helper_functions.dart';
+import 'package:baby_tracker/service/auth_service.dart';
+import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CreateBaby extends StatefulWidget {
@@ -9,10 +14,32 @@ class CreateBaby extends StatefulWidget {
 
 class _CreateBabyState extends State<CreateBaby> {
   final formKey = GlobalKey<FormState>();
-  String radioValue = "";
-  String name = "";
+  bool _isLoading = false;
+  String babyName = "";
   String gender = "";
-  DateTime date = DateTime.now();
+  String userName = "";
+  String email = "";
+  DateTime birthDate = DateTime.now();
+  AuthService authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    await HelperFunctions.getUserEmailFromSF().then((value) {
+      setState(() {
+        email = value!;
+      });
+    });
+    await HelperFunctions.getUserNameFromSF().then((value) {
+      setState(() {
+        userName = value!;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +47,12 @@ class _CreateBabyState extends State<CreateBaby> {
       appBar: AppBar(
         title: const Text('Add Baby Profile'),
       ),
-      body: SingleChildScrollView(
+      body: _isLoading ? Center(
+        child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor
+        ),
+      ) :
+      SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Form(
@@ -38,7 +70,7 @@ class _CreateBabyState extends State<CreateBaby> {
                     ),
                     onChanged: (val) {
                       setState(() {
-                        name = val;
+                        babyName = val;
                       });
                     },
                     validator: (val){
@@ -146,7 +178,7 @@ class _CreateBabyState extends State<CreateBaby> {
                     children: [
                       Text('Birth Date:'),
                       Text(
-                        '${date.month}/${date.day}/${date.year}',
+                        '${birthDate.month}/${birthDate.day}/${birthDate.year}',
                         style: TextStyle(fontSize: 32),
                       ),
                       ElevatedButton(
@@ -154,13 +186,13 @@ class _CreateBabyState extends State<CreateBaby> {
                         onPressed: () async {
                           DateTime? newDate = await showDatePicker(
                               context: context,
-                              initialDate: date,
+                              initialDate: birthDate,
                               firstDate: DateTime(2018),
                               lastDate: DateTime(2100));
                           // if 'CANCEL'
                           if (newDate == null) return;
                           // if 'OK'
-                          setState(() => date = newDate);
+                          setState(() => birthDate = newDate);
                         },
                       )
                     ],
@@ -197,9 +229,16 @@ class _CreateBabyState extends State<CreateBaby> {
       ),
     );
   }
-  createBaby() async{
+  createBaby() async {
     if(formKey.currentState!.validate()) {
-      
+      setState(() {
+        _isLoading = true;
+      });
+      DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).createBaby(userName, FirebaseAuth.instance.currentUser!.uid, babyName, gender, birthDate).whenComplete((){
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+      showSnackBar(context, Colors.green, "Baby added successfully");
     }
   }
 }
