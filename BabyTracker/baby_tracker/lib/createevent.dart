@@ -1,10 +1,6 @@
-import 'package:baby_tracker/Models/events.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:flutter/material.dart';
-import 'Models/events.dart';
-import 'db/sqlite.dart';
-
 
 class CreateEvent extends StatefulWidget {
   final String userName;
