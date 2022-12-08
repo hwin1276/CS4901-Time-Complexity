@@ -42,6 +42,11 @@ class DatabaseService {
     return documentSnapshot['gender'];
   }
 
+  // get event data
+  getEventData(String babyId) async {
+    return babyCollection.doc(babyId).collection("events").snapshots();
+  }
+
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
     DocumentReference babyDocumentReference = await babyCollection.add({

@@ -66,7 +66,7 @@ class _DetailsPagesState extends State<DetailsPages> {
               child: const Icon(Icons.add)),
           body: TabBarView(children: [
             Calendar(),
-            EventList(),
+            EventList(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId),
             Statistics(),
           ])),
     );
