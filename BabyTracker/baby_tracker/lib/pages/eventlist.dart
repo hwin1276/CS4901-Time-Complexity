@@ -20,13 +20,7 @@ class EventList extends StatefulWidget {
 }
 
 class _EventListState extends State<EventList> {
-  bool _isLoading = false;
   Stream<QuerySnapshot>? events;
-  String taskName = "";
-  String taskType = "";
-  String taskDescription = "";
-  DateTime taskStartTime = DateTime.now();
-  DateTime taskEndTime = DateTime.now();
 
   @override
   void initState() {
