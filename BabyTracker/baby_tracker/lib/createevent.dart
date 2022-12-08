@@ -26,8 +26,13 @@ class _CreateEventState extends State<CreateEvent> {
   String eventDescription = "";
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     endDateTime = endDateTime.add(Duration(minutes:30));
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final hours = startDateTime.hour.toString().padLeft(2,'0');
     final minutes = startDateTime.minute.toString().padLeft(2,'0');
     final endHours = endDateTime.hour.toString().padLeft(2,'0');
