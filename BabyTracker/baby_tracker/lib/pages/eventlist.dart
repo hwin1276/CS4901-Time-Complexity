@@ -52,7 +52,6 @@ class _EventListState extends State<EventList> {
             return ListView.builder(
               itemCount: snapshot.data.docs.length,
               itemBuilder: (context, index) {
-                print("success");
                 return EventCard(
                   taskName: snapshot.data.docs[index]['task'],
                   taskType: snapshot.data.docs[index]['type'],

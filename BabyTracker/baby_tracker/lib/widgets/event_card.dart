@@ -21,18 +21,25 @@ class EventCard extends StatelessWidget {
       margin: EdgeInsets.only(bottom: 20),
       child: ListTile(
         onTap: () {
-          
+
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         tileColor: Colors.white,
-        leading: Icon(
-            Icons.abc,
-            color: Colors.blue),
+        // leading: Icon(
+        //     Icons.abc,
+        //     color: Colors.blue),
         title: Text(
           taskName,
           style: TextStyle(
             fontSize: 16,
+            color: Colors.black,
+          ),
+        ),
+        subtitle: Text(
+          taskStartTime.toString(),
+          style: TextStyle(
+            fontSize: 12,
             color: Colors.black,
           ),
         ),
