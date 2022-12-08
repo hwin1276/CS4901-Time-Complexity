@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "826080305623",
-    "project_id": "babytracker-ec718",
-    "storage_bucket": "babytracker-ec718.appspot.com"
+    "project_number": "721256822688",
+    "project_id": "babytrackerflutter",
+    "storage_bucket": "babytrackerflutter.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:826080305623:android:b3fff159257f9bb8012b92",
+        "mobilesdk_app_id": "1:721256822688:android:131591ebac16bd53db16c5",
         "android_client_info": {
           "package_name": "com.example.baby_tracker"
         }
       },
       "oauth_client": [
         {
-          "client_id": "826080305623-5s7g0vvo7p42g2nig4d9j77cbav82ckf.apps.googleusercontent.com",
+          "client_id": "721256822688-0huf1qfocq4oi32rn568bnl02jc3085t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.baby_tracker",
+            "certificate_hash": "c5b3c0a6e7e9e6ffa4490135ee139d4613e30269"
+          }
+        },
+        {
+          "client_id": "721256822688-8nt3kamqh7rre0cuv7itq3a3jks949fk.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBXvozZa0ArtCcdjfA9zObgjwr2tgQDOWc"
+          "current_key": "AIzaSyDwHIR1XjqNoXg4DDd1hUhZ8jnurKczQwA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "826080305623-5s7g0vvo7p42g2nig4d9j77cbav82ckf.apps.googleusercontent.com",
+              "client_id": "721256822688-8nt3kamqh7rre0cuv7itq3a3jks949fk.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
