@@ -1,11 +1,16 @@
 import 'package:baby_tracker/Models/events.dart';
+import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:flutter/material.dart';
 import 'Models/events.dart';
 import 'db/sqlite.dart';
 
 
 class CreateEvent extends StatefulWidget {
-  const CreateEvent({Key? key}) : super(key: key);
+  final String userName;
+  final String babyName;
+  final String babyId;
+  const CreateEvent({Key? key, required this.userName, required this.babyName, required this.babyId}) : super(key: key);
 
   @override
   State<CreateEvent> createState() => _CreateEventState();
@@ -18,17 +23,16 @@ class _CreateEventState extends State<CreateEvent> {
   final formKey = GlobalKey<FormState>();
   String eventType = "";
   String eventTask = "";
-  String evemtDescription = "";
-
+  String eventDescription = "";
 
   @override
   Widget build(BuildContext context) {
     endDateTime = endDateTime.add(Duration(minutes:30));
-
     final hours = startDateTime.hour.toString().padLeft(2,'0');
     final minutes = startDateTime.minute.toString().padLeft(2,'0');
     final endHours = endDateTime.hour.toString().padLeft(2,'0');
     final endMinutes = endDateTime.minute.toString().padLeft(2,'0');
+
     
 
     return Scaffold(
@@ -159,7 +163,7 @@ class _CreateEventState extends State<CreateEvent> {
                     ),
                     onChanged: (value) {
                       setState(() {
-                        evemtDescription = value;
+                        eventDescription = value;
                       });
                     },
                   ),
@@ -319,6 +323,18 @@ class _CreateEventState extends State<CreateEvent> {
       setState(() {
         _isLoading = true;
       });
+      Map<String, dynamic> eventData = {
+        "task" : eventTask,
+        "type" : eventType,
+        "description" : eventDescription,
+        "startTime" : startDateTime,
+        "endTime" : endDateTime
+      };
+      DatabaseService().createEvent(widget.babyId, eventData).whenComplete(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+      showSnackBar(context, Colors.green, "Event Successfully Created");
     }
   }
 

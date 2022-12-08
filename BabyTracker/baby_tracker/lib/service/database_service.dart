@@ -51,7 +51,6 @@ class DatabaseService {
       "theme": "blue",
       "birthDate": birthDate,
       "caretakers": [],
-      "events": [],
       "babyId": "",
     });
 
@@ -64,5 +63,10 @@ class DatabaseService {
     return await userDocumentReference.update({
       "babies": FieldValue.arrayUnion(["${babyDocumentReference.id}_$babyName"])
     });
+  }
+
+  // create an event
+  createEvent(String babyId, Map<String, dynamic> eventData) async {
+    babyCollection.doc(babyId).collection("events").add(eventData);
   }
 }
