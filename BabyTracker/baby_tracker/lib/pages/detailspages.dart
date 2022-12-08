@@ -7,8 +7,10 @@ import '../createevent.dart';
 import '../objects/baby.dart';
 
 class DetailsPages extends StatefulWidget {
-  final String text;
-  const DetailsPages({Key? key, required this.text}) : super(key: key);
+  final String userName;
+  final String babyName;
+  final String babyId;
+  const DetailsPages({Key? key, required this.userName, required this.babyName, required this.babyId}) : super(key: key);
 
   @override
   State<DetailsPages> createState() => _DetailsPagesState();
@@ -45,7 +47,7 @@ class _DetailsPagesState extends State<DetailsPages> {
       length: 3,
       child: Scaffold(
           appBar: AppBar(
-            title: Text(widget.text),
+            title: Text(widget.babyName),
             bottom: TabBar(
               tabs: [
                 Tab(text: 'Calendar'),
@@ -59,12 +61,12 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const CreateEvent()));
+                        builder: (context) => CreateEvent(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId)));
               },
               child: const Icon(Icons.add)),
           body: TabBarView(children: [
             Calendar(),
-            EventList(),
+            EventList(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId),
             Statistics(),
           ])),
     );

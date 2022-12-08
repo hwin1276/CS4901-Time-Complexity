@@ -42,6 +42,11 @@ class DatabaseService {
     return documentSnapshot['gender'];
   }
 
+  // get event data
+  getEventData(String babyId) async {
+    return babyCollection.doc(babyId).collection("events").snapshots();
+  }
+
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
     DocumentReference babyDocumentReference = await babyCollection.add({
@@ -51,7 +56,6 @@ class DatabaseService {
       "theme": "blue",
       "birthDate": birthDate,
       "caretakers": [],
-      "events": [],
       "babyId": "",
     });
 
@@ -64,5 +68,10 @@ class DatabaseService {
     return await userDocumentReference.update({
       "babies": FieldValue.arrayUnion(["${babyDocumentReference.id}_$babyName"])
     });
+  }
+
+  // create an event
+  createEvent(String babyId, Map<String, dynamic> eventData) async {
+    babyCollection.doc(babyId).collection("events").add(eventData);
   }
 }

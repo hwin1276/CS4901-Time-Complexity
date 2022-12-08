@@ -96,7 +96,7 @@ class _BabyCardState extends State<BabyCard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailsPages(text: widget.babyName)
+                builder: (context) => DetailsPages(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId)
             )
         );
       },
