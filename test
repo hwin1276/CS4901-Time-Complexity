@@ -1,0 +1,111 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(BabyTrackerApp());
+}
+
+class BabyTrackerApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: HomePage(),
+    );
+  }
+}
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  DateTime _lastFeedingTime = DateTime.now();
+  Duration _lastFeedingDuration = Duration(minutes: 10);
+  String _lastFeedingType = 'breast';
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Baby Tracker'),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Last feeding:',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '${_lastFeedingTime.toLocal()}',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Duration:',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '${_lastFeedingDuration.inMinutes} minutes',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Type:',
+              style: TextStyle(
+                fontSize: 18,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              '$_lastFeedingType',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ),
+          RaisedButton(
+            onPressed: _recordFeeding,
+            child: Text('Record feeding'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _recordFeeding() {
+    // Show a dialog to collect information about the feeding
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Record feeding'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Last feeding time:'),
+              SizedBox(height: 8),
+              Text('${_lastFeedingTime.toLocal()}'),
+              SizedBox(height: 8),
+              Text('Duration (minutes
