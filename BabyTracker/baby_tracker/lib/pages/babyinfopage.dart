@@ -2,6 +2,8 @@ import 'package:baby_tracker/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'addcaretaker.dart';
+
 class BabyInfoPage extends StatefulWidget {
   const BabyInfoPage({
     Key? key,
@@ -53,7 +55,10 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
         actions: [
           IconButton(
             onPressed: () {
-              
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => AddCaretaker(babyId: widget.babyId, babyName: widget.babyName)));
             },
             icon: const Icon(Icons.add),
           ),

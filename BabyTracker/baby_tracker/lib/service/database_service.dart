@@ -61,6 +61,25 @@ class DatabaseService {
     return documentSnapshot['caretakers'];
   }
 
+  // search for users
+  searchByUserName(String userName) {
+    return userCollection.where("userName", isEqualTo: userName).get();
+  }
+
+  // check whether a user is a caretaker for a baby
+  Future<bool> isUserCaretaker(String userName, String searchUserName, String email, babyName, babyId) async {
+    DocumentReference userDocumentReference = userCollection.doc(uid);
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+
+    List<dynamic> babies = await documentSnapshot['babies'];
+    if(babies.contains("${babyId}_$babyName")) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
     DocumentReference babyDocumentReference = await babyCollection.add({
