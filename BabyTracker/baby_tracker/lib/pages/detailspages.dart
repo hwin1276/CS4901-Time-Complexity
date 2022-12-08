@@ -1,10 +1,9 @@
+import 'package:baby_tracker/pages/babyinfopage.dart';
 import 'package:baby_tracker/pages/calendar.dart';
 import 'package:baby_tracker/pages/eventlist.dart';
 import 'package:baby_tracker/pages/statistics.dart';
-import 'package:baby_tracker/objects/event.dart';
 import 'package:flutter/material.dart';
 import '../createevent.dart';
-import '../objects/baby.dart';
 
 class DetailsPages extends StatefulWidget {
   final String userName;
@@ -17,29 +16,6 @@ class DetailsPages extends StatefulWidget {
 }
 
 class _DetailsPagesState extends State<DetailsPages> {
-  //Sample Data To be made into a pull from a database
-  List<Event> events = [
-    Event(
-        id: 0,
-        description: "blank1",
-        startTime: DateTime.utc(2022, 12, 1, 20, 30),
-        length: Duration(hours: 1, minutes: 30)),
-    Event(
-        id: 1,
-        description: "blank2",
-        startTime: DateTime.utc(2022, 12, 2, 21, 30),
-        length: Duration(hours: 1, minutes: 30)),
-    Event(
-        id: 2,
-        description: "blank3",
-        startTime: DateTime.utc(2022, 12, 3, 22, 30),
-        length: Duration(hours: 1, minutes: 30)),
-    Event(
-        id: 3,
-        description: "blank4",
-        startTime: DateTime.utc(2022, 12, 4, 10, 30),
-        length: Duration(hours: 1)),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -55,6 +31,17 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Tab(text: 'Statistics'),
               ],
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.info),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BabyInfoPage(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId)));
+                },
+              ),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
               onPressed: () {

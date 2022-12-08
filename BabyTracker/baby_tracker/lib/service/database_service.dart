@@ -47,6 +47,20 @@ class DatabaseService {
     return babyCollection.doc(babyId).collection("events").snapshots();
   }
 
+  // get baby admin
+  getBabyAdmin(String babyId) async {
+    DocumentReference d = babyCollection.doc(babyId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['admin'];
+  }
+
+  // get baby caretakers
+  getBabyCaretakers(String babyId) async {
+    DocumentReference d = babyCollection.doc(babyId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['caretakers'];
+  }
+
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
     DocumentReference babyDocumentReference = await babyCollection.add({
