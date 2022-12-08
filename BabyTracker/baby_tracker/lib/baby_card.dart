@@ -1,10 +1,12 @@
 import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:baby_tracker/objects/baby.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../service/database_service.dart';
 
 class BabyCard extends StatefulWidget {
-  BabyCard({super.key,
+  BabyCard({
+    super.key,
     required this.babyName,
     required this.babyId,
     required this.userName,
@@ -20,11 +22,21 @@ class BabyCard extends StatefulWidget {
 class _BabyCardState extends State<BabyCard> {
   String babyTheme = "";
   String gender = "";
+  Stream<QuerySnapshot>? events;
 
   @override
   void initState() {
     getThemeandGender();
     super.initState();
+    getEventData();
+  }
+
+  getEventData() {
+    DatabaseService().getEventData(widget.babyId).then((val) {
+      setState(() {
+        events = val;
+      });
+    });
   }
 
   getThemeandGender() {
@@ -96,9 +108,10 @@ class _BabyCardState extends State<BabyCard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => DetailsPages(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId)
-            )
-        );
+                builder: (context) => DetailsPages(
+                    userName: widget.userName,
+                    babyName: widget.babyName,
+                    babyId: widget.babyId)));
       },
       child: Container(
           margin: const EdgeInsets.all(20),
@@ -127,6 +140,26 @@ class _BabyCardState extends State<BabyCard> {
                   ClipOval(child: babyGender()),
                   const SizedBox(width: 10),
                   Text(widget.babyName),
+                  SizedBox(
+                    width: 50,
+                  ),
+                  StreamBuilder(
+                      stream: events,
+                      builder: (context, AsyncSnapshot snapshot) {
+                        if (snapshot.hasData) {
+                          return Text(
+                            // TODO: show specific event count, i.e. Nap count, eat count, etc.
+                            ("Event Count: ${snapshot.data.docs.length}")
+                                .toString(),
+                            textAlign: TextAlign.right,
+                          );
+                        } else {
+                          return Center(
+                            child:
+                                CircularProgressIndicator(color: Colors.white),
+                          );
+                        }
+                      }),
                 ]),
               )
             ],

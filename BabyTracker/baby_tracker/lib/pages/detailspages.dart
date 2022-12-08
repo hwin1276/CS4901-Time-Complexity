@@ -10,7 +10,12 @@ class DetailsPages extends StatefulWidget {
   final String userName;
   final String babyName;
   final String babyId;
-  const DetailsPages({Key? key, required this.userName, required this.babyName, required this.babyId}) : super(key: key);
+  const DetailsPages(
+      {Key? key,
+      required this.userName,
+      required this.babyName,
+      required this.babyId})
+      : super(key: key);
 
   @override
   State<DetailsPages> createState() => _DetailsPagesState();
@@ -61,12 +66,21 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CreateEvent(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId)));
+                        builder: (context) => CreateEvent(
+                            userName: widget.userName,
+                            babyName: widget.babyName,
+                            babyId: widget.babyId)));
               },
               child: const Icon(Icons.add)),
           body: TabBarView(children: [
-            Calendar(),
-            EventList(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId),
+            Calendar(
+                userName: widget.userName,
+                babyName: widget.babyName,
+                babyId: widget.babyId),
+            EventList(
+                userName: widget.userName,
+                babyName: widget.babyName,
+                babyId: widget.babyId),
             Statistics(),
           ])),
     );

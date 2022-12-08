@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../service/database_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:baby_tracker/widgets/event_card.dart';
 
 class Calendar extends StatefulWidget {
-  const Calendar({Key? key}) : super(key: key);
+  const Calendar({
+    Key? key,
+    required this.babyName,
+    required this.babyId,
+    required this.userName,
+  }) : super(key: key);
+  final String babyName;
+  final String babyId;
+  final String userName;
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -10,10 +21,25 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   DateTime today = DateTime.now();
+  Stream<QuerySnapshot>? events;
   // Select date function
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
       today = day;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getEventData();
+  }
+
+  getEventData() {
+    DatabaseService().getEventData(widget.babyId).then((val) {
+      setState(() {
+        events = val;
+      });
     });
   }
 
@@ -50,7 +76,8 @@ class _CalendarState extends State<Calendar> {
             thickness: 1,
           ),
           SizedBox(height: 10),
-          Text("Events for: " + today.toString().split(" ")[0]),
+          Text("Events for: ${today.toString().split(" ")[0]}"),
+          // TODO: display list events for selected day
         ],
       ),
     );

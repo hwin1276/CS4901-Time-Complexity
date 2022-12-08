@@ -30,6 +30,7 @@ class _BabyListState extends State<BabyList> {
   String getId(String res) {
     return res.substring(0, res.indexOf("_"));
   }
+
   String getName(String res) {
     return res.substring(res.indexOf("_") + 1);
   }
@@ -45,7 +46,9 @@ class _BabyListState extends State<BabyList> {
         userName = value!;
       });
     });
-    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).getUserBabies().then((snapshot) {
+    await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getUserBabies()
+        .then((snapshot) {
       setState(() {
         babies = snapshot;
       });
@@ -70,8 +73,9 @@ class _BabyListState extends State<BabyList> {
             child: StreamBuilder(
               stream: babies,
               builder: (context, AsyncSnapshot snapshot) {
-                if(snapshot.hasData) {
-                  if(snapshot.data['babies'].length == null || snapshot.data['babies'].length == 0) {
+                if (snapshot.hasData) {
+                  if (snapshot.data['babies'].length == null ||
+                      snapshot.data['babies'].length == 0) {
                     return GestureDetector(
                       onTap: () => Navigator.push(
                           context,
@@ -97,47 +101,45 @@ class _BabyListState extends State<BabyList> {
                   } else {
                     return ListView.builder(
                         itemCount: snapshot.data['babies'].length + 1,
-                        itemBuilder: (context, index) =>
-                        (index != snapshot.data['babies'].length)
+                        itemBuilder: (context, index) => (index !=
+                                snapshot.data['babies'].length)
                             ? BabyCard(
-                          userName: snapshot.data['userName'],
-                          babyId: getId(snapshot.data['babies'][index]),
-                          babyName: getName(snapshot.data['babies'][index]),
-                        )
+                                userName: snapshot.data['userName'],
+                                babyId: getId(snapshot.data['babies'][index]),
+                                babyName:
+                                    getName(snapshot.data['babies'][index]),
+                              )
                             : GestureDetector(
-                          onTap: () =>
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const CreateBaby())),
-                          child: Container(
-                              margin: const EdgeInsets.all(20),
-                              height: 150,
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(10),
-                                    topRight: Radius.circular(10),
-                                    bottomLeft: Radius.circular(10),
-                                    bottomRight: Radius.circular(10)),
-                              ),
-                              child: Text(
-                                '+',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(fontSize: 50),
-                              )),
-                        )
-                    );
-                  };
-                }
-                else if (snapshot.hasError) {
+                                onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const CreateBaby())),
+                                child: Container(
+                                    margin: const EdgeInsets.all(20),
+                                    height: 150,
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(10),
+                                          topRight: Radius.circular(10),
+                                          bottomLeft: Radius.circular(10),
+                                          bottomRight: Radius.circular(10)),
+                                    ),
+                                    child: Text(
+                                      '+',
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(fontSize: 50),
+                                    )),
+                              ));
+                  }
+                  ;
+                } else if (snapshot.hasError) {
                   return const Text('No data available right now');
-                }
-                else {
+                } else {
                   return Center(
                     child: CircularProgressIndicator(
-                        color: Theme.of(context).primaryColor
-                    ),
+                        color: Theme.of(context).primaryColor),
                   );
                 }
               },
