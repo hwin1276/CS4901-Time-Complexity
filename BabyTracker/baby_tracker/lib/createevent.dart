@@ -1,43 +1,51 @@
-import 'package:baby_tracker/Models/events.dart';
+import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:flutter/material.dart';
-import 'Models/events.dart';
-import 'db/sqlite.dart';
-
 
 class CreateEvent extends StatefulWidget {
-  const CreateEvent({Key? key}) : super(key: key);
+  final String userName;
+  final String babyName;
+  final String babyId;
+  const CreateEvent({Key? key, required this.userName, required this.babyName, required this.babyId}) : super(key: key);
 
   @override
   State<CreateEvent> createState() => _CreateEventState();
 }
 
 class _CreateEventState extends State<CreateEvent> {
+  bool _isLoading = false;
   DateTime startDateTime = DateTime.now();
   DateTime endDateTime = DateTime.now();
-  final titleController = TextEditingController();
-  final descriptionController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  String? dropdownValue;
-  int? eventtype;
-  late String eventType;
-  late String desc;
+  String eventType = "";
+  String eventTask = "";
+  String eventDescription = "";
 
+  @override
+  void initState() {
+    super.initState();
+    endDateTime = endDateTime.add(Duration(minutes:30));
+  }
 
   @override
   Widget build(BuildContext context) {
-    endDateTime = endDateTime.add(Duration(minutes:30));
-
     final hours = startDateTime.hour.toString().padLeft(2,'0');
     final minutes = startDateTime.minute.toString().padLeft(2,'0');
     final endHours = endDateTime.hour.toString().padLeft(2,'0');
     final endMinutes = endDateTime.minute.toString().padLeft(2,'0');
+
     
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add an Event'),
       ),
-      body: SingleChildScrollView(
+      body: _isLoading ? Center(
+        child: CircularProgressIndicator(
+            color: Theme.of(context).primaryColor
+        ),
+      ) :
+      SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal:10, vertical: 15),
           child: Form(
@@ -50,53 +58,77 @@ class _CreateEventState extends State<CreateEvent> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal:15),
                   child: DropdownButtonFormField(
-                    value: dropdownValue,
                     icon: Icon(Icons.arrow_downward),
                     hint: Text('What kind of task are you adding?'),
-                    onChanged: (String? newValue) {
+                    value: eventType,
+                    items: const [
+                      DropdownMenuItem<String>(child: Text('What kind of task are you adding?'), value: ""),
+                      DropdownMenuItem<String>(child: Text('Diaper Change'), value: "Diaper Change"),
+                      DropdownMenuItem<String>(child: Text('Meal Time'), value: "Meal Time"),
+                      DropdownMenuItem<String>(child: Text('Sleep Time'), value: "Sleep Time"),
+                      DropdownMenuItem<String>(child: Text('Incidents'), value: "Incidents"),
+                    ],
+                    onChanged: (value) {
                       setState(() {
-                        dropdownValue = newValue!;
-
-                        switch(dropdownValue) {
-                          case 'Diaper Change': {
-                            eventtype = 1;
-                          }
-                          break;
-                          case 'Meal Time': {
-                            eventtype = 2;
-                          }
-                          break;
-                          case 'Sleep Time': {
-                            eventtype = 3;
-                          }
-                          break;
-                          case 'Accidents': {
-                            eventtype = 4;
-                          }
-                          break;
-                        }
+                        eventType = value!;
                       });
                     },
-                    items: <String>[
-                      'Diaper Change',
-                      'Meal Time',
-                      'Sleep Time',
-                      'Accidents'
-                    ].map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
                     validator: (value) {
-                      if (value == null) {
-                        return 'Please enter what kind of task your adding';
-                      }
-                      else {
+                      if (eventType == '') {
+                        return "Please select a event type";
+                      } else {
                         return null;
                       }
                     },
-                  ),
+                  )
+                  // DropdownButtonFormField(
+                  //   value: dropdownValue,
+                  //   icon: Icon(Icons.arrow_downward),
+                  //   hint: Text('What kind of task are you adding?'),
+                  //   onChanged: (String? newValue) {
+                  //     setState(() {
+                  //       dropdownValue = newValue!;
+                  //
+                  //       switch(dropdownValue) {
+                  //         case 'Diaper Change': {
+                  //           eventtype = 1;
+                  //         }
+                  //         break;
+                  //         case 'Meal Time': {
+                  //           eventtype = 2;
+                  //         }
+                  //         break;
+                  //         case 'Sleep Time': {
+                  //           eventtype = 3;
+                  //         }
+                  //         break;
+                  //         case 'Accidents': {
+                  //           eventtype = 4;
+                  //         }
+                  //         break;
+                  //       }
+                  //     });
+                  //   },
+                  //   items: <String>[
+                  //     'Diaper Change',
+                  //     'Meal Time',
+                  //     'Sleep Time',
+                  //     'Accidents'
+                  //   ].map<DropdownMenuItem<String>>((String value) {
+                  //     return DropdownMenuItem<String>(
+                  //       value: value,
+                  //       child: Text(value),
+                  //     );
+                  //   }).toList(),
+                  //   validator: (value) {
+                  //     if (value == null) {
+                  //       return 'Please enter what kind of task your adding';
+                  //     }
+                  //     else {
+                  //       return null;
+                  //     }
+                  //   },
+                  // ),
                 ),
                 Divider(
                   color: Colors.grey,
@@ -107,9 +139,13 @@ class _CreateEventState extends State<CreateEvent> {
                     decoration: InputDecoration(
                       hintText: "What is your task?",
                     ),
-                    controller: titleController,
+                    onChanged: (value) {
+                      setState(() {
+                        eventTask = value;
+                      });
+                    },
                     validator: (value) {
-                      if (value != null && value.isEmpty) {
+                      if (value == null || value.isEmpty) {
                         return 'Please enter your task';
                       } else {
                         return null;
@@ -122,12 +158,15 @@ class _CreateEventState extends State<CreateEvent> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal:15),
-                  child: TextField(
+                  child: TextFormField(
                     decoration: InputDecoration(
-                        hintText: "Description"
+                      hintText: "Describe your event",
                     ),
-                    maxLines: 5,
-                    controller: descriptionController,
+                    onChanged: (value) {
+                      setState(() {
+                        eventDescription = value;
+                      });
+                    },
                   ),
                 ),
                 Divider(
@@ -262,14 +301,7 @@ class _CreateEventState extends State<CreateEvent> {
                     ),
                     child: TextButton(
                       onPressed: () {
-                        final isValidForm = formKey.currentState!.validate();
-                        if (isValidForm) {
-                          eventType = titleController.text;
-                          desc= descriptionController.text;
-                          //add event to database
-                          addEvent();
-
-                        }
+                        addEvent();
                       },
                       child: const Text(
                           'Confirm',
@@ -287,18 +319,24 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
-   Future addEvent() async {
-    final event = Event(
-      childId: 1, // hardcoded for kid 1 
-      inputTime: DateTime.now(),
-      startTime: startDateTime,
-      endTime: endDateTime,
-      type: eventType,
-      diaperChange: desc,
-      amountFood: 0, // also hardcoded
-    );
-
-    await SqliteDB.instance.create(event);
+  Future addEvent() async {
+    if(formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      Map<String, dynamic> eventData = {
+        "task" : eventTask,
+        "type" : eventType,
+        "description" : eventDescription,
+        "startTime" : startDateTime,
+        "endTime" : endDateTime
+      };
+      DatabaseService().createEvent(widget.babyId, eventData).whenComplete(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+      showSnackBar(context, Colors.green, "Event Successfully Created");
+    }
   }
 
   Future<DateTime?> pickDate(dateTime) => showDatePicker (

@@ -1,59 +1,80 @@
+import 'package:baby_tracker/widgets/event_card.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '/Models/events.dart';
-import '/db/sqlite.dart';
+
+import '../service/database_service.dart';
 
 class EventList extends StatefulWidget {
-  const EventList({Key? key}) : super(key: key);
+  const EventList({
+    Key? key,
+    required this.babyName,
+    required this.babyId,
+    required this.userName,
+  }) : super(key: key);
+  final String babyName;
+  final String babyId;
+  final String userName;
 
   @override
   State<EventList> createState() => _EventListState();
 }
 
 class _EventListState extends State<EventList> {
-  late List<Event> events;
-  bool isLoading = false;
+  Stream<QuerySnapshot>? events;
 
   @override
   void initState() {
     super.initState();
-    refreshEvents();
+    getEventData();
   }
 
-  @override
-  void dispose() {
-    SqliteDB.instance.close();
-    super.dispose();
+  getEventData() {
+    DatabaseService().getEventData(widget.babyId).then((val) {
+      setState(() {
+        events = val;
+      });
+    });
   }
 
-  Future refreshEvents() async {
-    setState(() => isLoading = true);
-    this.events = await SqliteDB.instance.readAllEvents();
-    setState(() => isLoading = false);
-  }
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-          child: ListView.builder(
-            itemCount: events.length,
-            prototypeItem: ListTile(
-              title: Text('events'),
-            ),
-            itemBuilder: (context, index){
-              refreshEvents();
-            return Container(
-                    height: 40,
-                    child: Center(
-                      child: Text(
-                        '[${events[index].childId}] ${events[index].type} - ${events[index].diaperChange}',
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ),
-                  );
-            },
-        ), 
-    ),
+      body: StreamBuilder(
+        stream: events,
+        builder: (context, AsyncSnapshot snapshot) {
+          if(snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data.docs.length,
+              itemBuilder: (context, index) {
+                return EventCard(
+                  taskName: snapshot.data.docs[index]['task'],
+                  taskType: snapshot.data.docs[index]['type'],
+                  taskDescription: snapshot.data.docs[index]['description'],
+                  taskStartTime: snapshot.data.docs[index]['startTime'].toDate(),
+                  taskEndTime: snapshot.data.docs[index]['endTime'].toDate(),
+                );
+              },
+            );
+          }
+          else if (snapshot.hasError) {
+            return Center(
+                child: Text(
+                  'No data available right now',
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                )
+            );
+          }
+          else {
+            return Center(
+              child: CircularProgressIndicator(
+                  color: Colors.white
+              ),
+            );
+          }
+        }
+      ),
     );
   }
 
