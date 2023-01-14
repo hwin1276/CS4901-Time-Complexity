@@ -61,7 +61,6 @@ class _LoginPageState extends State<LoginPage> {
                           const Text('BabyTracker',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black,
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -79,7 +78,6 @@ class _LoginPageState extends State<LoginPage> {
                                 labelText: "Email",
                                 prefixIcon: Icon(
                                   Icons.email,
-                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               onChanged: (val) {
@@ -105,7 +103,6 @@ class _LoginPageState extends State<LoginPage> {
                                 labelText: "Password",
                                 prefixIcon: Icon(
                                   Icons.lock,
-                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               onChanged: (val) {
@@ -147,14 +144,12 @@ class _LoginPageState extends State<LoginPage> {
                           Text.rich(TextSpan(
                               text: "Don't have an account?",
                               style: TextStyle(
-                                color: Colors.black,
                                 fontSize: 14,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "Register here",
+                                  text: "  Register here",
                                   style: TextStyle(
-                                    color: Colors.black,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()

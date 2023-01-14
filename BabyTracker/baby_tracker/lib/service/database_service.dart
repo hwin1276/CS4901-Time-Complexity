@@ -5,8 +5,10 @@ class DatabaseService {
   DatabaseService({this.uid});
 
   // reference for our collections
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection("users"); // if exists enters collections otherwise firebase creates it for us
-  final CollectionReference babyCollection = FirebaseFirestore.instance.collection("babies");
+  final CollectionReference userCollection = FirebaseFirestore.instance.collection(
+      "users"); // if exists enters collections otherwise firebase creates it for us
+  final CollectionReference babyCollection =
+      FirebaseFirestore.instance.collection("babies");
 
   // updating the user data
   Future updateUserData(String userName, String email) async {
@@ -20,7 +22,8 @@ class DatabaseService {
 
   // getting user data
   Future gettingUserData(String email) async {
-    QuerySnapshot snapshot = await userCollection.where("email", isEqualTo: email).get();
+    QuerySnapshot snapshot =
+        await userCollection.where("email", isEqualTo: email).get();
     return snapshot;
   }
 
@@ -35,6 +38,7 @@ class DatabaseService {
     DocumentSnapshot documentSnapshot = await d.get();
     return documentSnapshot['theme'];
   }
+
   // get baby gender
   Future getBabyGender(String babyId) async {
     DocumentReference d = babyCollection.doc(babyId);
@@ -47,13 +51,20 @@ class DatabaseService {
     return babyCollection.doc(babyId).collection("events").snapshots();
   }
 
+  // Edit user
+
+  // Edit baby
+  Future editBaby(String userName, String id, String babyName, String gender,
+      String theme, DateTime birthDate) async {}
+
   // creating a baby
-  Future createBaby(String userName, String id, String babyName, String gender, DateTime birthDate) async{
+  Future createBaby(String userName, String id, String babyName, String gender,
+      String theme, DateTime birthDate) async {
     DocumentReference babyDocumentReference = await babyCollection.add({
       "babyName": babyName,
       "admin": "${id}_$userName",
       "gender": gender,
-      "theme": "blue",
+      "theme": theme,
       "birthDate": birthDate,
       "caretakers": [],
       "babyId": "",

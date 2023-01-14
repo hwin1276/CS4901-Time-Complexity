@@ -16,7 +16,7 @@ class Baby {
       this.theme = 'default',
       this.events});
 
-  static List<Baby> babyList() {
+  /*static List<Baby> babyList() {
     return [
       // Sample data for baby list
       Baby(
@@ -31,5 +31,5 @@ class Baby {
           theme: 'yellow'),
       Baby(babyid: 3, parentid: 2, name: 'Dustin', gender: 'male'),
     ];
-  }
+  }*/
 }

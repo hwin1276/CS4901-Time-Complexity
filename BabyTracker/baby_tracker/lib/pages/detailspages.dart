@@ -1,6 +1,7 @@
 import 'package:baby_tracker/pages/calendar.dart';
 import 'package:baby_tracker/pages/eventlist.dart';
 import 'package:baby_tracker/pages/statistics.dart';
+import 'package:baby_tracker/pages/edit_baby.dart';
 import 'package:baby_tracker/objects/event.dart';
 import 'package:flutter/material.dart';
 import '../createevent.dart';
@@ -49,7 +50,7 @@ class _DetailsPagesState extends State<DetailsPages> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
           appBar: AppBar(
             title: Text(widget.babyName),
@@ -58,6 +59,7 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Tab(text: 'Calendar'),
                 Tab(text: 'Events'),
                 Tab(text: 'Statistics'),
+                Tab(text: 'Edit'),
               ],
             ),
           ),
@@ -82,6 +84,7 @@ class _DetailsPagesState extends State<DetailsPages> {
                 babyName: widget.babyName,
                 babyId: widget.babyId),
             Statistics(),
+            Edit(),
           ])),
     );
   }
