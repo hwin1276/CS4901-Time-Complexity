@@ -6,15 +6,46 @@ import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Edit extends StatefulWidget {
-  const Edit({Key? key}) : super(key: key);
+  const Edit({
+    Key? key,
+    required this.babyId,
+  }) : super(key: key);
+  final String babyId;
 
   @override
   State<Edit> createState() => _EditState();
 }
 
 class _EditState extends State<Edit> {
+  final formKey = GlobalKey<FormState>();
   String babyName = "";
+  String userName = "";
   String theme = "";
+  String email = "";
+  AuthService authService = AuthService();
+
+  @override
+  void initState() {
+    super.initState();
+    gettingUserData();
+  }
+
+  gettingUserData() async {
+    await HelperFunctions.getUserEmailFromSF().then((value) {
+      setState(() {
+        email = value!;
+      });
+    });
+  }
+
+  getTheme() {
+    DatabaseService().getBabyTheme(widget.babyId).then((val) {
+      setState(() {
+        theme = val;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,14 +129,13 @@ class _EditState extends State<Edit> {
                   ],
                 );
               },
-              validator: (value) {
-                if (theme == "") return "Please select a theme";
-                return null;
-              },
             ),
             SizedBox(height: 60),
             TextButton.icon(
-              onPressed: () async {},
+              onPressed: () async {
+                editBaby();
+                print(theme);
+              },
               icon: Icon(Icons.check),
               label: const Text(
                 'Save Changes',
@@ -115,5 +145,14 @@ class _EditState extends State<Edit> {
         ),
       ),
     );
+  }
+
+  editBaby() async {
+    if (formKey.currentState!.validate()) {
+      DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+          .editBaby(FirebaseAuth.instance.currentUser!.uid, theme);
+      Navigator.of(context).pop();
+      showSnackBar(context, Colors.green, "Baby edited successfully");
+    }
   }
 }

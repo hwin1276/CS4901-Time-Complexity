@@ -2,10 +2,9 @@ import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../service/database_service.dart';
 
 class BabyCard extends StatefulWidget {
-  BabyCard({
+  const BabyCard({
     super.key,
     required this.babyName,
     required this.babyId,
@@ -109,9 +108,11 @@ class _BabyCardState extends State<BabyCard> {
             context,
             MaterialPageRoute(
                 builder: (context) => DetailsPages(
-                    userName: widget.userName,
-                    babyName: widget.babyName,
-                    babyId: widget.babyId)));
+                      userName: widget.userName,
+                      babyName: widget.babyName,
+                      babyId: widget.babyId,
+                      theme: babyTheme,
+                    )));
       },
       child: Container(
           margin: const EdgeInsets.all(20),

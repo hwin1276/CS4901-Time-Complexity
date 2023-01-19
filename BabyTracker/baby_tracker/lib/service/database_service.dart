@@ -46,16 +46,31 @@ class DatabaseService {
     return documentSnapshot['gender'];
   }
 
+  // get baby birthdate
+  Future getBabyBirthdate(String babyId) async {
+    DocumentReference d = babyCollection.doc(babyId);
+    DocumentSnapshot documentSnapshot = await d.get();
+    return documentSnapshot['birthDate'];
+  }
+
   // get event data
   getEventData(String babyId) async {
-    return babyCollection.doc(babyId).collection("events").snapshots();
+    return babyCollection
+        .doc(babyId)
+        .collection("events")
+        .orderBy("startTime", descending: true)
+        .snapshots();
   }
 
   // Edit user
 
-  // Edit baby
-  Future editBaby(String userName, String id, String babyName, String gender,
-      String theme, DateTime birthDate) async {}
+  // Edit baby theme
+  Future editBaby(String id, String theme) async {
+    final babyRef = babyCollection.doc(id);
+    babyRef.update({"theme": theme}).then(
+        (value) => print("Snapshop successfully updated!"),
+        onError: (e) => print("Error updating document $e"));
+  }
 
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender,
