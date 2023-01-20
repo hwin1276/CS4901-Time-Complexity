@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../service/database_service.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -23,6 +22,54 @@ class _StatisticsState extends State<Statistics> {
   Stream<QuerySnapshot>? events;
   late List<_ChartData> data;
   late TooltipBehavior _tooltip;
+
+  sleepChart() {
+    return Scaffold(
+        body: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            primaryYAxis: NumericAxis(minimum: 0, maximum: 40, interval: 10),
+            tooltipBehavior: _tooltip,
+            series: <ChartSeries<_ChartData, String>>[
+          ColumnSeries<_ChartData, String>(
+              dataSource: data,
+              xValueMapper: (_ChartData data, _) => data.x,
+              yValueMapper: (_ChartData data, _) => data.y,
+              name: 'Gold',
+              color: Color.fromRGBO(8, 142, 255, 1))
+        ]));
+  }
+
+  eatChart() {
+    return Scaffold(
+        body: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            primaryYAxis: NumericAxis(minimum: 0, maximum: 40, interval: 10),
+            tooltipBehavior: _tooltip,
+            series: <ChartSeries<_ChartData, String>>[
+          ColumnSeries<_ChartData, String>(
+              dataSource: data,
+              xValueMapper: (_ChartData data, _) => data.x,
+              yValueMapper: (_ChartData data, _) => data.y,
+              name: 'dd',
+              color: Color.fromRGBO(8, 142, 255, 1))
+        ]));
+  }
+
+  patternChart() {
+    return Scaffold(
+        body: SfCartesianChart(
+            primaryXAxis: CategoryAxis(),
+            primaryYAxis: NumericAxis(minimum: 0, maximum: 40, interval: 10),
+            tooltipBehavior: _tooltip,
+            series: <ChartSeries<_ChartData, String>>[
+          ColumnSeries<_ChartData, String>(
+              dataSource: data,
+              xValueMapper: (_ChartData data, _) => data.x,
+              yValueMapper: (_ChartData data, _) => data.y,
+              name: 'aa',
+              color: Color.fromRGBO(8, 142, 255, 1))
+        ]));
+  }
 
   @override
   void initState() {
@@ -48,19 +95,7 @@ class _StatisticsState extends State<Statistics> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: SfCartesianChart(
-            primaryXAxis: CategoryAxis(),
-            primaryYAxis: NumericAxis(minimum: 0, maximum: 40, interval: 10),
-            tooltipBehavior: _tooltip,
-            series: <ChartSeries<_ChartData, String>>[
-          ColumnSeries<_ChartData, String>(
-              dataSource: data,
-              xValueMapper: (_ChartData data, _) => data.x,
-              yValueMapper: (_ChartData data, _) => data.y,
-              name: 'Gold',
-              color: Color.fromRGBO(8, 142, 255, 1))
-        ]));
+    return patternChart();
   }
 }
 

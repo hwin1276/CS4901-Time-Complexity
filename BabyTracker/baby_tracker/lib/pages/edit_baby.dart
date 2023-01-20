@@ -134,12 +134,12 @@ class _EditState extends State<Edit> {
             TextButton.icon(
               onPressed: () async {
                 editBaby();
-                print(theme);
               },
               icon: Icon(Icons.check),
               label: const Text(
                 'Save Changes',
               ),
+              style: TextButton.styleFrom(foregroundColor: Colors.blue),
             ),
           ],
         ),
