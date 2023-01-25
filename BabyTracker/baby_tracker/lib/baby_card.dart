@@ -139,28 +139,11 @@ class _BabyCardState extends State<BabyCard> {
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
                   ClipOval(child: babyGender()),
-                  const SizedBox(width: 10),
-                  Text(widget.babyName),
+                  const SizedBox(width: 20),
+                  Text(style: TextStyle(fontSize: 48), widget.babyName),
                   SizedBox(
                     width: 50,
                   ),
-                  StreamBuilder(
-                      stream: events,
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(
-                            // TODO: show specific event count, i.e. Nap count, eat count, etc.
-                            ("Event Count: ${snapshot.data.docs.length}")
-                                .toString(),
-                            textAlign: TextAlign.right,
-                          );
-                        } else {
-                          return Center(
-                            child:
-                                CircularProgressIndicator(color: Colors.white),
-                          );
-                        }
-                      }),
                 ]),
               )
             ],

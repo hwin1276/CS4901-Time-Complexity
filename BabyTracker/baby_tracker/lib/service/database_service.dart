@@ -64,14 +64,6 @@ class DatabaseService {
 
   // Edit user
 
-  // Edit baby theme
-  Future editBaby(String id, String theme) async {
-    final babyRef = babyCollection.doc(id);
-    babyRef.update({"theme": theme}).then(
-        (value) => print("Snapshop successfully updated!"),
-        onError: (e) => print("Error updating document $e"));
-  }
-
   // creating a baby
   Future createBaby(String userName, String id, String babyName, String gender,
       String theme, DateTime birthDate) async {
