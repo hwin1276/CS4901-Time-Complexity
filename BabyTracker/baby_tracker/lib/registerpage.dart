@@ -29,206 +29,186 @@ class _RegisterPageState extends State<RegisterPage> {
         appBar: AppBar(
           title: const Text('Register Page'),
         ),
-        body: _isLoading ? Center(
-          child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor
-          ),
-        ) :
-        SingleChildScrollView(
-            child: Stack(
-              children: [
-                Form(
-                  key: formKey,
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        ClipOval(
-                            child: Container(
-                              width: 150,
-                              height: 150,
-                              color: Colors.pink,
-                              alignment: Alignment.center,
-                              child: const Text(
-                                  'logo',
-                                  style: TextStyle(
-                                      color: Colors.black
-                                  )
-                              ),
-                            )
-                        ),
-                        const SizedBox(height:5),
-                        const Text(
-                            'BabyTracker',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                            )
-                        ),
-                        const SizedBox(height: 5),
-                        const Text(
-                            'Developed by: Kennedy Middlebrooks, \nHung Nguyen, Cecil Nnodim, Hien Pham',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 9
-                            )
-                        ),
-                        const SizedBox(height: 20),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: TextFormField(
-                            decoration: textInputDecoration.copyWith(
-                              labelText: "Email",
-                              prefixIcon: Icon(
-                                Icons.email,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            onChanged: (val) {
-                              setState(() {
-                                email = val;
-                              });
-                            },
-                            validator: (val) {
-                              return RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                  .hasMatch(val!) ? null : "Please enter a valid email";
-                            },
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: TextFormField(
-                            decoration: textInputDecoration.copyWith(
-                              labelText: "Username",
-                              prefixIcon: Icon(
-                                Icons.person,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            onChanged: (val) {
-                              setState(() {
-                                userName = val;
-                              });
-                            },
-                            validator: (val) {
-                              if(val!.isNotEmpty) {
-                                return null;
-                              }
-                              else {
-                                return "Username cannot be empty";
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(height:10),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 15),
-                          child: TextFormField(
-                            obscureText: true,
-                            decoration: textInputDecoration.copyWith(
-                              labelText: "Password",
-                              prefixIcon: Icon(
-                                Icons.lock,
-                                color: Theme.of(context).primaryColor,
-                              ),
-                            ),
-                            onChanged: (val) {
-                              setState(() {
-                                password = val;
-                              });
-                            },
-                            validator: (val) {
-                              if(val!.length < 6) {
-                                return "Password must be atleast 6 characters";
-                              }
-                              else {
-                                return null;
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(height:20),
-                        Container(
-                            height: 50,
-                            width: 250,
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: TextButton(
-                              onPressed: () {
-                                register();
-                              },
-                              child: const Text(
-                                  'Register',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  )
-                              ),
-                            )
-                        ),
-                        SizedBox(height: 10),
-                        Text.rich(
-                            TextSpan(
-                                text: "Already have an account?",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 14,
+        body: _isLoading
+            ? Center(
+                child: CircularProgressIndicator(
+                    color: Theme.of(context).primaryColor),
+              )
+            : SingleChildScrollView(
+                child: Stack(
+                children: [
+                  Form(
+                    key: formKey,
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          ClipOval(
+                              child: Container(
+                            width: 150,
+                            height: 150,
+                            color: Colors.pink,
+                            alignment: Alignment.center,
+                            child: const Text('logo',
+                                style: TextStyle(color: Colors.black)),
+                          )),
+                          const SizedBox(height: 5),
+                          const Text('BabyTracker',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 40,
+                                fontWeight: FontWeight.bold,
+                              )),
+                          const SizedBox(height: 5),
+                          const Text(
+                              'Developed by: Kennedy Middlebrooks, \nHung Nguyen, Cecil Nnodim, Hien Pham',
+                              textAlign: TextAlign.center,
+                              style:
+                                  TextStyle(color: Colors.grey, fontSize: 9)),
+                          const SizedBox(height: 20),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                labelText: "Email",
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: Theme.of(context).primaryColor,
                                 ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: "Login now",
+                              ),
+                              onChanged: (val) {
+                                setState(() {
+                                  email = val;
+                                });
+                              },
+                              validator: (val) {
+                                return RegExp(
+                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                        .hasMatch(val!)
+                                    ? null
+                                    : "Please enter a valid email";
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: TextFormField(
+                              decoration: textInputDecoration.copyWith(
+                                labelText: "Username",
+                                prefixIcon: Icon(
+                                  Icons.person,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              onChanged: (val) {
+                                setState(() {
+                                  userName = val;
+                                });
+                              },
+                              validator: (val) {
+                                if (val!.isNotEmpty) {
+                                  return null;
+                                } else {
+                                  return "Username cannot be empty";
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15),
+                            child: TextFormField(
+                              obscureText: true,
+                              decoration: textInputDecoration.copyWith(
+                                labelText: "Password",
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                              onChanged: (val) {
+                                setState(() {
+                                  password = val;
+                                });
+                              },
+                              validator: (val) {
+                                if (val!.length < 6) {
+                                  return "Password must be atleast 6 characters";
+                                } else {
+                                  return null;
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Container(
+                              height: 50,
+                              width: 250,
+                              decoration: BoxDecoration(
+                                color: Colors.blue,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: TextButton(
+                                onPressed: () {
+                                  register();
+                                },
+                                child: const Text('Register',
                                     style: TextStyle(
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline,
-                                    ),
-                                    recognizer: TapGestureRecognizer()..onTap = () {
+                                      color: Colors.white,
+                                    )),
+                              )),
+                          SizedBox(height: 10),
+                          Text.rich(TextSpan(
+                              text: "Already have an account?",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 14,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: "Login now",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (context) => LoginPage()
-                                          )
-                                      );
+                                              builder: (context) =>
+                                                  LoginPage()));
                                     },
-                                  ),
-                                ]
-                            )
-                        ),
-                      ],
+                                ),
+                              ])),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-        )
-    );
+                ],
+              )));
   }
 
-  register() async{
-    if(formKey.currentState!.validate()) {
+  register() async {
+    if (formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
-      await authService.registerUserWithEmailandPassword(userName, email, password).then((value) async{
-        if(value == true) {
+      await authService
+          .registerUserWithEmailandPassword(userName, email, password)
+          .then((value) async {
+        if (value == true) {
           // saving the shared preference state
           await HelperFunctions.saveUserLoggedInStatus(true);
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(userName);
 
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => Home()
-              )
-          );
-        }
-        else {
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => Home()));
+        } else {
           showSnackBar(context, Colors.red, value);
           setState(() {
             _isLoading = false;

@@ -193,7 +193,7 @@ class _LoginPageState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['userName']);
 
-          Navigator.push(
+          Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home()));
         } else {
           showSnackBar(context, Colors.red, value);
