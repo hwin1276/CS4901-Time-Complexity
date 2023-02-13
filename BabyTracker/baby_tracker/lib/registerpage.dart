@@ -63,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               )),
                           const SizedBox(height: 5),
                           const Text(
-                              'Developed by: Kennedy Middlebrooks, \nHung Nguyen, Cecil Nnodim, Hien Pham',
+                              'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 9)),
