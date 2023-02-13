@@ -1,12 +1,8 @@
-import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:baby_tracker/objects/baby.dart';
-import 'package:baby_tracker/pages/calendar.dart';
 import 'createbaby.dart';
 import 'baby_card.dart';
-import '../objects/baby.dart';
 import 'helper/helper_functions.dart';
 
 class BabyList extends StatefulWidget {
