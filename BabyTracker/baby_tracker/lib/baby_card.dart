@@ -95,7 +95,7 @@ class _BabyCardState extends State<BabyCard> {
           child: const Icon(Icons.child_care, size: 30));
     } else {
       return Container(
-          color: Colors.pink[100], // if female
+          color: Colors.pink[100],
           padding: const EdgeInsets.all(10),
           child: const Icon(Icons.child_care, size: 30));
     }
