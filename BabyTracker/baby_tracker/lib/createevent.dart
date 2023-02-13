@@ -355,8 +355,11 @@ class _CreateEventState extends State<CreateEvent> {
         "task": eventTask,
         "type": eventType,
         "description": eventDescription,
+        "babyExcreta": babyExcreta,
+        "calories": calories,
+        "duration": endDateTime.difference(startDateTime).inMinutes,
         "startTime": startDateTime,
-        "endTime": endDateTime
+        "endTime": endDateTime,
       };
       DatabaseService().createEvent(widget.babyId, eventData).whenComplete(() {
         _isLoading = false;
