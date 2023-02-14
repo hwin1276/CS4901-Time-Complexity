@@ -1,3 +1,4 @@
+import 'package:baby_tracker/pages/babyinfopage.dart';
 import 'package:baby_tracker/pages/calendar.dart';
 import 'package:baby_tracker/pages/eventlist.dart';
 import 'package:baby_tracker/pages/statistics.dart';
@@ -41,6 +42,20 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Tab(text: 'Statistics'),
               ],
             ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.info),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => BabyInfoPage(
+                              userName: widget.userName,
+                              babyName: widget.babyName,
+                              babyId: widget.babyId)));
+                },
+              ),
+            ],
           ),
           floatingActionButton: FloatingActionButton(
               onPressed: () {

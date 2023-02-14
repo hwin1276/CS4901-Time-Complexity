@@ -7,10 +7,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'Models/events.dart';
 import 'helper/helper_functions.dart';
 import 'home.dart';
-import 'db/sqlite.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class LoginPage extends StatefulWidget {
@@ -66,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
                               )),
                           const SizedBox(height: 5),
                           const Text(
-                              'Developed by: Kennedy Middlebrooks, \nHung Nguyen, Cecil Nnodim, Hien Pham',
+                              'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
                               textAlign: TextAlign.center,
                               style:
                                   TextStyle(color: Colors.grey, fontSize: 9)),
@@ -188,7 +186,7 @@ class _LoginPageState extends State<LoginPage> {
           await HelperFunctions.saveUserEmailSF(email);
           await HelperFunctions.saveUserNameSF(snapshot.docs[0]['userName']);
 
-          Navigator.push(
+          Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home()));
         } else {
           showSnackBar(context, Colors.red, value);
