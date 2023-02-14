@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
@@ -85,8 +87,21 @@ class DatabaseService {
 
   // check whether a user is a caretaker for a baby
   Future<bool> isUserCaretaker(String userName, String searchUserName,
-      String email, babyName, babyId) async {
-    DocumentReference userDocumentReference = userCollection.doc(uid);
+      String searchEmail, babyName, babyId) async {
+    String searchUID = "M7EMJcNStcQYNoq6YlyVWOyxImk1";
+    /*
+    Map<String, dynamic> map = {};
+    var document =
+        await userCollection.where("email", isEqualTo: searchEmail).get();
+    document.docs.forEach((element) {
+      map = element as Map<String, dynamic>;
+    });
+    */
+    var document =
+        await userCollection.where("email", isEqualTo: searchEmail).get();
+    var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
+
+    DocumentReference userDocumentReference = userCollection.doc(data['uid']);
     DocumentSnapshot documentSnapshot = await userDocumentReference.get();
 
     List<dynamic> babies = await documentSnapshot['babies'];
