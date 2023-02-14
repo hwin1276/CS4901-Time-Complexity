@@ -46,8 +46,19 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
     });
   }
 
+  bool isAdmin() {
+    if (FirebaseAuth.instance.currentUser!.uid == getId(admin)) {
+      return true;
+    }
+    return false;
+  }
+
   getName(String res) {
     return res.substring(res.indexOf("_") + 1);
+  }
+
+  getId(String res) {
+    return res.substring(0, res.indexOf("_"));
   }
 
   @override
@@ -138,21 +149,49 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
             return Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.red,
-                    child: Text(
-                        getName(caretakers[index])
-                            .substring(0, 1)
-                            .toUpperCase(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        )),
-                  ),
-                  title: Text(getName(caretakers[index])),
-                ));
+                child: isAdmin()
+                    ? ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.red,
+                          child: Text(
+                              getName(caretakers[index])
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              )),
+                        ),
+                        title: Text(getName(caretakers[index])),
+                        trailing: InkWell(
+                            onTap: () async {},
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.red,
+                                  border:
+                                      Border.all(color: Colors.white, width: 1),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: const Text("Kick",
+                                    style: TextStyle(color: Colors.white)))))
+                    : ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.red,
+                          child: Text(
+                              getName(caretakers[index])
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              )),
+                        ),
+                        title: Text(getName(caretakers[index])),
+                      ));
           });
     } else {
       return CircularProgressIndicator(color: Theme.of(context).primaryColor);
