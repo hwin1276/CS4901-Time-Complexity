@@ -1,3 +1,4 @@
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
@@ -20,12 +21,10 @@ class EventCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 20),
       child: ListTile(
-        onTap: () {
-
-        },
+        onTap: () {},
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        tileColor: Colors.white,
+        tileColor: AppColorScheme.white,
         // leading: Icon(
         //     Icons.abc,
         //     color: Colors.blue),
@@ -33,14 +32,14 @@ class EventCard extends StatelessWidget {
           taskName,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.black,
+            color: AppColorScheme.black,
           ),
         ),
         subtitle: Text(
           taskStartTime.toString(),
           style: TextStyle(
             fontSize: 12,
-            color: Colors.black,
+            color: AppColorScheme.black,
           ),
         ),
       ),

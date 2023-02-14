@@ -1,14 +1,15 @@
+import 'package:baby_tracker/helper/helper_functions.dart';
+import 'package:baby_tracker/home.dart';
 import 'package:baby_tracker/registerpage.dart';
 import 'package:baby_tracker/service/auth_service.dart';
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'helper/helper_functions.dart';
-import 'home.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class LoginPage extends StatefulWidget {
@@ -50,25 +51,28 @@ class _LoginPageState extends State<LoginPage> {
                               child: Container(
                             width: 150,
                             height: 150,
-                            color: Colors.pink,
+                            color: AppColorScheme.pink,
                             alignment: Alignment.center,
-                            child: const Text('logo',
-                                style: TextStyle(color: Colors.black)),
+                            child: const Text(
+                              'logo',
+                              style: TextStyle(color: AppColorScheme.black),
+                            ),
                           )),
                           const SizedBox(height: 5),
                           const Text('BabyTracker',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppColorScheme.black,
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                               )),
                           const SizedBox(height: 5),
                           const Text(
-                              'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
-                              textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 9)),
+                            'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: AppColorScheme.lightGray, fontSize: 9),
+                          ),
                           const SizedBox(height: 20),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -129,7 +133,7 @@ class _LoginPageState extends State<LoginPage> {
                               height: 50,
                               width: 250,
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: AppColorScheme.blue,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: TextButton(
@@ -138,21 +142,21 @@ class _LoginPageState extends State<LoginPage> {
                                 },
                                 child: const Text('Login',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: AppColorScheme.white,
                                     )),
                               )),
                           SizedBox(height: 10),
                           Text.rich(TextSpan(
                               text: "Don't have an account?",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppColorScheme.black,
                                 fontSize: 14,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: "Register here",
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: AppColorScheme.black,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
@@ -194,7 +198,7 @@ class _LoginPageState extends State<LoginPage> {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => const Home()));
         } else {
-          showSnackBar(context, Colors.red, value);
+          showSnackBar(context, AppColorScheme.red, value);
           setState(() {
             _isLoading = false;
           });

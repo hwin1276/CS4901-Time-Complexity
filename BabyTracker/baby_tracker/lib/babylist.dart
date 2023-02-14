@@ -1,4 +1,5 @@
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'createbaby.dart';
@@ -52,8 +53,9 @@ class _BabyListState extends State<BabyList> {
   }
 
   @override
+  // ignore: duplicate_ignore
   Widget build(BuildContext context) {
-    // ignore: dead_code, dead_code, dead_code
+    // ignore: dead_code,
     return Scaffold(
       appBar: AppBar(
         title: const Text('Baby View'),
@@ -81,7 +83,7 @@ class _BabyListState extends State<BabyList> {
                           margin: const EdgeInsets.all(20),
                           height: 150,
                           decoration: BoxDecoration(
-                            color: Colors.grey,
+                            color: AppColorScheme.lightGray,
                             borderRadius: BorderRadius.only(
                                 topLeft: Radius.circular(10),
                                 topRight: Radius.circular(10),
@@ -115,7 +117,7 @@ class _BabyListState extends State<BabyList> {
                                     margin: const EdgeInsets.all(20),
                                     height: 150,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey,
+                                      color: AppColorScheme.lightGray,
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(10),
                                           topRight: Radius.circular(10),
@@ -129,6 +131,7 @@ class _BabyListState extends State<BabyList> {
                                     )),
                               ));
                   }
+                  // ignore: dead_code, empty_statements
                   ;
                 } else if (snapshot.hasError) {
                   return const Text('No data available right now');

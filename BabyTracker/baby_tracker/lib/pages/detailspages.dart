@@ -21,7 +21,6 @@ class DetailsPages extends StatefulWidget {
 }
 
 class _DetailsPagesState extends State<DetailsPages> {
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -30,7 +29,7 @@ class _DetailsPagesState extends State<DetailsPages> {
           appBar: AppBar(
             title: Text(widget.babyName),
             bottom: TabBar(
-              tabs: [
+              tabs: const [
                 Tab(text: 'Calendar'),
                 Tab(text: 'Events'),
                 Tab(text: 'Statistics'),
@@ -43,7 +42,10 @@ class _DetailsPagesState extends State<DetailsPages> {
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => BabyInfoPage(userName: widget.userName, babyName: widget.babyName, babyId: widget.babyId)));
+                          builder: (context) => BabyInfoPage(
+                              userName: widget.userName,
+                              babyName: widget.babyName,
+                              babyId: widget.babyId)));
                 },
               ),
             ],

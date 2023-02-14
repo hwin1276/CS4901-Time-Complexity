@@ -1,3 +1,4 @@
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/widgets/event_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -40,42 +41,38 @@ class _EventListState extends State<EventList> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: StreamBuilder(
-        stream: events,
-        builder: (context, AsyncSnapshot snapshot) {
-          if(snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data.docs.length,
-              itemBuilder: (context, index) {
-                return EventCard(
-                  taskName: snapshot.data.docs[index]['task'],
-                  taskType: snapshot.data.docs[index]['type'],
-                  taskDescription: snapshot.data.docs[index]['description'],
-                  taskStartTime: snapshot.data.docs[index]['startTime'].toDate(),
-                  taskEndTime: snapshot.data.docs[index]['endTime'].toDate(),
-                );
-              },
-            );
-          }
-          else if (snapshot.hasError) {
-            return Center(
-                child: Text(
-                  'No data available right now',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                )
-            );
-          }
-          else {
-            return Center(
-              child: CircularProgressIndicator(
-                  color: Colors.white
-              ),
-            );
-          }
-        }
-      ),
+          stream: events,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data.docs.length,
+                itemBuilder: (context, index) {
+                  return EventCard(
+                    taskName: snapshot.data.docs[index]['task'],
+                    taskType: snapshot.data.docs[index]['type'],
+                    taskDescription: snapshot.data.docs[index]['description'],
+                    taskStartTime:
+                        snapshot.data.docs[index]['startTime'].toDate(),
+                    taskEndTime: snapshot.data.docs[index]['endTime'].toDate(),
+                  );
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Center(
+                  child: Text(
+                'No data available right now',
+                style: TextStyle(
+                  color: AppColorScheme.white,
+                ),
+              ));
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: AppColorScheme.white,
+                ),
+              );
+            }
+          }),
     );
   }
-
 }

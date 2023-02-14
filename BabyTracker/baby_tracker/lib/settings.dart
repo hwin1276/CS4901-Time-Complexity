@@ -1,6 +1,7 @@
 import 'package:baby_tracker/loginpage.dart';
 import 'package:baby_tracker/objects/theme.dart';
 import 'package:baby_tracker/service/auth_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,8 +26,8 @@ GestureDetector buildAccount(BuildContext context, String title) {
                   style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey)),
-              Icon(Icons.arrow_forward_ios, color: Colors.grey[600])
+                      color: AppColorScheme.lightGray)),
+              Icon(Icons.arrow_forward_ios, color: AppColorScheme.darkGray)
             ],
           )));
 }
@@ -50,9 +51,12 @@ class _SettingsState extends State<Settings> {
             SizedBox(height: 40),
             Row(
               children: const [
-                Icon(Icons.person, color: Colors.blue),
+                Icon(Icons.person, color: AppColorScheme.blue),
                 SizedBox(width: 10),
-                Text("Account", style: TextStyle(fontWeight: FontWeight.bold))
+                Text(
+                  "Account",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
               ],
             ),
             Divider(
@@ -67,10 +71,12 @@ class _SettingsState extends State<Settings> {
             SizedBox(height: 40),
             Row(
               children: const [
-                Icon(Icons.accessibility, color: Colors.blue),
+                Icon(Icons.accessibility, color: AppColorScheme.blue),
                 SizedBox(width: 10),
-                Text("Accessibility",
-                    style: TextStyle(fontWeight: FontWeight.bold))
+                Text(
+                  "Accessibility",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )
               ],
             ),
             Divider(
@@ -82,12 +88,13 @@ class _SettingsState extends State<Settings> {
               children: [
                 Text('Dark Mode'),
                 CupertinoSwitch(
-                    value: themeProvider.isDarkMode,
-                    onChanged: (value) {
-                      final provider =
-                          Provider.of<ThemeProvider>(context, listen: false);
-                      provider.toggleTheme(value);
-                    }),
+                  value: themeProvider.isDarkMode,
+                  onChanged: (value) {
+                    final provider =
+                        Provider.of<ThemeProvider>(context, listen: false);
+                    provider.toggleTheme(value);
+                  },
+                ),
               ],
             ),
             // Sign Out
@@ -109,10 +116,12 @@ class _SettingsState extends State<Settings> {
                       (route) => false);
                 },
                 icon: Icon(Icons.logout),
-                label: const Text('Sign Out',
-                    style: TextStyle(
-                      color: Colors.white,
-                    )),
+                label: const Text(
+                  'Sign Out',
+                  style: TextStyle(
+                    color: AppColorScheme.white,
+                  ),
+                ),
               ),
             ),
           ],

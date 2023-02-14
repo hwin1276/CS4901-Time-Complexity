@@ -1,6 +1,7 @@
 import 'package:baby_tracker/helper/helper_functions.dart';
 import 'package:baby_tracker/service/auth_service.dart';
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -154,7 +155,7 @@ class _CreateBabyState extends State<CreateBaby> {
                               Text(
                                 state.errorText ?? '',
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: AppColorScheme.red,
                                 ),
                               )
                             ],
@@ -216,7 +217,7 @@ class _CreateBabyState extends State<CreateBaby> {
                             },
                             child: const Text('Confirm',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: AppColorScheme.white,
                                 )),
                           ))
                     ],
@@ -239,7 +240,7 @@ class _CreateBabyState extends State<CreateBaby> {
         _isLoading = false;
       });
       Navigator.of(context).pop();
-      showSnackBar(context, Colors.green, "Baby added successfully");
+      showSnackBar(context, AppColorScheme.green, "Baby added successfully");
     }
   }
 }

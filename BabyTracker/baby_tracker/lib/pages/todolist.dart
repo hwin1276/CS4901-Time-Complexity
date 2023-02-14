@@ -1,6 +1,7 @@
 //import 'dart:html';
-import '../objects/task.dart';
 
+import 'package:baby_tracker/objects/task.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:flutter/material.dart';
 
 class ToDoList extends StatelessWidget {
@@ -26,15 +27,15 @@ class ToDoList extends StatelessWidget {
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        tileColor: Colors.white,
+        tileColor: AppColorScheme.white,
         leading: Icon(
             task.isDone ? Icons.check_box : Icons.check_box_outline_blank,
-            color: Colors.blue),
+            color: AppColorScheme.blue),
         title: Text(
           task.taskText!,
           style: TextStyle(
             fontSize: 16,
-            color: Colors.black,
+            color: AppColorScheme.black,
             decoration: task.isDone ? TextDecoration.lineThrough : null,
           ),
         ),
@@ -43,11 +44,11 @@ class ToDoList extends StatelessWidget {
           height: 35,
           width: 35,
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: AppColorScheme.red,
             borderRadius: BorderRadius.circular(5),
           ),
           child: IconButton(
-            color: Colors.white,
+            color: AppColorScheme.white,
             iconSize: 18,
             icon: Icon(Icons.delete),
             onPressed: () {

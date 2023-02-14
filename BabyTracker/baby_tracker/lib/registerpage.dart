@@ -1,12 +1,13 @@
+import 'package:baby_tracker/home.dart';
+import 'package:baby_tracker/loginpage.dart';
 import 'package:baby_tracker/service/auth_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import 'helper/helper_functions.dart';
-import 'home.dart';
-import 'loginpage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -26,16 +27,16 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Register Page'),
-        ),
-        body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor),
-              )
-            : SingleChildScrollView(
-                child: Stack(
+      appBar: AppBar(
+        title: const Text('Register Page'),
+      ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor),
+            )
+          : SingleChildScrollView(
+              child: Stack(
                 children: [
                   Form(
                     key: formKey,
@@ -48,16 +49,16 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: Container(
                             width: 150,
                             height: 150,
-                            color: Colors.pink,
+                            color: AppColorScheme.pink,
                             alignment: Alignment.center,
                             child: const Text('logo',
-                                style: TextStyle(color: Colors.black)),
+                                style: TextStyle(color: AppColorScheme.black)),
                           )),
                           const SizedBox(height: 5),
                           const Text('BabyTracker',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppColorScheme.black,
                                 fontSize: 40,
                                 fontWeight: FontWeight.bold,
                               )),
@@ -65,8 +66,9 @@ class _RegisterPageState extends State<RegisterPage> {
                           const Text(
                               'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
                               textAlign: TextAlign.center,
-                              style:
-                                  TextStyle(color: Colors.grey, fontSize: 9)),
+                              style: TextStyle(
+                                  color: AppColorScheme.lightGray,
+                                  fontSize: 9)),
                           const SizedBox(height: 20),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -104,9 +106,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               onChanged: (val) {
-                                setState(() {
-                                  userName = val;
-                                });
+                                setState(
+                                  () {
+                                    userName = val;
+                                  },
+                                );
                               },
                               validator: (val) {
                                 if (val!.isNotEmpty) {
@@ -130,9 +134,11 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                               ),
                               onChanged: (val) {
-                                setState(() {
-                                  password = val;
-                                });
+                                setState(
+                                  () {
+                                    password = val;
+                                  },
+                                );
                               },
                               validator: (val) {
                                 if (val!.length < 6) {
@@ -148,7 +154,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               height: 50,
                               width: 250,
                               decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: AppColorScheme.blue,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: TextButton(
@@ -157,39 +163,45 @@ class _RegisterPageState extends State<RegisterPage> {
                                 },
                                 child: const Text('Register',
                                     style: TextStyle(
-                                      color: Colors.white,
+                                      color: AppColorScheme.white,
                                     )),
                               )),
                           SizedBox(height: 10),
-                          Text.rich(TextSpan(
+                          Text.rich(
+                            TextSpan(
                               text: "Already have an account?",
                               style: TextStyle(
-                                color: Colors.black,
+                                color: AppColorScheme.black,
                                 fontSize: 14,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: "Login now",
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: AppColorScheme.black,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  LoginPage()));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => LoginPage(),
+                                        ),
+                                      );
                                     },
                                 ),
-                              ])),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              )));
+              ),
+            ),
+    );
   }
 
   register() async {
@@ -199,22 +211,30 @@ class _RegisterPageState extends State<RegisterPage> {
       });
       await authService
           .registerUserWithEmailandPassword(userName, email, password)
-          .then((value) async {
-        if (value == true) {
-          // saving the shared preference state
-          await HelperFunctions.saveUserLoggedInStatus(true);
-          await HelperFunctions.saveUserEmailSF(email);
-          await HelperFunctions.saveUserNameSF(userName);
+          .then(
+        (value) async {
+          if (value == true) {
+            // saving the shared preference state
+            await HelperFunctions.saveUserLoggedInStatus(true);
+            await HelperFunctions.saveUserEmailSF(email);
+            await HelperFunctions.saveUserNameSF(userName);
 
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => Home()));
-        } else {
-          showSnackBar(context, Colors.red, value);
-          setState(() {
-            _isLoading = false;
-          });
-        }
-      });
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Home(),
+              ),
+            );
+          } else {
+            showSnackBar(context, AppColorScheme.red, value);
+            setState(
+              () {
+                _isLoading = false;
+              },
+            );
+          }
+        },
+      );
     }
   }
 }

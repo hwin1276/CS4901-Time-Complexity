@@ -1,4 +1,5 @@
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -30,12 +31,16 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
   }
 
   getCareTakersandAdmin() {
-    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).getBabyCaretakers(widget.babyId).then((val) {
+    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getBabyCaretakers(widget.babyId)
+        .then((val) {
       setState(() {
         caretakers = val;
       });
     });
-    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid).getBabyAdmin(widget.babyId).then((val) {
+    DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+        .getBabyAdmin(widget.babyId)
+        .then((val) {
       setState(() {
         admin = val;
       });
@@ -58,50 +63,48 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddCaretaker(babyId: widget.babyId, babyName: widget.babyName)));
+                      builder: (context) => AddCaretaker(
+                          babyId: widget.babyId, babyName: widget.babyName)));
             },
             icon: const Icon(Icons.add),
           ),
         ],
       ),
       body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              primaryCaretaker(),
-              Divider(
-                color: Colors.grey,
-              ),
-              allCaretakers(),
-            ],
-          ),
-        )
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                primaryCaretaker(),
+                Divider(
+                  color: AppColorScheme.lightGray,
+                ),
+                allCaretakers(),
+              ],
+            ),
+          )),
     );
   }
 
   primaryCaretaker() {
-    if(admin.isNotEmpty) {
+    if (admin.isNotEmpty) {
       return Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30),
-          color: Colors.purple.withOpacity(0.2),
+          color: AppColorScheme.purple.withOpacity(0.2),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             CircleAvatar(
               radius: 30,
-              backgroundColor: Colors.red,
-              child: Text(
-                getAdminName(admin).substring(0,1).toUpperCase(),
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  color: Colors.white,
-                )
-              ),
+              backgroundColor: AppColorScheme.red,
+              child: Text(getAdminName(admin).substring(0, 1).toUpperCase(),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AppColorScheme.white,
+                  )),
             ),
             const SizedBox(width: 20),
             Column(
@@ -122,43 +125,38 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
           ],
         ),
       );
-    }
-    else {
-      return CircularProgressIndicator(
-          color: Theme.of(context).primaryColor
-      );
+    } else {
+      return CircularProgressIndicator(color: Theme.of(context).primaryColor);
     }
   }
 
   allCaretakers() {
-    if(caretakers.isNotEmpty) {
+    if (caretakers.isNotEmpty) {
       return ListView.builder(
-        itemCount: caretakers.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-            child: ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.red,
-                child: Text(
-                    getAdminName(caretakers[index]).substring(0,1).toUpperCase(),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white,
-                    )
-                ),
-              ),
-              title: Text(getAdminName(caretakers[index])),
-            )
-          );
-        }
-      );
+          itemCount: caretakers.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            return Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: AppColorScheme.red,
+                    child: Text(
+                        getAdminName(caretakers[index])
+                            .substring(0, 1)
+                            .toUpperCase(),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        )),
+                  ),
+                  title: Text(getAdminName(caretakers[index])),
+                ));
+          });
     } else {
-      return CircularProgressIndicator(
-          color: Theme.of(context).primaryColor
-      );
+      return CircularProgressIndicator(color: Theme.of(context).primaryColor);
     }
   }
 }

@@ -11,11 +11,9 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Center(
-            child: Text(
-                'Statistics View to be Added'
-            )
-        )
+      body: Center(
+        child: Text('Statistics View to be Added'),
+      ),
     );
   }
 }
