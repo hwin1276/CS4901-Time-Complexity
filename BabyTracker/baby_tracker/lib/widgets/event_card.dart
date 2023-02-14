@@ -103,7 +103,7 @@ class EventCard extends StatelessWidget {
                           "TITLE: $taskName\nDESCRIPTION: $taskDescription\nCALORIES: $calories\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}")
                       : (taskType == "Sleep Time")
                           ? Text(
-                              "TITLE: $taskName\nDESCRIPTION: $taskDescription\nDURATION: $duration\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}")
+                              "TITLE: $taskName\nDESCRIPTION: $taskDescription\nDURATION: ${duration.inMinutes} Minutes\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}")
                           : Text(
                               "TITLE: $taskName\nDESCRIPTION: $taskDescription\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}"),
               actions: [
