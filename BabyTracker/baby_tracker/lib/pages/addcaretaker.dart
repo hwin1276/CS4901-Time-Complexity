@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../widgets/showsnackbar.dart';
+
 class AddCaretaker extends StatefulWidget {
   const AddCaretaker({Key? key, required this.babyName, required this.babyId})
       : super(key: key);
@@ -176,7 +178,20 @@ class _AddCaretakerState extends State<AddCaretaker> {
           style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text("Email: $searchEmail"),
       trailing: InkWell(
-          onTap: () async {},
+          onTap: () async {
+            if (!isJoined) {
+              await DatabaseService(uid: user!.uid).inviteUser(
+                  widget.babyId, widget.babyName, searchEmail, searchUsername);
+              setState(() {
+                isJoined = !isJoined;
+              });
+              showSnackBar(
+                  context, Colors.green, "Succssfully invited $searchUsername");
+            } else {
+              showSnackBar(
+                  context, Colors.red, "You have already invited this person");
+            }
+          },
           child: isJoined
               ? Container(
                   decoration: BoxDecoration(
@@ -186,7 +201,7 @@ class _AddCaretakerState extends State<AddCaretaker> {
                   ),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: const Text("Already Invited",
+                  child: const Text("Invited",
                       style: TextStyle(color: Colors.white)))
               : Container(
                   decoration: BoxDecoration(

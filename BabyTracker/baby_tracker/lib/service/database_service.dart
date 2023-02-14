@@ -22,7 +22,7 @@ class DatabaseService {
     });
   }
 
-  // getting user data
+  // getting user data NOTE:Returns QuerySnapshot
   Future gettingUserData(String email) async {
     QuerySnapshot snapshot =
         await userCollection.where("email", isEqualTo: email).get();
@@ -88,15 +88,6 @@ class DatabaseService {
   // check whether a user is a caretaker for a baby
   Future<bool> isUserCaretaker(String userName, String searchUserName,
       String searchEmail, babyName, babyId) async {
-    String searchUID = "M7EMJcNStcQYNoq6YlyVWOyxImk1";
-    /*
-    Map<String, dynamic> map = {};
-    var document =
-        await userCollection.where("email", isEqualTo: searchEmail).get();
-    document.docs.forEach((element) {
-      map = element as Map<String, dynamic>;
-    });
-    */
     var document =
         await userCollection.where("email", isEqualTo: searchEmail).get();
     var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
@@ -139,5 +130,25 @@ class DatabaseService {
   // create an event
   createEvent(String babyId, Map<String, dynamic> eventData) async {
     babyCollection.doc(babyId).collection("events").add(eventData);
+  }
+
+  // Invite user to join as caretaker for baby
+  Future inviteUser(String babyId, String babyName, String searchEmail,
+      String searchUsername) async {
+    // get the searched user's uid
+    var document =
+        await userCollection.where("email", isEqualTo: searchEmail).get();
+    var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
+
+    // document references
+    DocumentReference userDocumentReference = userCollection.doc(data['uid']);
+    DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+
+    await userDocumentReference.update({
+      'babies': FieldValue.arrayUnion(["${babyId}_$babyName"])
+    });
+    await babyDocumentReference.update({
+      'caretakers': FieldValue.arrayUnion(["${data['uid']}_$searchUsername"])
+    });
   }
 }
