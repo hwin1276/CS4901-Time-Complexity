@@ -17,6 +17,7 @@ class _CreateBabyState extends State<CreateBaby> {
   bool _isLoading = false;
   String babyName = "";
   String gender = "";
+  String theme = "";
   String userName = "";
   String email = "";
   DateTime birthDate = DateTime.now();
@@ -83,43 +84,18 @@ class _CreateBabyState extends State<CreateBaby> {
                           },
                         ),
                       ),
-                      // Baby Gender
-                      // Padding(
-                      //     padding: EdgeInsets.symmetric(horizontal: 15),
-                      //     child: Column(
-                      //       children: [
-                      //         RadioListTile(
-                      //           title: Text("Male"),
-                      //           value: "male",
-                      //           groupValue: gender,
-                      //           onChanged: (value) {
-                      //             setState(() {
-                      //               gender = value.toString();
-                      //             });
-                      //           },
-                      //         ),
-                      //         RadioListTile(
-                      //           title: Text("Female"),
-                      //           value: "female",
-                      //           groupValue: gender,
-                      //           onChanged: (value) {
-                      //             setState(() {
-                      //               gender = value.toString();
-                      //             });
-                      //           },
-                      //         ),
-                      //         RadioListTile(
-                      //           title: Text("Other"),
-                      //           value: "other",
-                      //           groupValue: gender,
-                      //           onChanged: (value) {
-                      //             setState(() {
-                      //               gender = value.toString();
-                      //             });
-                      //           },
-                      //         )
-                      //       ],
-                      //     )),
+                      // Gender
+                      Divider(
+                        height: 20,
+                        thickness: 1,
+                      ),
+                      Row(
+                        children: const [
+                          SizedBox(width: 10),
+                          Text("Gender",
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ],
+                      ),
                       FormField(
                         builder: (state) {
                           return Column(
@@ -165,7 +141,76 @@ class _CreateBabyState extends State<CreateBaby> {
                           return null;
                         },
                       ),
-
+                      Divider(
+                        height: 20,
+                        thickness: 1,
+                      ),
+                      // Baby Theme (color of the card)
+                      Row(
+                        children: const [
+                          SizedBox(width: 10),
+                          Text("Theme",
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ],
+                      ),
+                      FormField(
+                        builder: (state) {
+                          return Column(
+                            children: [
+                              RadioListTile<String>(
+                                  title: Text('Red'),
+                                  value: 'red',
+                                  groupValue: theme,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      theme = value!;
+                                    });
+                                  }),
+                              RadioListTile<String>(
+                                  title: Text('Blue'),
+                                  value: 'blue',
+                                  groupValue: theme,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      theme = value!;
+                                    });
+                                  }),
+                              RadioListTile<String>(
+                                  title: Text('Green'),
+                                  value: 'green',
+                                  groupValue: theme,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      theme = value!;
+                                    });
+                                  }),
+                              RadioListTile<String>(
+                                  title: Text('Yellow'),
+                                  value: 'yellow',
+                                  groupValue: theme,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      theme = value!;
+                                    });
+                                  }),
+                              Text(
+                                state.errorText ?? '',
+                                style: TextStyle(
+                                  color: Colors.red,
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                        validator: (value) {
+                          if (theme == "") return "Please select a theme";
+                          return null;
+                        },
+                      ),
+                      Divider(
+                        height: 20,
+                        thickness: 1,
+                      ),
                       // Baby Birth Date
                       Padding(
                         padding:
@@ -234,7 +279,7 @@ class _CreateBabyState extends State<CreateBaby> {
       });
       DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
           .createBaby(userName, FirebaseAuth.instance.currentUser!.uid,
-              babyName, gender, birthDate)
+              babyName, gender, theme, birthDate)
           .whenComplete(() {
         _isLoading = false;
       });
