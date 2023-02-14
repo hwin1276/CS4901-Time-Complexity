@@ -216,49 +216,51 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: StreamBuilder(
-            stream: events,
-            builder: (context, AsyncSnapshot snapshot) {
-              if (snapshot.hasData) {
-                napsPerDay(snapshot);
-                mealsPerDay(snapshot);
-                diapersPerDay(snapshot);
-                return Column(children: [
-                  SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.crib, color: Colors.green),
-                      Text(" Naps"),
-                    ],
-                  ),
-                  Container(
-                    child: sleepChart(),
-                  ),
-                  SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.dining, color: Colors.blue),
-                      Text(" Meals"),
-                    ],
-                  ),
-                  Container(child: eatChart()),
-                  SizedBox(height: 40),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Icon(Icons.baby_changing_station, color: Colors.brown),
-                      Text(" Diaper Changes"),
-                    ],
-                  ),
-                  Container(child: diaperChart()),
-                ]);
-              }
-              return Center(
-                child: CircularProgressIndicator(color: Colors.white),
-              );
-            }));
+        body: SingleChildScrollView(
+      child: StreamBuilder(
+          stream: events,
+          builder: (context, AsyncSnapshot snapshot) {
+            if (snapshot.hasData) {
+              napsPerDay(snapshot);
+              mealsPerDay(snapshot);
+              diapersPerDay(snapshot);
+              return Column(children: [
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.crib, color: Colors.green),
+                    Text(" Naps"),
+                  ],
+                ),
+                Container(
+                  child: sleepChart(),
+                ),
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.dining, color: Colors.blue),
+                    Text(" Meals"),
+                  ],
+                ),
+                Container(child: eatChart()),
+                SizedBox(height: 40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Icon(Icons.baby_changing_station, color: Colors.brown),
+                    Text(" Diaper Changes"),
+                  ],
+                ),
+                Container(child: diaperChart()),
+              ]);
+            }
+            return Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            );
+          }),
+    ));
   }
 }
 
