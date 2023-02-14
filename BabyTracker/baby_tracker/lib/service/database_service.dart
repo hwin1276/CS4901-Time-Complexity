@@ -151,4 +151,25 @@ class DatabaseService {
       'caretakers': FieldValue.arrayUnion(["${data['uid']}_$searchUsername"])
     });
   }
+
+  // Kick user from list of caretakers
+  Future kickUser(String babyId, String babyName, String caretakerId,
+      String caretakerUsername) async {
+    // document references
+    DocumentReference userDocumentReference = userCollection.doc(caretakerId);
+    DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+
+    DocumentSnapshot userDocumentSnapshot = await userDocumentReference.get();
+    List<dynamic> babies = await userDocumentSnapshot['babies'];
+
+    if (babies.contains("${babyId}_$babyName")) {
+      await userDocumentReference.update({
+        'babies': FieldValue.arrayRemove(["${babyId}_$babyName"])
+      });
+      await babyDocumentReference.update({
+        'caretakers':
+            FieldValue.arrayRemove(["${caretakerId}_$caretakerUsername"])
+      });
+    }
+  }
 }

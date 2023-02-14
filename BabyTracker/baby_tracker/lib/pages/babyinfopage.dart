@@ -2,6 +2,7 @@ import 'package:baby_tracker/service/database_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/showsnackbar.dart';
 import 'addcaretaker.dart';
 
 class BabyInfoPage extends StatefulWidget {
@@ -22,11 +23,13 @@ class BabyInfoPage extends StatefulWidget {
 class _BabyInfoPageState extends State<BabyInfoPage> {
   var caretakers = <dynamic>[];
   String admin = "";
+  User? user;
 
   @override
   void initState() {
     super.initState();
     getCareTakersandAdmin();
+    user = FirebaseAuth.instance.currentUser;
   }
 
   getCareTakersandAdmin() {
@@ -49,6 +52,15 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
   bool isAdmin() {
     if (FirebaseAuth.instance.currentUser!.uid == getId(admin)) {
       return true;
+    }
+    return false;
+  }
+
+  bool isYou(String caretakerId) {
+    if (caretakerId.isNotEmpty) {
+      if (FirebaseAuth.instance.currentUser!.uid == getId(caretakerId)) {
+        return true;
+      }
     }
     return false;
   }
@@ -149,7 +161,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
             return Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: isAdmin()
+                child: (isAdmin() && !(isYou(caretakers[index])))
                     ? ListTile(
                         leading: CircleAvatar(
                           radius: 30,
@@ -165,7 +177,15 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                         ),
                         title: Text(getName(caretakers[index])),
                         trailing: InkWell(
-                            onTap: () async {},
+                            onTap: () async {
+                              await DatabaseService(uid: user!.uid).kickUser(
+                                  widget.babyId,
+                                  widget.babyName,
+                                  getId(caretakers[index]),
+                                  getName(caretakers[index]));
+                              showSnackBar(context, Colors.green,
+                                  "Succssfully kicked ${getName(caretakers[index])}");
+                            },
                             child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
