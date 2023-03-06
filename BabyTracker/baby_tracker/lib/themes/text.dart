@@ -8,4 +8,11 @@ class AppTextTheme {
     color: AppColorScheme
         .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
   );
+  static const h1 = TextStyle(
+    fontSize: 30,
+    fontStyle: FontStyle.normal,
+    fontWeight: FontWeight.bold,
+    color: AppColorScheme
+        .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
+  );
 }
