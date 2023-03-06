@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
-import '../service/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:collection';
 import 'package:baby_tracker/widgets/event_card.dart';
-import 'package:intl/intl.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({
@@ -21,27 +20,57 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  DateTime today = DateTime.now();
-  Stream<QuerySnapshot>? events;
-  // Select date function
-  void _onDaySelected(DateTime day, DateTime focusedDay) {
-    setState(() {
-      today = day;
-    });
-  }
+  DateTime _focusedDay = DateTime.now();
+  late DateTime _selectedDay;
+  late CalendarFormat _calendarFormat;
+  late Map<DateTime, List<dynamic>> _events;
+  Stream<QuerySnapshot>? eventData;
 
   @override
   void initState() {
     super.initState();
+    _selectedDay = DateTime.now();
+    _calendarFormat = CalendarFormat.month;
+    _events = LinkedHashMap(
+      equals: isSameDay,
+      hashCode: getHashCode,
+    );
     getEventData();
   }
 
-  getEventData() {
+  int getHashCode(DateTime key) {
+    return key.day * 1000000 + key.month * 10000 + key.year;
+  }
+
+  List _getEventsForTheDay(DateTime day) {
+    return _events[day] ?? [];
+  }
+
+  getEventData() async {
+    /*
     DatabaseService().getEventData(widget.babyId).then((val) {
       setState(() {
-        events = val;
+        eventData = val;
       });
     });
+    */
+
+    final snap = await FirebaseFirestore.instance
+        .collection("babies")
+        .doc(widget.babyId)
+        .collection("events")
+        .orderBy("startTime", descending: true)
+        .get();
+    for (var doc in snap.docs) {
+      final event = doc.data();
+      final day = DateTime.utc(event["startTime"].toDate().year,
+          event["startTime"].toDate().month, event["startTime"].toDate().day);
+      if (_events[day] == null) {
+        _events[day] = [];
+      }
+      _events[day]!.add(event);
+    }
+    setState(() {});
   }
 
   @override
@@ -55,61 +84,56 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
         body: Padding(
       padding: const EdgeInsets.all(20.0),
-      child: Column(
+      child: ListView(
         children: [
           TableCalendar(
-            focusedDay: today,
-            headerStyle:
-                HeaderStyle(formatButtonVisible: false, titleCentered: true),
-            selectedDayPredicate: ((day) => isSameDay(day, today)),
-            // Date range of calendar
+            focusedDay: _focusedDay,
             firstDay: DateTime.utc(2020, 1, 1),
             lastDay: DateTime.utc(2030, 12, 25),
-            onDaySelected: _onDaySelected,
-            daysOfWeekVisible: true,
-            // Style the calendar
+            calendarFormat: _calendarFormat,
+            selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
             calendarStyle: CalendarStyle(
-              isTodayHighlighted: true,
-              selectedTextStyle: TextStyle(color: Colors.white),
+                isTodayHighlighted: true,
+                selectedTextStyle: TextStyle(color: Colors.white),
+                markersAlignment: Alignment.bottomRight),
+            availableGestures: AvailableGestures.horizontalSwipe,
+            onDaySelected: (selectedDay, focusedDay) {
+              setState(() {
+                _selectedDay = selectedDay;
+                _focusedDay = focusedDay;
+              });
+            },
+            onFormatChanged: (format) {
+              setState(() {
+                _calendarFormat = format;
+              });
+            },
+            eventLoader: _getEventsForTheDay,
+            // Custom marker to display number instead of dots
+            calendarBuilders: CalendarBuilders(
+              markerBuilder: (context, day, events) => events.isNotEmpty
+                  ? Container(
+                      width: 18,
+                      height: 18,
+                      alignment: Alignment.center,
+                      decoration: const BoxDecoration(color: Colors.lightBlue),
+                      child: Text('${events.length}',
+                          style: const TextStyle(color: Colors.white)))
+                  : null,
             ),
           ),
-          Divider(
-            height: 20,
-            thickness: 1,
-          ),
-          SizedBox(height: 10),
-          Text("Events for: ${today.toString().split(" ")[0]}"),
-          StreamBuilder(
-              stream: events,
-              builder: (context, AsyncSnapshot snapshot) {
-                if (snapshot.hasData) {
-                  for (var index = 0;
-                      index < snapshot.data.docs.length;
-                      index++) {
-                    if (DateFormat('EEEE').format(
-                            snapshot.data.docs[index]['startTime'].toDate()) ==
-                        DateFormat('EEEE').format(today)) {
-                      return Text(
-                          "${index + 1}. ${snapshot.data.docs[index]['task']}");
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(color: Colors.white),
-                      );
-                    }
-                  }
-                } else if (snapshot.hasError) {
-                  return Center(
-                      child: Text(
-                    'No data available right now',
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ));
-                }
-                return Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                );
-              })
+          Text("Events for: ${_focusedDay.toString().split(" ")[0]}"),
+          // Event List
+          for (var event in _getEventsForTheDay(_selectedDay))
+            EventCard(
+                taskName: event["task"],
+                taskType: event["type"],
+                taskDescription: event["description"],
+                taskStartTime: event["startTime"].toDate(),
+                taskEndTime: event["endTime"].toDate(),
+                calories: event["calories"],
+                babyExcreta: event["babyExcreta"],
+                duration: event["duration"])
         ],
       ),
     ));
