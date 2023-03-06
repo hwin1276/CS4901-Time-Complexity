@@ -1,4 +1,5 @@
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
@@ -30,16 +31,15 @@ class EventCard extends StatelessWidget {
         //     color: Colors.blue),
         title: Text(
           taskName,
-          style: TextStyle(
-            fontSize: 16,
+          style: AppTextTheme.body.copyWith(
             color: AppColorScheme.black,
           ),
         ),
         subtitle: Text(
           taskStartTime.toString(),
-          style: TextStyle(
-            fontSize: 12,
+          style: AppTextTheme.subtitle.copyWith(
             color: AppColorScheme.black,
+            fontSize: 12,
           ),
         ),
       ),
