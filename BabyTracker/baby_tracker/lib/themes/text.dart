@@ -22,4 +22,11 @@ class AppTextTheme {
     color: AppColorScheme
         .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
   );
+  static const h3 = TextStyle(
+    fontSize: 20,
+    fontStyle: FontStyle.italic,
+    fontWeight: FontWeight.w500,
+    color: AppColorScheme
+        .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
+  );
 }
