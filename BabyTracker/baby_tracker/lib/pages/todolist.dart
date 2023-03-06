@@ -2,6 +2,7 @@
 
 import 'package:baby_tracker/objects/task.dart';
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 
 class ToDoList extends StatelessWidget {
@@ -33,10 +34,9 @@ class ToDoList extends StatelessWidget {
             color: AppColorScheme.blue),
         title: Text(
           task.taskText!,
-          style: TextStyle(
-            fontSize: 16,
+          style: AppTextTheme.h1.copyWith(
             color: AppColorScheme.black,
-            decoration: task.isDone ? TextDecoration.lineThrough : null,
+            fontSize: 20,
           ),
         ),
         trailing: Container(
