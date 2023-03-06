@@ -31,7 +31,7 @@ class AppTextTheme {
         .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
   );
   static const subtitle = TextStyle(
-    fontSize: 12,
+    fontSize: 16,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w100,
     color: AppColorScheme
