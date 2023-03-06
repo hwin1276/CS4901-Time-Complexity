@@ -1,5 +1,6 @@
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -56,33 +57,43 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("${widget.babyName}'s Caretakers"),
+        title: Text(
+          "${widget.babyName}'s Caretakers",
+          style: AppTextTheme.h1.copyWith(
+            color: AppColorScheme.white,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: () {
               Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddCaretaker(
-                          babyId: widget.babyId, babyName: widget.babyName)));
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddCaretaker(
+                    babyId: widget.babyId,
+                    babyName: widget.babyName,
+                  ),
+                ),
+              );
             },
             icon: const Icon(Icons.add),
           ),
         ],
       ),
       body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                primaryCaretaker(),
-                Divider(
-                  color: AppColorScheme.lightGray,
-                ),
-                allCaretakers(),
-              ],
-            ),
-          )),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              primaryCaretaker(),
+              Divider(
+                color: AppColorScheme.lightGray,
+              ),
+              allCaretakers(),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -100,11 +111,12 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
             CircleAvatar(
               radius: 30,
               backgroundColor: AppColorScheme.red,
-              child: Text(getAdminName(admin).substring(0, 1).toUpperCase(),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: AppColorScheme.white,
-                  )),
+              child: Text(
+                getAdminName(admin).substring(0, 1).toUpperCase(),
+                style: AppTextTheme.h2.copyWith(
+                  color: AppColorScheme.white,
+                ),
+              ),
             ),
             const SizedBox(width: 20),
             Column(
@@ -112,9 +124,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
               children: [
                 Text(
                   "Primary Caretaker",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -144,13 +154,13 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                     radius: 30,
                     backgroundColor: AppColorScheme.red,
                     child: Text(
-                        getAdminName(caretakers[index])
-                            .substring(0, 1)
-                            .toUpperCase(),
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white,
-                        )),
+                      getAdminName(caretakers[index])
+                          .substring(0, 1)
+                          .toUpperCase(),
+                      style: AppTextTheme.h3.copyWith(
+                        color: AppColorScheme.white,
+                      ),
+                    ),
                   ),
                   title: Text(getAdminName(caretakers[index])),
                 ));
