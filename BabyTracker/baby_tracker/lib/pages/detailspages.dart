@@ -2,6 +2,8 @@ import 'package:baby_tracker/pages/babyinfopage.dart';
 import 'package:baby_tracker/pages/calendar.dart';
 import 'package:baby_tracker/pages/eventlist.dart';
 import 'package:baby_tracker/pages/statistics.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import '../createevent.dart';
 
@@ -34,6 +36,12 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Tab(text: 'Events'),
                 Tab(text: 'Statistics'),
               ],
+              labelStyle: AppTextTheme.h3.copyWith(
+                color: AppColorScheme.white,
+              ),
+              unselectedLabelStyle: AppTextTheme.h3.copyWith(
+                color: AppColorScheme.lightGray,
+              ),
             ),
             actions: [
               IconButton(
