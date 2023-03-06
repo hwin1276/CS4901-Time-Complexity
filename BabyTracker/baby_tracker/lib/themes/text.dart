@@ -8,6 +8,7 @@ class AppTextTheme {
     color: AppColorScheme
         .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
   );
+  // This one can be used as a title style for now (maybe just annotate that's why you're using it in a comment in that case)
   static const h1 = TextStyle(
     fontSize: 30,
     fontStyle: FontStyle.normal,
@@ -26,6 +27,13 @@ class AppTextTheme {
     fontSize: 20,
     fontStyle: FontStyle.italic,
     fontWeight: FontWeight.w500,
+    color: AppColorScheme
+        .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
+  );
+  static const subtitle = TextStyle(
+    fontSize: 12,
+    fontStyle: FontStyle.italic,
+    fontWeight: FontWeight.w100,
     color: AppColorScheme
         .red, // This isn't really the color it should ever be, use .copyWith() method to set the proper color
   );
