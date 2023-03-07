@@ -229,8 +229,8 @@ class _CreateBabyState extends State<CreateBaby> {
                                 DateTime? newDate = await showDatePicker(
                                     context: context,
                                     initialDate: birthDate,
-                                    firstDate: DateTime(2018),
-                                    lastDate: DateTime(2100));
+                                    firstDate: DateTime(2000),
+                                    lastDate: DateTime.now());
                                 // if 'CANCEL'
                                 if (newDate == null) return;
                                 // if 'OK'

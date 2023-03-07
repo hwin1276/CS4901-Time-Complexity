@@ -32,7 +32,7 @@ class _CreateEventState extends State<CreateEvent> {
   @override
   void initState() {
     super.initState();
-    endDateTime = endDateTime.add(Duration(minutes: 30));
+    startDateTime = startDateTime.add(Duration(minutes: -30));
   }
 
   @override
@@ -220,7 +220,11 @@ class _CreateEventState extends State<CreateEvent> {
                                     style: TextStyle(fontSize: 24),
                                   ),
                                   onPressed: () async {
-                                    final date = await pickDate(startDateTime);
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        initialDate: startDateTime,
+                                        firstDate: DateTime(2000),
+                                        lastDate: endDateTime);
 
                                     if (date == null) return;
 
@@ -278,7 +282,11 @@ class _CreateEventState extends State<CreateEvent> {
                                     style: TextStyle(fontSize: 24),
                                   ),
                                   onPressed: () async {
-                                    final date = await pickDate(endDateTime);
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        initialDate: endDateTime,
+                                        firstDate: startDateTime,
+                                        lastDate: DateTime.now());
 
                                     if (date == null) return;
 
@@ -368,13 +376,6 @@ class _CreateEventState extends State<CreateEvent> {
       showSnackBar(context, Colors.green, "Event Successfully Created");
     }
   }
-
-  Future<DateTime?> pickDate(dateTime) => showDatePicker(
-        context: context,
-        initialDate: dateTime,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2100),
-      );
 
   Future<TimeOfDay?> pickTime(hour, minute) => showTimePicker(
       context: context, initialTime: TimeOfDay(hour: hour, minute: minute));
