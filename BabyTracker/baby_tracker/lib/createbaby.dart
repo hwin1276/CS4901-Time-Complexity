@@ -302,7 +302,7 @@ class _CreateBabyState extends State<CreateBaby> {
       );
       DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
           .createBaby(userName, FirebaseAuth.instance.currentUser!.uid,
-              babyName, gender, birthDate)
+              babyName, gender, theme, birthDate)
           .whenComplete(
         () {
           _isLoading = false;

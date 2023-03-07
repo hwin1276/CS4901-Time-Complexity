@@ -1,7 +1,7 @@
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
-import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -74,7 +74,8 @@ class _CreateEventState extends State<CreateEvent> {
                                 color: AppColorScheme.white,
                               ),
                             ),
-                            value: eventType,items: [
+                            value: eventType,
+                            items: [
                               DropdownMenuItem<String>(
                                 value: "",
                                 child: Text(
@@ -121,7 +122,6 @@ class _CreateEventState extends State<CreateEvent> {
                                 ),
                               ),
                             ],
-                            
                             onChanged: (value) {
                               setState(
                                 () {
@@ -136,18 +136,23 @@ class _CreateEventState extends State<CreateEvent> {
                                 return null;
                               }
                             },
-                          )
+                          )),
                       SizedBox(height: 15),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
                           decoration: InputDecoration(
                             hintText: "What is your task?",
+                            hintStyle: AppTextTheme.subtitle.copyWith(
+                              color: AppColorScheme.lightGray,
+                            ),
                           ),
                           onChanged: (value) {
-                            setState(() {
-                              eventTask = value;
-                            });
+                            setState(
+                              () {
+                                eventTask = value;
+                              },
+                            );
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -171,7 +176,7 @@ class _CreateEventState extends State<CreateEvent> {
                           onChanged: (value) {
                             setState(
                               () {
-                                eventTask = value;
+                                eventDescription = value;
                               },
                             );
                           },
@@ -185,21 +190,46 @@ class _CreateEventState extends State<CreateEvent> {
                               padding: EdgeInsets.symmetric(horizontal: 15),
                               child: DropdownButtonFormField(
                                 icon: Icon(Icons.arrow_downward),
-                                hint: Text(
-                                    'Did the baby pee, poop, or have diarrhea?'),
+                                decoration: InputDecoration(
+                                  hintText:
+                                      "Did the baby pee, poop, or have diarrhea?",
+                                  hintStyle: AppTextTheme.h2.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
                                 value: babyExcreta,
-                                items: const [
+                                items: [
                                   DropdownMenuItem<String>(
                                       value: "",
                                       child: Text(
-                                          'Did the baby pee, poop, or have diarrhea?')),
+                                          'Did the baby pee, poop, or have diarrhea?',
+                                          style: AppTextTheme.h2.copyWith(
+                                            color: AppColorScheme.white,
+                                          ))),
                                   DropdownMenuItem<String>(
-                                      value: "pee", child: Text('pee')),
+                                      value: "pee",
+                                      child: Text(
+                                        'pee',
+                                        style: AppTextTheme.h2.copyWith(
+                                          color: AppColorScheme.white,
+                                        ),
+                                      )),
                                   DropdownMenuItem<String>(
-                                      value: "poop", child: Text('poop')),
+                                      value: "poop",
+                                      child: Text(
+                                        'poop',
+                                        style: AppTextTheme.h2.copyWith(
+                                          color: AppColorScheme.white,
+                                        ),
+                                      )),
                                   DropdownMenuItem<String>(
                                       value: "diarrhea",
-                                      child: Text('diarrhea')),
+                                      child: Text(
+                                        'diarrhea',
+                                        style: AppTextTheme.h2.copyWith(
+                                          color: AppColorScheme.white,
+                                        ),
+                                      )),
                                 ],
                                 onChanged: (value) {
                                   setState(() {
@@ -227,6 +257,9 @@ class _CreateEventState extends State<CreateEvent> {
                                 decoration: InputDecoration(
                                   hintText:
                                       "How many calories did the baby eat?",
+                                  hintStyle: AppTextTheme.subtitle.copyWith(
+                                    color: AppColorScheme.lightGray,
+                                  ),
                                 ),
                                 keyboardType: TextInputType.number,
                                 inputFormatters: [
@@ -270,6 +303,7 @@ class _CreateEventState extends State<CreateEvent> {
                                     style: AppTextTheme.h2.copyWith(
                                       color: AppColorScheme.white,
                                     ),
+                                  ),
                                   onPressed: () async {
                                     final date = await showDatePicker(
                                         context: context,
@@ -326,7 +360,12 @@ class _CreateEventState extends State<CreateEvent> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('End Time:'),
+                            Text(
+                              'End Time:',
+                              style: AppTextTheme.h2.copyWith(
+                                color: AppColorScheme.white,
+                              ),
+                            ),
                             Row(
                               children: [
                                 ElevatedButton(
@@ -377,6 +416,7 @@ class _CreateEventState extends State<CreateEvent> {
                                       time.hour,
                                       time.minute,
                                     );
+
                                     setState(() => endDateTime = newDateTime);
                                   },
                                 ),
@@ -385,15 +425,12 @@ class _CreateEventState extends State<CreateEvent> {
                           ],
                         ),
                       ),
-                      Divider(
-                        color: AppColorScheme.lightGray,
-                      ),
                       SizedBox(height: 50),
                       Container(
                           height: 40,
                           width: 200,
                           decoration: BoxDecoration(
-                            color: AppColorScheme.blue,
+                            color: Colors.blue,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: TextButton(

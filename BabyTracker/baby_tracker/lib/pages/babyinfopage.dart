@@ -135,7 +135,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
               radius: 30,
               backgroundColor: AppColorScheme.red,
               child: Text(
-                getAdminName(admin).substring(0, 1).toUpperCase(),
+                getName(admin).substring(0, 1).toUpperCase(),
                 style: AppTextTheme.h2.copyWith(
                   color: AppColorScheme.white,
                 ),
