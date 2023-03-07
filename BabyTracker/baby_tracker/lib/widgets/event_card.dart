@@ -77,7 +77,11 @@ class EventCard extends StatelessWidget {
         return timeago.format(timeAgoDay);
       }
       */
-      return timeago.format(taskStartTime);
+      if (taskType == 'Appointments') {
+        return timeago.format(taskStartTime, allowFromNow: true);
+      } else {
+        return timeago.format(taskStartTime);
+      }
     }
 
     // method to display duration depending on how many hours/minutes
