@@ -85,8 +85,8 @@ class DatabaseService {
     return userCollection.where("userName", isEqualTo: userName).get();
   }
 
-  // check whether a user is a caretaker for a baby
-  Future<bool> isUserCaretaker(String userName, String searchUserName,
+  // check whether a user is a caretaker for a baby using a caretaker's email
+  Future<bool> isUserCaretakerEmail(
       String searchEmail, babyName, babyId) async {
     var document =
         await userCollection.where("email", isEqualTo: searchEmail).get();

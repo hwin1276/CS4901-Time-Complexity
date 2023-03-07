@@ -137,7 +137,6 @@ class _AddCaretakerState extends State<AddCaretaker> {
             itemCount: searchSnapshot!.docs.length,
             itemBuilder: (context, index) {
               return userTile(
-                userName,
                 searchSnapshot!.docs[index]['userName'],
                 searchSnapshot!.docs[index]['email'],
               );
@@ -146,11 +145,9 @@ class _AddCaretakerState extends State<AddCaretaker> {
         : Container(child: Text("Search for a user"));
   }
 
-  alreadyCaretaker(
-      String userName, String searchUsername, String searchEmail) async {
+  alreadyCaretaker(String searchEmail) async {
     await DatabaseService(uid: user!.uid)
-        .isUserCaretaker(userName, searchUsername, searchEmail, widget.babyName,
-            widget.babyId)
+        .isUserCaretakerEmail(searchEmail, widget.babyName, widget.babyId)
         .then((value) {
       if (mounted) {
         setState(() {
@@ -160,8 +157,8 @@ class _AddCaretakerState extends State<AddCaretaker> {
     });
   }
 
-  Widget userTile(String userName, String searchUsername, String searchEmail) {
-    alreadyCaretaker(userName, searchUsername, searchEmail);
+  Widget userTile(String searchUsername, String searchEmail) {
+    alreadyCaretaker(searchEmail);
     return ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       leading: CircleAvatar(
