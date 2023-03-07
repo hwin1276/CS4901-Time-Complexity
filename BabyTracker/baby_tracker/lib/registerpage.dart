@@ -2,6 +2,7 @@ import 'package:baby_tracker/home.dart';
 import 'package:baby_tracker/loginpage.dart';
 import 'package:baby_tracker/service/auth_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
 import 'package:flutter/gestures.dart';
@@ -28,7 +29,13 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Register Page'),
+        title: Text(
+          'Register Page',
+          style: AppTextTheme.h1.copyWith(
+            color: AppColorScheme.white,
+            fontSize: 20,
+          ),
+        ),
       ),
       body: _isLoading
           ? Center(
@@ -46,35 +53,42 @@ class _RegisterPageState extends State<RegisterPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           ClipOval(
-                              child: Container(
-                            width: 150,
-                            height: 150,
-                            color: AppColorScheme.pink,
-                            alignment: Alignment.center,
-                            child: const Text('logo',
-                                style: TextStyle(color: AppColorScheme.black)),
-                          )),
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              color: AppColorScheme.pink,
+                              alignment: Alignment.center,
+                              child: Text(
+                                'logo',
+                                style: AppTextTheme.body.copyWith(
+                                  color: AppColorScheme.black,
+                                ),
+                              ),
+                            ),
+                          ),
                           const SizedBox(height: 5),
-                          const Text('BabyTracker',
+                          Text('BabyTracker',
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppColorScheme.black,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                              )),
+                              style: AppTextTheme.h1
+                                  .copyWith(color: AppColorScheme.black)),
                           const SizedBox(height: 5),
-                          const Text(
-                              'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                  color: AppColorScheme.lightGray,
-                                  fontSize: 9)),
+                          Text(
+                            'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
+                            textAlign: TextAlign.center,
+                            style: AppTextTheme.subtitle.copyWith(
+                              color: AppColorScheme.white,
+                              fontSize: 9,
+                            ),
+                          ),
                           const SizedBox(height: 20),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Email",
+                                labelStyle: AppTextTheme.h2.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.email,
                                   color: Theme.of(context).primaryColor,
@@ -100,6 +114,9 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Username",
+                                labelStyle: AppTextTheme.h2.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.person,
                                   color: Theme.of(context).primaryColor,
@@ -128,6 +145,9 @@ class _RegisterPageState extends State<RegisterPage> {
                               obscureText: true,
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Password",
+                                labelStyle: AppTextTheme.h2.copyWith(
+                                  color: Theme.of(context).primaryColor,
+                                ),
                                 prefixIcon: Icon(
                                   Icons.lock,
                                   color: Theme.of(context).primaryColor,
@@ -151,33 +171,35 @@ class _RegisterPageState extends State<RegisterPage> {
                           ),
                           const SizedBox(height: 20),
                           Container(
-                              height: 50,
-                              width: 250,
-                              decoration: BoxDecoration(
-                                color: AppColorScheme.blue,
-                                borderRadius: BorderRadius.circular(20),
+                            height: 50,
+                            width: 250,
+                            decoration: BoxDecoration(
+                              color: AppColorScheme.blue,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                register();
+                              },
+                              child: Text(
+                                'Register',
+                                style: AppTextTheme.body.copyWith(
+                                  color: AppColorScheme.white,
+                                ),
                               ),
-                              child: TextButton(
-                                onPressed: () {
-                                  register();
-                                },
-                                child: const Text('Register',
-                                    style: TextStyle(
-                                      color: AppColorScheme.white,
-                                    )),
-                              )),
+                            ),
+                          ),
                           SizedBox(height: 10),
                           Text.rich(
                             TextSpan(
                               text: "Already have an account?",
-                              style: TextStyle(
+                              style: AppTextTheme.body.copyWith(
                                 color: AppColorScheme.black,
-                                fontSize: 14,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: "Login now",
-                                  style: TextStyle(
+                                  style: AppTextTheme.body.copyWith(
                                     color: AppColorScheme.black,
                                     decoration: TextDecoration.underline,
                                   ),
