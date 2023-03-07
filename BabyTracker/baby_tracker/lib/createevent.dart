@@ -1,5 +1,6 @@
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:flutter/material.dart';
 
@@ -64,34 +65,66 @@ class _CreateEventState extends State<CreateEvent> {
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: DropdownButtonFormField(
                             icon: Icon(Icons.arrow_downward),
-                            hint: Text('What kind of task are you adding?'),
+                            hint: Text(
+                              'What kind of task are you adding?',
+                              style: AppTextTheme.h2.copyWith(
+                                color: AppColorScheme.white,
+                              ),
+                            ),
                             value: eventType,
-                            items: const [
+                            items: [
                               DropdownMenuItem<String>(
                                 value: "",
-                                child:
-                                    Text('What kind of task are you adding?'),
+                                child: Text(
+                                  'What kind of task are you adding?',
+                                  style: AppTextTheme.h2.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
                               ),
                               DropdownMenuItem<String>(
-                                  value: "Diaper Change",
-                                  child: Text('Diaper Change')),
+                                value: "Diaper Change",
+                                child: Text(
+                                  'Diaper Change',
+                                  style: AppTextTheme.h2.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
+                              ),
                               DropdownMenuItem<String>(
                                 value: "Meal Time",
-                                child: Text('Meal Time'),
+                                child: Text(
+                                  'Meal Time',
+                                  style: AppTextTheme.h2.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
                               ),
                               DropdownMenuItem<String>(
                                 value: "Sleep Time",
-                                child: Text('Sleep Time'),
+                                child: Text(
+                                  'Sleep Time',
+                                  style: AppTextTheme.h2.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
                               ),
                               DropdownMenuItem<String>(
                                 value: "Incidents",
-                                child: Text('Incidents'),
+                                child: Text(
+                                  'Incidents',
+                                  style: AppTextTheme.h2.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
                               ),
                             ],
                             onChanged: (value) {
-                              setState(() {
-                                eventType = value!;
-                              });
+                              setState(
+                                () {
+                                  eventType = value!;
+                                },
+                              );
                             },
                             validator: (value) {
                               if (eventType == '') {
@@ -158,11 +191,16 @@ class _CreateEventState extends State<CreateEvent> {
                         child: TextFormField(
                           decoration: InputDecoration(
                             hintText: "What is your task?",
+                            hintStyle: AppTextTheme.subtitle.copyWith(
+                              color: AppColorScheme.lightGray,
+                            ),
                           ),
                           onChanged: (value) {
-                            setState(() {
-                              eventTask = value;
-                            });
+                            setState(
+                              () {
+                                eventTask = value;
+                              },
+                            );
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -181,11 +219,16 @@ class _CreateEventState extends State<CreateEvent> {
                         child: TextFormField(
                           decoration: InputDecoration(
                             hintText: "Describe your event",
+                            hintStyle: AppTextTheme.subtitle.copyWith(
+                              color: AppColorScheme.lightGray,
+                            ),
                           ),
                           onChanged: (value) {
-                            setState(() {
-                              eventDescription = value;
-                            });
+                            setState(
+                              () {
+                                eventDescription = value;
+                              },
+                            );
                           },
                         ),
                       ),
@@ -197,13 +240,20 @@ class _CreateEventState extends State<CreateEvent> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text('Start Time:'),
+                            Text(
+                              'Start Time:',
+                              style: AppTextTheme.h2.copyWith(
+                                color: AppColorScheme.white,
+                              ),
+                            ),
                             Row(
                               children: [
                                 ElevatedButton(
                                   child: Text(
                                     '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
-                                    style: TextStyle(fontSize: 24),
+                                    style: AppTextTheme.h2.copyWith(
+                                      color: AppColorScheme.white,
+                                    ),
                                   ),
                                   onPressed: () async {
                                     final date = await pickDate(startDateTime);
@@ -225,7 +275,9 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '$hours:$minutes',
-                                    style: TextStyle(fontSize: 24),
+                                    style: AppTextTheme.h2.copyWith(
+                                      color: AppColorScheme.white,
+                                    ),
                                   ),
                                   onPressed: () async {
                                     final time = await pickTime(
@@ -261,7 +313,9 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
-                                    style: TextStyle(fontSize: 24),
+                                    style: AppTextTheme.h2.copyWith(
+                                      color: AppColorScheme.white,
+                                    ),
                                   ),
                                   onPressed: () async {
                                     final date = await pickDate(endDateTime);
@@ -283,7 +337,9 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '$endHours:$endMinutes',
-                                    style: TextStyle(fontSize: 24),
+                                    style: AppTextTheme.h2.copyWith(
+                                      color: AppColorScheme.white,
+                                    ),
                                   ),
                                   onPressed: () async {
                                     final time = await pickTime(
@@ -322,10 +378,12 @@ class _CreateEventState extends State<CreateEvent> {
                             onPressed: () {
                               addEvent();
                             },
-                            child: const Text('Confirm',
-                                style: TextStyle(
-                                  color: AppColorScheme.white,
-                                )),
+                            child: Text(
+                              'Confirm',
+                              style: AppTextTheme.body.copyWith(
+                                color: AppColorScheme.white,
+                              ),
+                            ),
                           ))
                     ],
                   ),
