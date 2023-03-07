@@ -126,7 +126,10 @@ class _CalendarState extends State<Calendar> {
                   : null,
             ),
           ),
-          Text("Events for: ${_focusedDay.toString().split(" ")[0]}"),
+          Text("Events for: ${_focusedDay.toString().split(" ")[0]}",
+              style: AppTextTheme.h3.copyWith(
+                color: AppColorScheme.white,
+              )),
           // Event List
           for (var event in _getEventsForTheDay(_selectedDay))
             EventCard(
