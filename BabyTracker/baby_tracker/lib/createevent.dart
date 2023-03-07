@@ -306,33 +306,64 @@ class _CreateEventState extends State<CreateEvent> {
                             ),
                             Row(
                               children: [
-                                ElevatedButton(
-                                  child: Text(
-                                    '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
-                                    style: AppTextTheme.h3.copyWith(
-                                      color: AppColorScheme.white,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        initialDate: startDateTime,
-                                        firstDate: DateTime(2000),
-                                        lastDate: endDateTime);
+                                (eventType == 'Appointments')
+                                    ? ElevatedButton(
+                                        child: Text(
+                                          '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
+                                          style: AppTextTheme.h3.copyWith(
+                                            color: AppColorScheme.white,
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          final date = await showDatePicker(
+                                              context: context,
+                                              initialDate: startDateTime,
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime.now()
+                                                  .add(Duration(days: 365)));
 
-                                    if (date == null) return;
+                                          if (date == null) return;
 
-                                    final newDateTime = DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      startDateTime.hour,
-                                      startDateTime.minute,
-                                    );
+                                          final newDateTime = DateTime(
+                                            date.year,
+                                            date.month,
+                                            date.day,
+                                            startDateTime.hour,
+                                            startDateTime.minute,
+                                          );
 
-                                    setState(() => startDateTime = newDateTime);
-                                  },
-                                ),
+                                          setState(() =>
+                                              startDateTime = newDateTime);
+                                        },
+                                      )
+                                    : ElevatedButton(
+                                        child: Text(
+                                          '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
+                                          style: AppTextTheme.h3.copyWith(
+                                            color: AppColorScheme.white,
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          final date = await showDatePicker(
+                                              context: context,
+                                              initialDate: startDateTime,
+                                              firstDate: DateTime(2000),
+                                              lastDate: endDateTime);
+
+                                          if (date == null) return;
+
+                                          final newDateTime = DateTime(
+                                            date.year,
+                                            date.month,
+                                            date.day,
+                                            startDateTime.hour,
+                                            startDateTime.minute,
+                                          );
+
+                                          setState(() =>
+                                              startDateTime = newDateTime);
+                                        },
+                                      ),
                                 SizedBox(width: 10),
                                 ElevatedButton(
                                   child: Text(
@@ -377,33 +408,64 @@ class _CreateEventState extends State<CreateEvent> {
                             ),
                             Row(
                               children: [
-                                ElevatedButton(
-                                  child: Text(
-                                    '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
-                                    style: AppTextTheme.h3.copyWith(
-                                      color: AppColorScheme.white,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final date = await showDatePicker(
-                                        context: context,
-                                        initialDate: endDateTime,
-                                        firstDate: startDateTime,
-                                        lastDate: DateTime.now());
+                                (eventType == 'Appointments')
+                                    ? ElevatedButton(
+                                        child: Text(
+                                          '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
+                                          style: AppTextTheme.h3.copyWith(
+                                            color: AppColorScheme.white,
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          final date = await showDatePicker(
+                                              context: context,
+                                              initialDate: startDateTime,
+                                              firstDate: startDateTime,
+                                              lastDate: DateTime.now()
+                                                  .add(Duration(days: 365)));
 
-                                    if (date == null) return;
+                                          if (date == null) return;
 
-                                    final newDateTime = DateTime(
-                                      date.year,
-                                      date.month,
-                                      date.day,
-                                      endDateTime.hour,
-                                      endDateTime.minute,
-                                    );
+                                          final newDateTime = DateTime(
+                                            date.year,
+                                            date.month,
+                                            date.day,
+                                            endDateTime.hour,
+                                            endDateTime.minute,
+                                          );
 
-                                    setState(() => endDateTime = newDateTime);
-                                  },
-                                ),
+                                          setState(
+                                              () => endDateTime = newDateTime);
+                                        },
+                                      )
+                                    : ElevatedButton(
+                                        child: Text(
+                                          '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
+                                          style: AppTextTheme.h3.copyWith(
+                                            color: AppColorScheme.white,
+                                          ),
+                                        ),
+                                        onPressed: () async {
+                                          final date = await showDatePicker(
+                                              context: context,
+                                              initialDate: startDateTime,
+                                              firstDate: startDateTime,
+                                              lastDate: DateTime.now());
+
+                                          if (date == null) return;
+
+                                          final newDateTime = DateTime(
+                                            date.year,
+                                            date.month,
+                                            date.day,
+                                            endDateTime.hour,
+                                            endDateTime.minute,
+                                          );
+
+                                          setState(
+                                              () => endDateTime = newDateTime);
+                                        },
+                                      ),
                                 SizedBox(width: 10),
                                 ElevatedButton(
                                   child: Text(
