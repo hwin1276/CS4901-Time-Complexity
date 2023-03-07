@@ -70,7 +70,7 @@ class _CreateEventState extends State<CreateEvent> {
                             icon: Icon(Icons.arrow_downward),
                             hint: Text(
                               'What kind of task are you adding?',
-                              style: AppTextTheme.h2.copyWith(
+                              style: AppTextTheme.subtitle.copyWith(
                                 color: AppColorScheme.white,
                               ),
                             ),
@@ -80,7 +80,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 value: "",
                                 child: Text(
                                   'What kind of task are you adding?',
-                                  style: AppTextTheme.h2.copyWith(
+                                  style: AppTextTheme.h3.copyWith(
                                     color: AppColorScheme.white,
                                   ),
                                 ),
@@ -89,7 +89,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 value: "Diaper Change",
                                 child: Text(
                                   'Diaper Change',
-                                  style: AppTextTheme.h2.copyWith(
+                                  style: AppTextTheme.h3.copyWith(
                                     color: AppColorScheme.white,
                                   ),
                                 ),
@@ -98,7 +98,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 value: "Meal Time",
                                 child: Text(
                                   'Meal Time',
-                                  style: AppTextTheme.h2.copyWith(
+                                  style: AppTextTheme.h3.copyWith(
                                     color: AppColorScheme.white,
                                   ),
                                 ),
@@ -107,7 +107,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 value: "Sleep Time",
                                 child: Text(
                                   'Sleep Time',
-                                  style: AppTextTheme.h2.copyWith(
+                                  style: AppTextTheme.h3.copyWith(
                                     color: AppColorScheme.white,
                                   ),
                                 ),
@@ -116,7 +116,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 value: "Incidents",
                                 child: Text(
                                   'Incidents',
-                                  style: AppTextTheme.h2.copyWith(
+                                  style: AppTextTheme.h3.copyWith(
                                     color: AppColorScheme.white,
                                   ),
                                 ),
@@ -192,8 +192,8 @@ class _CreateEventState extends State<CreateEvent> {
                                 icon: Icon(Icons.arrow_downward),
                                 decoration: InputDecoration(
                                   hintText:
-                                      "Did the baby pee, poop, or have diarrhea?",
-                                  hintStyle: AppTextTheme.h2.copyWith(
+                                      "What kind of stool did the baby have",
+                                  hintStyle: AppTextTheme.subtitle.copyWith(
                                     color: AppColorScheme.white,
                                   ),
                                 ),
@@ -202,15 +202,15 @@ class _CreateEventState extends State<CreateEvent> {
                                   DropdownMenuItem<String>(
                                       value: "",
                                       child: Text(
-                                          'Did the baby pee, poop, or have diarrhea?',
-                                          style: AppTextTheme.h2.copyWith(
+                                          'What kind of stool did the baby have?',
+                                          style: AppTextTheme.h3.copyWith(
                                             color: AppColorScheme.white,
                                           ))),
                                   DropdownMenuItem<String>(
                                       value: "pee",
                                       child: Text(
                                         'pee',
-                                        style: AppTextTheme.h2.copyWith(
+                                        style: AppTextTheme.h3.copyWith(
                                           color: AppColorScheme.white,
                                         ),
                                       )),
@@ -218,7 +218,7 @@ class _CreateEventState extends State<CreateEvent> {
                                       value: "poop",
                                       child: Text(
                                         'poop',
-                                        style: AppTextTheme.h2.copyWith(
+                                        style: AppTextTheme.h3.copyWith(
                                           color: AppColorScheme.white,
                                         ),
                                       )),
@@ -226,7 +226,7 @@ class _CreateEventState extends State<CreateEvent> {
                                       value: "diarrhea",
                                       child: Text(
                                         'diarrhea',
-                                        style: AppTextTheme.h2.copyWith(
+                                        style: AppTextTheme.h3.copyWith(
                                           color: AppColorScheme.white,
                                         ),
                                       )),
@@ -291,7 +291,7 @@ class _CreateEventState extends State<CreateEvent> {
                           children: [
                             Text(
                               'Start Time:',
-                              style: AppTextTheme.h2.copyWith(
+                              style: AppTextTheme.h3.copyWith(
                                 color: AppColorScheme.white,
                               ),
                             ),
@@ -300,7 +300,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
-                                    style: AppTextTheme.h2.copyWith(
+                                    style: AppTextTheme.h3.copyWith(
                                       color: AppColorScheme.white,
                                     ),
                                   ),
@@ -328,7 +328,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '$hours:$minutes',
-                                    style: AppTextTheme.h2.copyWith(
+                                    style: AppTextTheme.h3.copyWith(
                                       color: AppColorScheme.white,
                                     ),
                                   ),
@@ -362,7 +362,7 @@ class _CreateEventState extends State<CreateEvent> {
                           children: [
                             Text(
                               'End Time:',
-                              style: AppTextTheme.h2.copyWith(
+                              style: AppTextTheme.h3.copyWith(
                                 color: AppColorScheme.white,
                               ),
                             ),
@@ -371,7 +371,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
-                                    style: AppTextTheme.h2.copyWith(
+                                    style: AppTextTheme.h3.copyWith(
                                       color: AppColorScheme.white,
                                     ),
                                   ),
@@ -399,7 +399,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 ElevatedButton(
                                   child: Text(
                                     '$endHours:$endMinutes',
-                                    style: AppTextTheme.h2.copyWith(
+                                    style: AppTextTheme.h3.copyWith(
                                       color: AppColorScheme.white,
                                     ),
                                   ),
