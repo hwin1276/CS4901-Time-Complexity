@@ -86,13 +86,26 @@ class DatabaseService {
   }
 
   // check whether a user is a caretaker for a baby using a caretaker's email
-  Future<bool> isUserCaretakerEmail(
+  Future<bool> isUserCaretakerWithEmail(
       String searchEmail, babyName, babyId) async {
     var document =
         await userCollection.where("email", isEqualTo: searchEmail).get();
     var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
 
     DocumentReference userDocumentReference = userCollection.doc(data['uid']);
+    DocumentSnapshot documentSnapshot = await userDocumentReference.get();
+
+    List<dynamic> babies = await documentSnapshot['babies'];
+    if (babies.contains("${babyId}_$babyName")) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  // check whether a user is a caretaker for a baby using a caretaker's id
+  Future<bool> isUserCaretakerWithId(String searchId, babyName, babyId) async {
+    DocumentReference userDocumentReference = userCollection.doc(searchId);
     DocumentSnapshot documentSnapshot = await userDocumentReference.get();
 
     List<dynamic> babies = await documentSnapshot['babies'];

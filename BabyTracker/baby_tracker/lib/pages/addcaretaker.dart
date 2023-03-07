@@ -147,7 +147,7 @@ class _AddCaretakerState extends State<AddCaretaker> {
 
   alreadyCaretaker(String searchEmail) async {
     await DatabaseService(uid: user!.uid)
-        .isUserCaretakerEmail(searchEmail, widget.babyName, widget.babyId)
+        .isUserCaretakerWithEmail(searchEmail, widget.babyName, widget.babyId)
         .then((value) {
       if (mounted) {
         setState(() {
