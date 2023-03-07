@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../service/database_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:baby_tracker/widgets/event_card.dart';
+import 'package:intl/intl.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({
@@ -53,7 +54,8 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget calendar() {
-    return Padding(
+    return Scaffold(
+        body: Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
         children: [
@@ -81,9 +83,39 @@ class _CalendarState extends State<Calendar> {
           ),
           SizedBox(height: 10),
           Text("Events for: ${today.toString().split(" ")[0]}"),
-          // TODO: display list events for selected day
+          StreamBuilder(
+              stream: events,
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.hasData) {
+                  for (var index = 0;
+                      index < snapshot.data.docs.length;
+                      index++) {
+                    if (DateFormat('EEEE').format(
+                            snapshot.data.docs[index]['startTime'].toDate()) ==
+                        DateFormat('EEEE').format(today)) {
+                      return Text(
+                          "${index + 1}. ${snapshot.data.docs[index]['task']}");
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      );
+                    }
+                  }
+                } else if (snapshot.hasError) {
+                  return Center(
+                      child: Text(
+                    'No data available right now',
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ));
+                }
+                return Center(
+                  child: CircularProgressIndicator(color: Colors.white),
+                );
+              })
         ],
       ),
-    );
+    ));
   }
 }

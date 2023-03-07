@@ -4,6 +4,7 @@ import 'package:baby_tracker/themes/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/showsnackbar.dart';
 import 'addcaretaker.dart';
 
 class BabyInfoPage extends StatefulWidget {
@@ -24,11 +25,13 @@ class BabyInfoPage extends StatefulWidget {
 class _BabyInfoPageState extends State<BabyInfoPage> {
   var caretakers = <dynamic>[];
   String admin = "";
+  User? user;
 
   @override
   void initState() {
     super.initState();
     getCareTakersandAdmin();
+    user = FirebaseAuth.instance.currentUser;
   }
 
   getCareTakersandAdmin() {
@@ -48,8 +51,28 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
     });
   }
 
-  getAdminName(String res) {
+  bool isAdmin() {
+    if (FirebaseAuth.instance.currentUser!.uid == getId(admin)) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isYou(String caretakerId) {
+    if (caretakerId.isNotEmpty) {
+      if (FirebaseAuth.instance.currentUser!.uid == getId(caretakerId)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  getName(String res) {
     return res.substring(res.indexOf("_") + 1);
+  }
+
+  getId(String res) {
+    return res.substring(0, res.indexOf("_"));
   }
 
   @override
@@ -128,7 +151,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  getAdminName(admin),
+                  getName(admin),
                 ),
               ],
             ),
@@ -149,21 +172,57 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
             return Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: AppColorScheme.red,
-                    child: Text(
-                      getAdminName(caretakers[index])
-                          .substring(0, 1)
-                          .toUpperCase(),
-                      style: AppTextTheme.h3.copyWith(
-                        color: AppColorScheme.white,
-                      ),
-                    ),
-                  ),
-                  title: Text(getAdminName(caretakers[index])),
-                ));
+                child: (isAdmin() && !(isYou(caretakers[index])))
+                    ? ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.red,
+                          child: Text(
+                              getName(caretakers[index])
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              )),
+                        ),
+                        title: Text(getName(caretakers[index])),
+                        trailing: InkWell(
+                            onTap: () async {
+                              await DatabaseService(uid: user!.uid).kickUser(
+                                  widget.babyId,
+                                  widget.babyName,
+                                  getId(caretakers[index]),
+                                  getName(caretakers[index]));
+                              showSnackBar(context, Colors.green,
+                                  "Succssfully kicked ${getName(caretakers[index])}");
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.red,
+                                  border:
+                                      Border.all(color: Colors.white, width: 1),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                child: const Text("Kick",
+                                    style: TextStyle(color: Colors.white)))))
+                    : ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.red,
+                          child: Text(
+                              getName(caretakers[index])
+                                  .substring(0, 1)
+                                  .toUpperCase(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white,
+                              )),
+                        ),
+                        title: Text(getName(caretakers[index])),
+                      ));
           });
     } else {
       return CircularProgressIndicator(color: Theme.of(context).primaryColor);

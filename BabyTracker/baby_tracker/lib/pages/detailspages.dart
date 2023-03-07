@@ -11,12 +11,14 @@ class DetailsPages extends StatefulWidget {
   final String userName;
   final String babyName;
   final String babyId;
-  const DetailsPages(
-      {Key? key,
-      required this.userName,
-      required this.babyName,
-      required this.babyId})
-      : super(key: key);
+  final String theme;
+  const DetailsPages({
+    Key? key,
+    required this.userName,
+    required this.babyName,
+    required this.babyId,
+    required this.theme,
+  }) : super(key: key);
 
   @override
   State<DetailsPages> createState() => _DetailsPagesState();
@@ -78,7 +80,11 @@ class _DetailsPagesState extends State<DetailsPages> {
                 userName: widget.userName,
                 babyName: widget.babyName,
                 babyId: widget.babyId),
-            Statistics(),
+            Statistics(
+              babyName: widget.babyName,
+              babyId: widget.babyId,
+              userName: widget.userName,
+            ),
           ])),
     );
   }

@@ -3,6 +3,7 @@ import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CreateEvent extends StatefulWidget {
   final String userName;
@@ -27,11 +28,13 @@ class _CreateEventState extends State<CreateEvent> {
   String eventType = "";
   String eventTask = "";
   String eventDescription = "";
+  String babyExcreta = "";
+  String calories = "";
 
   @override
   void initState() {
     super.initState();
-    endDateTime = endDateTime.add(Duration(minutes: 30));
+    startDateTime = startDateTime.add(Duration(minutes: -30));
   }
 
   @override
@@ -55,7 +58,7 @@ class _CreateEventState extends State<CreateEvent> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
                 child: Form(
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  //autovalidateMode: AutovalidateMode.onUserInteraction,
                   key: formKey,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -71,8 +74,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 color: AppColorScheme.white,
                               ),
                             ),
-                            value: eventType,
-                            items: [
+                            value: eventType,items: [
                               DropdownMenuItem<String>(
                                 value: "",
                                 child: Text(
@@ -119,6 +121,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 ),
                               ),
                             ],
+                            
                             onChanged: (value) {
                               setState(
                                 () {
@@ -134,73 +137,17 @@ class _CreateEventState extends State<CreateEvent> {
                               }
                             },
                           )
-                          // DropdownButtonFormField(
-                          //   value: dropdownValue,
-                          //   icon: Icon(Icons.arrow_downward),
-                          //   hint: Text('What kind of task are you adding?'),
-                          //   onChanged: (String? newValue) {
-                          //     setState(() {
-                          //       dropdownValue = newValue!;
-                          //
-                          //       switch(dropdownValue) {
-                          //         case 'Diaper Change': {
-                          //           eventtype = 1;
-                          //         }
-                          //         break;
-                          //         case 'Meal Time': {
-                          //           eventtype = 2;
-                          //         }
-                          //         break;
-                          //         case 'Sleep Time': {
-                          //           eventtype = 3;
-                          //         }
-                          //         break;
-                          //         case 'Accidents': {
-                          //           eventtype = 4;
-                          //         }
-                          //         break;
-                          //       }
-                          //     });
-                          //   },
-                          //   items: <String>[
-                          //     'Diaper Change',
-                          //     'Meal Time',
-                          //     'Sleep Time',
-                          //     'Accidents'
-                          //   ].map<DropdownMenuItem<String>>((String value) {
-                          //     return DropdownMenuItem<String>(
-                          //       value: value,
-                          //       child: Text(value),
-                          //     );
-                          //   }).toList(),
-                          //   validator: (value) {
-                          //     if (value == null) {
-                          //       return 'Please enter what kind of task your adding';
-                          //     }
-                          //     else {
-                          //       return null;
-                          //     }
-                          //   },
-                          // ),
-                          ),
-                      Divider(
-                        color: Colors.grey,
-                      ),
+                      SizedBox(height: 15),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
                           decoration: InputDecoration(
                             hintText: "What is your task?",
-                            hintStyle: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
-                            ),
                           ),
                           onChanged: (value) {
-                            setState(
-                              () {
-                                eventTask = value;
-                              },
-                            );
+                            setState(() {
+                              eventTask = value;
+                            });
                           },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -211,9 +158,7 @@ class _CreateEventState extends State<CreateEvent> {
                           },
                         ),
                       ),
-                      Divider(
-                        color: Colors.grey,
-                      ),
+                      SizedBox(height: 15),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
@@ -226,15 +171,86 @@ class _CreateEventState extends State<CreateEvent> {
                           onChanged: (value) {
                             setState(
                               () {
-                                eventDescription = value;
+                                eventTask = value;
                               },
                             );
                           },
                         ),
                       ),
-                      Divider(
-                        color: AppColorScheme.lightGray,
-                      ),
+                      if (eventType == "Diaper Change")
+                        Column(
+                          children: [
+                            SizedBox(height: 15),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: DropdownButtonFormField(
+                                icon: Icon(Icons.arrow_downward),
+                                hint: Text(
+                                    'Did the baby pee, poop, or have diarrhea?'),
+                                value: babyExcreta,
+                                items: const [
+                                  DropdownMenuItem<String>(
+                                      value: "",
+                                      child: Text(
+                                          'Did the baby pee, poop, or have diarrhea?')),
+                                  DropdownMenuItem<String>(
+                                      value: "pee", child: Text('pee')),
+                                  DropdownMenuItem<String>(
+                                      value: "poop", child: Text('poop')),
+                                  DropdownMenuItem<String>(
+                                      value: "diarrhea",
+                                      child: Text('diarrhea')),
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    babyExcreta = value!;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (babyExcreta == '') {
+                                    return "Please select a diaper change type";
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      if (eventType == "Meal Time")
+                        Column(
+                          children: [
+                            SizedBox(height: 15),
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 15),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  hintText:
+                                      "How many calories did the baby eat?",
+                                ),
+                                keyboardType: TextInputType.number,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    calories = value;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null ||
+                                      value.isEmpty ||
+                                      value == "0") {
+                                    return 'Please enter how many calories did your baby eat';
+                                  } else {
+                                    return null;
+                                  }
+                                },
+                              ),
+                            ),
+                          ],
+                        ),
+                      SizedBox(height: 15),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: Row(
@@ -254,9 +270,12 @@ class _CreateEventState extends State<CreateEvent> {
                                     style: AppTextTheme.h2.copyWith(
                                       color: AppColorScheme.white,
                                     ),
-                                  ),
                                   onPressed: () async {
-                                    final date = await pickDate(startDateTime);
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        initialDate: startDateTime,
+                                        firstDate: DateTime(2000),
+                                        lastDate: endDateTime);
 
                                     if (date == null) return;
 
@@ -318,7 +337,11 @@ class _CreateEventState extends State<CreateEvent> {
                                     ),
                                   ),
                                   onPressed: () async {
-                                    final date = await pickDate(endDateTime);
+                                    final date = await showDatePicker(
+                                        context: context,
+                                        initialDate: endDateTime,
+                                        firstDate: startDateTime,
+                                        lastDate: DateTime.now());
 
                                     if (date == null) return;
 
@@ -354,7 +377,6 @@ class _CreateEventState extends State<CreateEvent> {
                                       time.hour,
                                       time.minute,
                                     );
-
                                     setState(() => endDateTime = newDateTime);
                                   },
                                 ),
@@ -366,7 +388,7 @@ class _CreateEventState extends State<CreateEvent> {
                       Divider(
                         color: AppColorScheme.lightGray,
                       ),
-                      SizedBox(height: 100),
+                      SizedBox(height: 50),
                       Container(
                           height: 40,
                           width: 200,
@@ -402,8 +424,11 @@ class _CreateEventState extends State<CreateEvent> {
         "task": eventTask,
         "type": eventType,
         "description": eventDescription,
+        "babyExcreta": babyExcreta,
+        "calories": calories,
+        "duration": endDateTime.difference(startDateTime).inMinutes,
         "startTime": startDateTime,
-        "endTime": endDateTime
+        "endTime": endDateTime,
       };
       DatabaseService().createEvent(widget.babyId, eventData).whenComplete(() {
         _isLoading = false;
@@ -412,13 +437,6 @@ class _CreateEventState extends State<CreateEvent> {
       showSnackBar(context, AppColorScheme.green, "Event Successfully Created");
     }
   }
-
-  Future<DateTime?> pickDate(dateTime) => showDatePicker(
-        context: context,
-        initialDate: dateTime,
-        firstDate: DateTime(1900),
-        lastDate: DateTime(2100),
-      );
 
   Future<TimeOfDay?> pickTime(hour, minute) => showTimePicker(
       context: context, initialTime: TimeOfDay(hour: hour, minute: minute));

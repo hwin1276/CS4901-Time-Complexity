@@ -6,6 +6,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../widgets/showsnackbar.dart';
+
 class AddCaretaker extends StatefulWidget {
   const AddCaretaker({Key? key, required this.babyName, required this.babyId})
       : super(key: key);
@@ -78,7 +80,7 @@ class _AddCaretakerState extends State<AddCaretaker> {
                     ),
                     GestureDetector(
                         onTap: () {
-                          //initiateSearchMethod();
+                          initiateSearchMethod();
                         },
                         child: Container(
                           width: 40,
@@ -104,59 +106,111 @@ class _AddCaretakerState extends State<AddCaretaker> {
   }
 
   initiateSearchMethod() async {
-    //   if(searchController.text.isNotEmpty) {
-    //     setState(() {
-    //       _isLoading = true;
-    //     });
-    //     await DatabaseService().searchByUserName(searchController.text).then((snapshot) {
-    //       setState(() {
-    //         searchSnapshot = snapshot;
-    //         _isLoading = false;
-    //         hasUserSearched = true;
-    //       });
-    //     });
-    //   }
+    if (searchController.text.isNotEmpty) {
+      setState(() {
+        _isLoading = true;
+      });
+      await DatabaseService()
+          .searchByUserName(searchController.text)
+          .then((snapshot) {
+        setState(() {
+          if (snapshot.docs.length == 0) {
+            showDialog(
+              context: context,
+              builder: (context) =>
+                  AlertDialog(title: Text("No one found by that username")),
+            );
+          } else {
+            searchSnapshot = snapshot;
+            hasUserSearched = true;
+          }
+          _isLoading = false;
+        });
+      });
+    }
   }
+
   userList() {
-    return Container();
-    //   return hasUserSearched
-    //   ? ListView.builder(
-    //     shrinkWrap: true,
-    //     itemCount: searchSnapshot!.docs.length,
-    //     itemBuilder: (context, index) {
-    //       return UserTile(
-    //         userName,
-    //         searchSnapshot!.docs[index]['userName'],
-    //         searchSnapshot!.docs[index]['email'],
-    //       );
-    //     },
-    //   )
-    //   : Container();
+    return hasUserSearched
+        ? ListView.builder(
+            shrinkWrap: true,
+            itemCount: searchSnapshot!.docs.length,
+            itemBuilder: (context, index) {
+              return userTile(
+                userName,
+                searchSnapshot!.docs[index]['userName'],
+                searchSnapshot!.docs[index]['email'],
+              );
+            },
+          )
+        : Container(child: Text("Search for a user"));
   }
-  // alreadyCaretaker(String userName, String searchUsername, String email) async{
-  //   await DatabaseService(uid: user!.uid).isUserCaretaker(userName, searchUsername, email, widget.babyId, widget.babyName).then((value) {
-  //     setState(() {
-  //       isJoined = value;
-  //     });
-  //   });
-  // }
-  // Widget UserTile(String userName, String searchUsername, String email) {
-  //   alreadyCaretaker(userName, searchUsername, email);
-  //   return ListTile(
-  //     contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-  //     leading: CircleAvatar(
-  //       radius: 30,
-  //       backgroundColor: Theme.of(context).primaryColor,
-  //       child: Text(
-  //         babyName.substring(0,1).toUpperCase(),
-  //         style: const TextStyle(color: Colors.white),
-  //       ),
-  //     ),
-  //     title: Text(
-  //       userName,
-  //       style: const TextStyle(fontWeight: FontWeight.w600)
-  //     ),
-  //     subtitle: Text("Email: "),
-  //   );
-  // }
+
+  alreadyCaretaker(
+      String userName, String searchUsername, String searchEmail) async {
+    await DatabaseService(uid: user!.uid)
+        .isUserCaretaker(userName, searchUsername, searchEmail, widget.babyName,
+            widget.babyId)
+        .then((value) {
+      if (mounted) {
+        setState(() {
+          isJoined = value;
+        });
+      }
+    });
+  }
+
+  Widget userTile(String userName, String searchUsername, String searchEmail) {
+    alreadyCaretaker(userName, searchUsername, searchEmail);
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      leading: CircleAvatar(
+        radius: 30,
+        backgroundColor: Theme.of(context).primaryColor,
+        child: Text(
+          widget.babyName.substring(0, 1).toUpperCase(),
+          style: const TextStyle(color: Colors.white),
+        ),
+      ),
+      title: Text(searchUsername,
+          style: const TextStyle(fontWeight: FontWeight.w600)),
+      subtitle: Text("Email: $searchEmail"),
+      trailing: InkWell(
+          onTap: () async {
+            if (!isJoined) {
+              await DatabaseService(uid: user!.uid).inviteUser(
+                  widget.babyId, widget.babyName, searchEmail, searchUsername);
+              setState(() {
+                isJoined = !isJoined;
+              });
+              showSnackBar(
+                  context, Colors.green, "Succssfully invited $searchUsername");
+            } else {
+              showSnackBar(
+                  context, Colors.red, "You have already invited this person");
+            }
+          },
+          child: isJoined
+              ? Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black,
+                    border: Border.all(color: Colors.white, width: 1),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: const Text("Invited",
+                      style: TextStyle(color: Colors.white)))
+              : Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.black,
+                    border: Border.all(color: Colors.white, width: 1),
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: const Text("Invite",
+                      style: TextStyle(color: Colors.white)))),
+    );
+  }
 }

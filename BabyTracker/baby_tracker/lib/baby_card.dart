@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class BabyCard extends StatefulWidget {
-  BabyCard({
+  const BabyCard({
     super.key,
     required this.babyName,
     required this.babyId,
@@ -110,9 +110,11 @@ class _BabyCardState extends State<BabyCard> {
             context,
             MaterialPageRoute(
                 builder: (context) => DetailsPages(
-                    userName: widget.userName,
-                    babyName: widget.babyName,
-                    babyId: widget.babyId)));
+                      userName: widget.userName,
+                      babyName: widget.babyName,
+                      babyId: widget.babyId,
+                      theme: babyTheme,
+                    )));
       },
       child: Container(
           margin: const EdgeInsets.all(20),
@@ -139,31 +141,11 @@ class _BabyCardState extends State<BabyCard> {
                 padding: const EdgeInsets.all(10.0),
                 child: Row(children: [
                   ClipOval(child: babyGender()),
-                  const SizedBox(width: 10),
-                  Text(widget.babyName),
+                  const SizedBox(width: 20),
+                  Text(style: TextStyle(fontSize: 48), widget.babyName),
                   SizedBox(
                     width: 50,
                   ),
-                  StreamBuilder(
-                      stream: events,
-                      builder: (context, AsyncSnapshot snapshot) {
-                        if (snapshot.hasData) {
-                          return Text(
-                            // TODO: show specific event count, i.e. Nap count, eat count, etc.
-                            ("Event Count: ${snapshot.data.docs.length}")
-                                .toString(),
-                            textAlign: TextAlign.right,
-                            style: AppTextTheme.body.copyWith(
-                              color: AppColorScheme.white,
-                            ),
-                          );
-                        } else {
-                          return Center(
-                            child: CircularProgressIndicator(
-                                color: AppColorScheme.white),
-                          );
-                        }
-                      }),
                 ]),
               )
             ],

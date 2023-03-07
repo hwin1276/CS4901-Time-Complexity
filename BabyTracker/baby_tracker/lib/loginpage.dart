@@ -87,7 +87,6 @@ class _LoginPageState extends State<LoginPage> {
                                 labelText: "Email",
                                 prefixIcon: Icon(
                                   Icons.email,
-                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               onChanged: (val) {
@@ -113,7 +112,6 @@ class _LoginPageState extends State<LoginPage> {
                                 labelText: "Password",
                                 prefixIcon: Icon(
                                   Icons.lock,
-                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               onChanged: (val) {
@@ -165,7 +163,7 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "Register here",
+                                  text: " Register here",
                                   style: AppTextTheme.body.copyWith(
                                     color: AppColorScheme.black,
                                     decoration: TextDecoration.underline,
