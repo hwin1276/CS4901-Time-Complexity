@@ -4,6 +4,7 @@ import 'package:baby_tracker/registerpage.dart';
 import 'package:baby_tracker/service/auth_service.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,16 +30,16 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Login Page'),
-        ),
-        body: _isLoading
-            ? Center(
-                child: CircularProgressIndicator(
-                    color: Theme.of(context).primaryColor),
-              )
-            : SingleChildScrollView(
-                child: Stack(
+      appBar: AppBar(
+        title: const Text('Login Page'),
+      ),
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(
+                  color: Theme.of(context).primaryColor),
+            )
+          : SingleChildScrollView(
+              child: Stack(
                 children: [
                   Form(
                     key: formKey,
@@ -48,30 +49,35 @@ class _LoginPageState extends State<LoginPage> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           ClipOval(
-                              child: Container(
-                            width: 150,
-                            height: 150,
-                            color: AppColorScheme.pink,
-                            alignment: Alignment.center,
-                            child: const Text(
-                              'logo',
-                              style: TextStyle(color: AppColorScheme.black),
+                            child: Container(
+                              width: 150,
+                              height: 150,
+                              color: AppColorScheme.pink,
+                              alignment: Alignment.center,
+                              child: Text(
+                                'logo',
+                                style: AppTextTheme.body.copyWith(
+                                  color: AppColorScheme.black,
+                                ),
+                              ),
                             ),
-                          )),
+                          ),
                           const SizedBox(height: 5),
-                          const Text('BabyTracker',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(
-                                color: AppColorScheme.black,
-                                fontSize: 40,
-                                fontWeight: FontWeight.bold,
-                              )),
+                          Text(
+                            'BabyTracker',
+                            textAlign: TextAlign.center,
+                            style: AppTextTheme.h1.copyWith(
+                              color: AppColorScheme.black,
+                            ),
+                          ),
                           const SizedBox(height: 5),
-                          const Text(
+                          Text(
                             'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: AppColorScheme.lightGray, fontSize: 9),
+                            style: AppTextTheme.subtitle.copyWith(
+                              color: AppColorScheme.lightGray,
+                              fontSize: 9,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           Padding(
@@ -111,9 +117,11 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               onChanged: (val) {
-                                setState(() {
-                                  password = val;
-                                });
+                                setState(
+                                  () {
+                                    password = val;
+                                  },
+                                );
                               },
                               validator: (val) {
                                 if (val!.length < 6) {
@@ -130,51 +138,60 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               child: const Text('Forgot Password')),
                           Container(
-                              height: 50,
-                              width: 250,
-                              decoration: BoxDecoration(
-                                color: AppColorScheme.blue,
-                                borderRadius: BorderRadius.circular(20),
+                            height: 50,
+                            width: 250,
+                            decoration: BoxDecoration(
+                              color: AppColorScheme.blue,
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: TextButton(
+                              onPressed: () {
+                                login();
+                              },
+                              child: Text(
+                                'Login',
+                                style: AppTextTheme.h2.copyWith(
+                                  color: AppColorScheme.white,
+                                ),
                               ),
-                              child: TextButton(
-                                onPressed: () {
-                                  login();
-                                },
-                                child: const Text('Login',
-                                    style: TextStyle(
-                                      color: AppColorScheme.white,
-                                    )),
-                              )),
+                            ),
+                          ),
                           SizedBox(height: 10),
-                          Text.rich(TextSpan(
+                          Text.rich(
+                            TextSpan(
                               text: "Don't have an account?",
-                              style: TextStyle(
+                              style: AppTextTheme.body.copyWith(
                                 color: AppColorScheme.black,
-                                fontSize: 14,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: "Register here",
-                                  style: TextStyle(
+                                  style: AppTextTheme.body.copyWith(
                                     color: AppColorScheme.black,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const RegisterPage()));
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              const RegisterPage(),
+                                        ),
+                                      );
                                     },
                                 ),
-                              ])),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
                   ),
                 ],
-              )));
+              ),
+            ),
+    );
   }
 
   login() async {
