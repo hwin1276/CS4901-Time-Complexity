@@ -65,11 +65,14 @@ class EventCard extends StatelessWidget {
 
     // method to display how long ago event was created in hours/days
     timeAgo() {
+      /*
       if (DateTime.now().day - taskStartTime.day == 0) {
         return timeago.format(timeAgoHr);
       } else {
         return timeago.format(timeAgoDay);
       }
+      */
+      return timeago.format(taskStartTime);
     }
 
     // method to display duration depending on how many hours/minutes
@@ -77,14 +80,16 @@ class EventCard extends StatelessWidget {
       if (duration.inHours == 0) {
         return Text(
           "${duration.inMinutes}min • ${timeAgo()}",
-          style: TextStyle(
-              fontSize: 12, color: Colors.black, fontWeight: FontWeight.w500),
+          style: AppTextTheme.subtitle.copyWith(
+            color: AppColorScheme.black,
+          ),
         );
       } else {
         return Text(
           "${duration.inHours}hr ${duration.inMinutes}min • ${timeAgo()}}",
-          style: TextStyle(
-              fontSize: 12, color: Colors.black, fontWeight: FontWeight.w500),
+          style: AppTextTheme.subtitle.copyWith(
+            color: AppColorScheme.black,
+          ),
         );
       }
     }
@@ -130,13 +135,7 @@ class EventCard extends StatelessWidget {
             color: AppColorScheme.black,
           ),
         ),
-        subtitle: Text(
-          taskStartTime.toString(),
-          style: AppTextTheme.subtitle.copyWith(
-            color: AppColorScheme.black,
-            fontSize: 12,
-          ),
-        ),
+        subtitle: showTime(),
         trailing: Text(">", style: TextStyle(color: Colors.black)),
       ),
     );
