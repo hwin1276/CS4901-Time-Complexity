@@ -47,6 +47,11 @@ class EventCard extends StatelessWidget {
           color: Colors.red,
           padding: const EdgeInsets.all(10),
           child: const Icon(Icons.medical_services, size: 30));
+    } else if (taskType == 'Appointments') {
+      return Container(
+          color: AppColorScheme.yellow,
+          padding: const EdgeInsets.all(10),
+          child: const Icon(Icons.alarm, size: 30));
     }
   }
 

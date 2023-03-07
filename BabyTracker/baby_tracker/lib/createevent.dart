@@ -121,6 +121,15 @@ class _CreateEventState extends State<CreateEvent> {
                                   ),
                                 ),
                               ),
+                              DropdownMenuItem<String>(
+                                value: "Appointments",
+                                child: Text(
+                                  'Appointments',
+                                  style: AppTextTheme.h3.copyWith(
+                                    color: AppColorScheme.white,
+                                  ),
+                                ),
+                              ),
                             ],
                             onChanged: (value) {
                               setState(
@@ -466,6 +475,7 @@ class _CreateEventState extends State<CreateEvent> {
         "duration": endDateTime.difference(startDateTime).inMinutes,
         "startTime": startDateTime,
         "endTime": endDateTime,
+        "completed": (eventType == 'Appointments') ? false : true,
       };
       DatabaseService().createEvent(widget.babyId, eventData).whenComplete(() {
         _isLoading = false;
