@@ -82,7 +82,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
         centerTitle: true,
         title: Text(
           "${widget.babyName}'s Caretakers",
-          style: AppTextTheme.h1.copyWith(
+          style: AppTextTheme.h2.copyWith(
             color: AppColorScheme.white,
           ),
         ),
@@ -150,9 +150,9 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                   style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  getName(admin),
-                ),
+                Text(getName(admin),
+                    style: AppTextTheme.body
+                        .copyWith(color: AppColorScheme.white)),
               ],
             ),
           ],
@@ -176,17 +176,19 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                     ? ListTile(
                         leading: CircleAvatar(
                           radius: 30,
-                          backgroundColor: Colors.red,
+                          backgroundColor: AppColorScheme.red,
                           child: Text(
                               getName(caretakers[index])
                                   .substring(0, 1)
                                   .toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
+                              style: AppTextTheme.h3.copyWith(
+                                color: AppColorScheme.white,
                               )),
                         ),
-                        title: Text(getName(caretakers[index])),
+                        title: Text(getName(caretakers[index]),
+                            style: AppTextTheme.h3.copyWith(
+                              color: AppColorScheme.white,
+                            )),
                         trailing: InkWell(
                             onTap: () async {
                               await DatabaseService(uid: user!.uid).kickUser(
@@ -194,34 +196,35 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                                   widget.babyName,
                                   getId(caretakers[index]),
                                   getName(caretakers[index]));
-                              showSnackBar(context, Colors.green,
+                              showSnackBar(context, AppColorScheme.green,
                                   "Succssfully kicked ${getName(caretakers[index])}");
                             },
                             child: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: Colors.red,
-                                  border:
-                                      Border.all(color: Colors.white, width: 1),
+                                  color: AppColorScheme.red,
+                                  border: Border.all(
+                                      color: AppColorScheme.white, width: 1),
                                 ),
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 20, vertical: 10),
-                                child: const Text("Kick",
-                                    style: TextStyle(color: Colors.white)))))
+                                child: Text("Kick",
+                                    style: AppTextTheme.body.copyWith(
+                                        color: AppColorScheme.white)))))
                     : ListTile(
                         leading: CircleAvatar(
                           radius: 30,
-                          backgroundColor: Colors.red,
+                          backgroundColor: AppColorScheme.red,
                           child: Text(
                               getName(caretakers[index])
                                   .substring(0, 1)
                                   .toUpperCase(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                              )),
+                              style: AppTextTheme.h3
+                                  .copyWith(color: AppColorScheme.white)),
                         ),
-                        title: Text(getName(caretakers[index])),
+                        title: Text(getName(caretakers[index]),
+                            style: AppTextTheme.h3
+                                .copyWith(color: AppColorScheme.white)),
                       ));
           });
     } else {
