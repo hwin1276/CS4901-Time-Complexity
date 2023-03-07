@@ -1,3 +1,5 @@
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../service/database_service.dart';
@@ -70,7 +72,9 @@ class _CalendarState extends State<Calendar> {
             // Style the calendar
             calendarStyle: CalendarStyle(
               isTodayHighlighted: true,
-              selectedTextStyle: TextStyle(color: Colors.white),
+              selectedTextStyle: AppTextTheme.body.copyWith(
+                color: AppColorScheme.white,
+              ),
             ),
           ),
           Divider(

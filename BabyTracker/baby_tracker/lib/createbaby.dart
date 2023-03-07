@@ -1,6 +1,8 @@
 import 'package:baby_tracker/helper/helper_functions.dart';
 import 'package:baby_tracker/service/auth_service.dart';
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -69,11 +71,16 @@ class _CreateBabyState extends State<CreateBaby> {
                         child: TextFormField(
                           decoration: InputDecoration(
                             hintText: "Name",
+                            hintStyle: AppTextTheme.subtitle.copyWith(
+                              color: AppColorScheme.lightGray,
+                            ),
                           ),
                           onChanged: (val) {
-                            setState(() {
-                              babyName = val;
-                            });
+                            setState(
+                              () {
+                                babyName = val;
+                              },
+                            );
                           },
                           validator: (val) {
                             if (val!.isNotEmpty) {
@@ -101,36 +108,45 @@ class _CreateBabyState extends State<CreateBaby> {
                           return Column(
                             children: [
                               RadioListTile<String>(
-                                  title: Text('Male'),
-                                  value: 'Male',
-                                  groupValue: gender,
-                                  onChanged: (String? value) {
-                                    setState(() {
+                                title: Text('Male'),
+                                value: 'Male',
+                                groupValue: gender,
+                                onChanged: (String? value) {
+                                  setState(
+                                    () {
                                       gender = value!;
-                                    });
-                                  }),
+                                    },
+                                  );
+                                },
+                              ),
                               RadioListTile<String>(
-                                  title: Text('Female'),
-                                  value: 'Female',
-                                  groupValue: gender,
-                                  onChanged: (String? value) {
-                                    setState(() {
+                                title: Text('Female'),
+                                value: 'Female',
+                                groupValue: gender,
+                                onChanged: (String? value) {
+                                  setState(
+                                    () {
                                       gender = value!;
-                                    });
-                                  }),
+                                    },
+                                  );
+                                },
+                              ),
                               RadioListTile<String>(
-                                  title: Text('Other'),
-                                  value: 'Other',
-                                  groupValue: gender,
-                                  onChanged: (String? value) {
-                                    setState(() {
+                                title: Text('Other'),
+                                value: 'Other',
+                                groupValue: gender,
+                                onChanged: (String? value) {
+                                  setState(
+                                    () {
                                       gender = value!;
-                                    });
-                                  }),
+                                    },
+                                  );
+                                },
+                              ),
                               Text(
                                 state.errorText ?? '',
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: AppColorScheme.red,
                                 ),
                               )
                             ],
@@ -221,7 +237,9 @@ class _CreateBabyState extends State<CreateBaby> {
                             Text('Birth Date:'),
                             Text(
                               '${birthDate.month}/${birthDate.day}/${birthDate.year}',
-                              style: TextStyle(fontSize: 32),
+                              style: AppTextTheme.h2.copyWith(
+                                color: AppColorScheme.white,
+                              ),
                             ),
                             ElevatedButton(
                               child: Text('Select Date'),
@@ -249,21 +267,24 @@ class _CreateBabyState extends State<CreateBaby> {
                         padding: EdgeInsets.symmetric(horizontal: 15),
                       ),
                       Container(
-                          height: 40,
-                          width: 200,
-                          decoration: BoxDecoration(
-                            color: Colors.blue,
-                            borderRadius: BorderRadius.circular(20),
+                        height: 40,
+                        width: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: TextButton(
+                          onPressed: () {
+                            createBaby();
+                          },
+                          child: Text(
+                            'Confirm',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ),
                           ),
-                          child: TextButton(
-                            onPressed: () {
-                              createBaby();
-                            },
-                            child: const Text('Confirm',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                )),
-                          ))
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -274,17 +295,21 @@ class _CreateBabyState extends State<CreateBaby> {
 
   createBaby() async {
     if (formKey.currentState!.validate()) {
-      setState(() {
-        _isLoading = true;
-      });
+      setState(
+        () {
+          _isLoading = true;
+        },
+      );
       DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
           .createBaby(userName, FirebaseAuth.instance.currentUser!.uid,
               babyName, gender, theme, birthDate)
-          .whenComplete(() {
-        _isLoading = false;
-      });
+          .whenComplete(
+        () {
+          _isLoading = false;
+        },
+      );
       Navigator.of(context).pop();
-      showSnackBar(context, Colors.green, "Baby added successfully");
+      showSnackBar(context, AppColorScheme.green, "Baby added successfully");
     }
   }
 }

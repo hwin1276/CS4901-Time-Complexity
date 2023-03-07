@@ -1,3 +1,5 @@
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -118,19 +120,23 @@ class EventCard extends StatelessWidget {
         leading: eventIcon(),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        tileColor: Colors.white,
+        tileColor: AppColorScheme.white,
         // leading: Icon(
         //     Icons.abc,
         //     color: Colors.blue),
         title: Text(
           taskName,
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
+          style: AppTextTheme.body.copyWith(
+            color: AppColorScheme.black,
           ),
         ),
-        subtitle: showTime(),
+        subtitle: Text(
+          taskStartTime.toString(),
+          style: AppTextTheme.subtitle.copyWith(
+            color: AppColorScheme.black,
+            fontSize: 12,
+          ),
+        ),
         trailing: Text(">", style: TextStyle(color: Colors.black)),
       ),
     );

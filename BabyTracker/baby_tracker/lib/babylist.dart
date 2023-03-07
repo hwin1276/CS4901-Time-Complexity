@@ -1,4 +1,6 @@
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'createbaby.dart';
@@ -52,11 +54,18 @@ class _BabyListState extends State<BabyList> {
   }
 
   @override
+  // ignore: duplicate_ignore
   Widget build(BuildContext context) {
-    // ignore: dead_code, dead_code, dead_code
+    // ignore: dead_code,
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Baby View'),
+        title: Text(
+          'Baby View',
+          style: AppTextTheme.h1.copyWith(
+            color: AppColorScheme.black,
+            fontSize: 20,
+          ),
+        ),
         centerTitle: true,
       ),
       body: Column(
@@ -74,61 +83,67 @@ class _BabyListState extends State<BabyList> {
                       snapshot.data['babies'].length == 0) {
                     return GestureDetector(
                       onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const CreateBaby())),
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CreateBaby(),
+                        ),
+                      ),
+                      // This can stay as-is for now, but should really be extracted
                       child: Container(
-                          margin: const EdgeInsets.all(20),
-                          height: 150,
-                          decoration: BoxDecoration(
-                            color: Colors.grey,
-                            borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                                bottomLeft: Radius.circular(10),
-                                bottomRight: Radius.circular(10)),
-                          ),
-                          child: Text(
-                            '+',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 50),
-                          )),
+                        margin: const EdgeInsets.all(20),
+                        height: 150,
+                        decoration: BoxDecoration(
+                          color: AppColorScheme.lightGray,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                              bottomLeft: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                        ),
+                        child: Text(
+                          '+',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 50),
+                        ),
+                      ),
                     );
                   } else {
                     return ListView.builder(
-                        itemCount: snapshot.data['babies'].length + 1,
-                        itemBuilder: (context, index) => (index !=
-                                snapshot.data['babies'].length)
-                            ? BabyCard(
-                                userName: snapshot.data['userName'],
-                                babyId: getId(snapshot.data['babies'][index]),
-                                babyName:
-                                    getName(snapshot.data['babies'][index]),
-                              )
-                            : GestureDetector(
-                                onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const CreateBaby())),
-                                child: Container(
-                                    margin: const EdgeInsets.all(20),
-                                    height: 150,
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey,
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(10),
-                                          topRight: Radius.circular(10),
-                                          bottomLeft: Radius.circular(10),
-                                          bottomRight: Radius.circular(10)),
-                                    ),
-                                    child: Text(
-                                      '+',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(fontSize: 50),
-                                    )),
-                              ));
+                      itemCount: snapshot.data['babies'].length + 1,
+                      itemBuilder: (context, index) => (index !=
+                              snapshot.data['babies'].length)
+                          ? BabyCard(
+                              userName: snapshot.data['userName'],
+                              babyId: getId(snapshot.data['babies'][index]),
+                              babyName: getName(snapshot.data['babies'][index]),
+                            )
+                          : GestureDetector(
+                              onTap: () => Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateBaby())),
+                              child: Container(
+                                margin: const EdgeInsets.all(20),
+                                height: 150,
+                                decoration: BoxDecoration(
+                                  color: AppColorScheme.lightGray,
+                                  borderRadius: BorderRadius.only(
+                                      topLeft: Radius.circular(10),
+                                      topRight: Radius.circular(10),
+                                      bottomLeft: Radius.circular(10),
+                                      bottomRight: Radius.circular(10)),
+                                ),
+                                child: Text(
+                                  '+',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(fontSize: 50),
+                                ),
+                              ),
+                            ),
+                    );
                   }
+                  // ignore: dead_code, empty_statements
                   ;
                 } else if (snapshot.hasError) {
                   return const Text('No data available right now');

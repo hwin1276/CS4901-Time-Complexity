@@ -1,3 +1,5 @@
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/event_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -61,15 +63,18 @@ class _EventListState extends State<EventList> {
               );
             } else if (snapshot.hasError) {
               return Center(
-                  child: Text(
-                'No data available right now',
-                style: TextStyle(
-                  color: Colors.white,
+                child: Text(
+                  'No data available right now',
+                  style: AppTextTheme.body.copyWith(
+                    color: AppColorScheme.white,
+                  ),
                 ),
-              ));
+              );
             } else {
               return Center(
-                child: CircularProgressIndicator(color: Colors.white),
+                child: CircularProgressIndicator(
+                  color: AppColorScheme.white,
+                ),
               );
             }
           }),

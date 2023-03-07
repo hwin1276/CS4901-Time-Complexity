@@ -1,5 +1,7 @@
 import 'package:baby_tracker/helper/helper_functions.dart';
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -52,11 +54,8 @@ class _AddCaretakerState extends State<AddCaretaker> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Add a Caretaker",
-              style: TextStyle(
-                fontSize: 27,
-                fontWeight: FontWeight.bold,
-              )),
+          title: Text("Add a Caretaker",
+              style: AppTextTheme.h1.copyWith(color: AppColorScheme.white)),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -70,13 +69,13 @@ class _AddCaretakerState extends State<AddCaretaker> {
                     Expanded(
                       child: TextField(
                           controller: searchController,
-                          style: const TextStyle(color: Colors.white),
-                          decoration: const InputDecoration(
+                          style: const TextStyle(color: AppColorScheme.white),
+                          decoration: InputDecoration(
                             border: InputBorder.none,
                             hintText:
-                                "Search for another user using their username...",
-                            hintStyle:
-                                TextStyle(color: Colors.white, fontSize: 16),
+                                "Search for another user using their email...",
+                            hintStyle: AppTextTheme.subtitle
+                                .copyWith(color: AppColorScheme.lightGray),
                           )),
                     ),
                     GestureDetector(
@@ -87,12 +86,12 @@ class _AddCaretakerState extends State<AddCaretaker> {
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.1),
+                            color: AppColorScheme.white.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(40),
                           ),
                           child: const Icon(
                             Icons.search,
-                            color: Colors.white,
+                            color: AppColorScheme.white,
                           ),
                         )),
                   ],
@@ -132,7 +131,6 @@ class _AddCaretakerState extends State<AddCaretaker> {
   }
 
   userList() {
-    //return Container();
     return hasUserSearched
         ? ListView.builder(
             shrinkWrap: true,

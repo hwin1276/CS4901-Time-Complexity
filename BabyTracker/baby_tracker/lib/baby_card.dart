@@ -1,5 +1,7 @@
 import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -54,31 +56,31 @@ class _BabyCardState extends State<BabyCard> {
   colorGradient() {
     if (babyTheme == 'red') {
       return LinearGradient(
-        colors: const [Color(0xfff32e20), Color(0xffee4c83)],
+        colors: const [AppColorScheme.red, AppColorScheme.paleRed],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
     } else if (babyTheme == 'blue') {
       return LinearGradient(
-        colors: const [Color(0xff2095f3), Color(0xffb5dcfb)],
+        colors: const [AppColorScheme.blue, AppColorScheme.paleBlue],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
     } else if (babyTheme == 'yellow') {
       return LinearGradient(
-        colors: const [Color(0xfffff389), Color(0xffffa014)],
+        colors: const [AppColorScheme.paleYellow, AppColorScheme.yellow],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
     } else if (babyTheme == 'green') {
       return LinearGradient(
-        colors: const [Color(0xff47a44b), Color(0xffaddbaf)],
+        colors: const [AppColorScheme.green, AppColorScheme.paleGreen],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
     } else {
       return LinearGradient(
-        colors: const [Color(0xffb9b9b9), Color(0xffffffff)],
+        colors: const [AppColorScheme.lightGray, AppColorScheme.white],
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
@@ -89,12 +91,12 @@ class _BabyCardState extends State<BabyCard> {
     if (gender == 'Male') {
       return Container(
           // if male then color = blue
-          color: Colors.blue[100],
+          color: AppColorScheme.paleBlue,
           padding: const EdgeInsets.all(10),
           child: const Icon(Icons.child_care, size: 30));
     } else {
       return Container(
-          color: Colors.pink[100],
+          color: AppColorScheme.palePink, // if female
           padding: const EdgeInsets.all(10),
           child: const Icon(Icons.child_care, size: 30));
     }
