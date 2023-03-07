@@ -1,4 +1,5 @@
 import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import '../pages/todolist.dart';
 import '../objects/task.dart';
@@ -40,8 +41,9 @@ class _ToDoState extends State<ToDo> {
                         ),
                         child: Text(
                           'Tasks',
-                          style: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.w500),
+                          style: AppTextTheme.h1.copyWith(
+                            color: Theme.of(context).primaryColor,
+                          ),
                         ),
                       ),
                       for (Task tasktd in todoList)
@@ -86,8 +88,12 @@ class _ToDoState extends State<ToDo> {
                     child: TextField(
                       controller: todoController,
                       decoration: InputDecoration(
-                          hintText: 'Add a new task to the list',
-                          border: InputBorder.none),
+                        hintText: 'Add a new task to the list',
+                        hintStyle: AppTextTheme.subtitle.copyWith(
+                          color: AppColorScheme.darkGray,
+                        ),
+                        border: InputBorder.none,
+                      ),
                     ),
                   ),
                 ),
