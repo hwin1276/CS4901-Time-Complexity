@@ -84,65 +84,80 @@ class _CalendarState extends State<Calendar> {
 
   Widget calendar() {
     return Scaffold(
-        body: Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: ListView(
-        children: [
-          TableCalendar(
-            focusedDay: _focusedDay,
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 25),
-            calendarFormat: _calendarFormat,
-            selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-            calendarStyle: CalendarStyle(
-                isTodayHighlighted: true,
-                selectedTextStyle: AppTextTheme.body.copyWith(
-                  color: AppColorScheme.white,
-                ),
-                markersAlignment: Alignment.bottomRight),
-            availableGestures: AvailableGestures.horizontalSwipe,
-            onDaySelected: (selectedDay, focusedDay) {
-              setState(() {
-                _selectedDay = selectedDay;
-                _focusedDay = focusedDay;
-              });
-            },
-            onFormatChanged: (format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            },
-            eventLoader: _getEventsForTheDay,
-            // Custom marker to display number instead of dots
-            calendarBuilders: CalendarBuilders(
-              markerBuilder: (context, day, events) => events.isNotEmpty
-                  ? Container(
-                      width: 18,
-                      height: 18,
-                      alignment: Alignment.center,
-                      decoration: const BoxDecoration(color: Colors.lightBlue),
-                      child: Text('${events.length}',
-                          style: const TextStyle(color: Colors.white)))
-                  : null,
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: ListView(
+          children: [
+            TableCalendar(
+              focusedDay: _focusedDay,
+              firstDay: DateTime.utc(2020, 1, 1),
+              lastDay: DateTime.utc(2030, 12, 25),
+              calendarFormat: _calendarFormat,
+              selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+              calendarStyle: CalendarStyle(
+                  isTodayHighlighted: true,
+                  selectedTextStyle: AppTextTheme.body.copyWith(
+                    color: AppColorScheme.white,
+                  ),
+                  markersAlignment: Alignment.bottomRight),
+              availableGestures: AvailableGestures.horizontalSwipe,
+              onDaySelected: (selectedDay, focusedDay) {
+                setState(
+                  () {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                  },
+                );
+              },
+              onFormatChanged: (format) {
+                setState(
+                  () {
+                    _calendarFormat = format;
+                  },
+                );
+              },
+              eventLoader: _getEventsForTheDay,
+              // Custom marker to display number instead of dots
+              calendarBuilders: calendarBase(),
             ),
-          ),
-          Text("Events for: ${_focusedDay.toString().split(" ")[0]}",
+            Text(
+              "Events for: ${_focusedDay.toString().split(" ")[0]}",
               style: AppTextTheme.h3.copyWith(
                 color: AppColorScheme.white,
-              )),
-          // Event List
-          for (var event in _getEventsForTheDay(_selectedDay))
-            EventCard(
-                taskName: event["task"],
-                taskType: event["type"],
-                taskDescription: event["description"],
-                taskStartTime: event["startTime"].toDate(),
-                taskEndTime: event["endTime"].toDate(),
-                calories: event["calories"],
-                babyExcreta: event["babyExcreta"],
-                duration: event["duration"])
-        ],
+              ),
+            ),
+            // Event List
+            for (var event in _getEventsForTheDay(_selectedDay))
+              displayCalendarEventCard(event)
+          ],
+        ),
       ),
-    ));
+    );
+  }
+
+  EventCard displayCalendarEventCard(event) {
+    return EventCard(
+        taskName: event["task"],
+        taskType: event["type"],
+        taskDescription: event["description"],
+        taskStartTime: event["startTime"].toDate(),
+        taskEndTime: event["endTime"].toDate(),
+        calories: event["calories"],
+        babyExcreta: event["babyExcreta"],
+        duration: event["duration"]);
+  }
+
+  CalendarBuilders<Object?> calendarBase() {
+    return CalendarBuilders(
+      markerBuilder: (context, day, events) => events.isNotEmpty
+          ? Container(
+              width: 18,
+              height: 18,
+              alignment: Alignment.center,
+              decoration: const BoxDecoration(color: Colors.lightBlue),
+              child: Text('${events.length}',
+                  style: const TextStyle(color: Colors.white)))
+          : null,
+    );
   }
 }
