@@ -87,20 +87,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
           ),
         ),
         actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => AddCaretaker(
-                    babyId: widget.babyId,
-                    babyName: widget.babyName,
-                  ),
-                ),
-              );
-            },
-            icon: const Icon(Icons.add),
-          ),
+          addEventButton(context),
         ],
       ),
       body: Container(
@@ -117,6 +104,23 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
           ),
         ),
       ),
+    );
+  }
+
+  IconButton addEventButton(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => AddCaretaker(
+              babyId: widget.babyId,
+              babyName: widget.babyName,
+            ),
+          ),
+        );
+      },
+      icon: const Icon(Icons.add),
     );
   }
 
@@ -150,9 +154,11 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                   style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
                 ),
                 const SizedBox(height: 10),
-                Text(getName(admin),
-                    style: AppTextTheme.body
-                        .copyWith(color: AppColorScheme.white)),
+                Text(
+                  getName(admin),
+                  style:
+                      AppTextTheme.body.copyWith(color: AppColorScheme.white),
+                ),
               ],
             ),
           ],
@@ -166,69 +172,76 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
   allCaretakers() {
     if (caretakers.isNotEmpty) {
       return ListView.builder(
-          itemCount: caretakers.length,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            return Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
-                child: (isAdmin() && !(isYou(caretakers[index])))
-                    ? ListTile(
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: AppColorScheme.red,
-                          child: Text(
-                              getName(caretakers[index])
-                                  .substring(0, 1)
-                                  .toUpperCase(),
-                              style: AppTextTheme.h3.copyWith(
-                                color: AppColorScheme.white,
-                              )),
-                        ),
-                        title: Text(getName(caretakers[index]),
-                            style: AppTextTheme.h3.copyWith(
-                              color: AppColorScheme.white,
-                            )),
-                        trailing: InkWell(
-                            onTap: () async {
-                              await DatabaseService(uid: user!.uid).kickUser(
-                                  widget.babyId,
-                                  widget.babyName,
-                                  getId(caretakers[index]),
-                                  getName(caretakers[index]));
-                              showSnackBar(context, AppColorScheme.green,
-                                  "Succssfully kicked ${getName(caretakers[index])}");
-                            },
-                            child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: AppColorScheme.red,
-                                  border: Border.all(
-                                      color: AppColorScheme.white, width: 1),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20, vertical: 10),
-                                child: Text("Kick",
-                                    style: AppTextTheme.body.copyWith(
-                                        color: AppColorScheme.white)))))
-                    : ListTile(
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundColor: AppColorScheme.red,
-                          child: Text(
-                              getName(caretakers[index])
-                                  .substring(0, 1)
-                                  .toUpperCase(),
-                              style: AppTextTheme.h3
-                                  .copyWith(color: AppColorScheme.white)),
-                        ),
-                        title: Text(getName(caretakers[index]),
-                            style: AppTextTheme.h3
-                                .copyWith(color: AppColorScheme.white)),
-                      ));
-          });
+        itemCount: caretakers.length,
+        shrinkWrap: true,
+        itemBuilder: (context, index) {
+          return Container(
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+            child: (isAdmin() && !(isYou(caretakers[index])))
+                ? adminOptions(index, context)
+                : notAdminOptions(index),
+          );
+        },
+      );
     } else {
       return CircularProgressIndicator(color: Theme.of(context).primaryColor);
     }
+  }
+
+  ListTile notAdminOptions(int index) {
+    return ListTile(
+      leading: CircleAvatar(
+        radius: 30,
+        backgroundColor: AppColorScheme.red,
+        child: Text(
+          getName(caretakers[index]).substring(0, 1).toUpperCase(),
+          style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
+        ),
+      ),
+      title: Text(
+        getName(caretakers[index]),
+        style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
+      ),
+    );
+  }
+
+  ListTile adminOptions(int index, BuildContext context) {
+    return ListTile(
+      leading: CircleAvatar(
+        radius: 30,
+        backgroundColor: AppColorScheme.red,
+        child: Text(getName(caretakers[index]).substring(0, 1).toUpperCase(),
+            style: AppTextTheme.h3.copyWith(
+              color: AppColorScheme.white,
+            )),
+      ),
+      title: Text(getName(caretakers[index]),
+          style: AppTextTheme.h3.copyWith(
+            color: AppColorScheme.white,
+          )),
+      trailing: InkWell(
+        onTap: () async {
+          await DatabaseService(uid: user!.uid).kickUser(
+              widget.babyId,
+              widget.babyName,
+              getId(caretakers[index]),
+              getName(caretakers[index]));
+          showSnackBar(context, AppColorScheme.green,
+              "Succssfully kicked ${getName(caretakers[index])}");
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            color: AppColorScheme.red,
+            border: Border.all(color: AppColorScheme.white, width: 1),
+          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Text(
+            "Kick",
+            style: AppTextTheme.body.copyWith(color: AppColorScheme.white),
+          ),
+        ),
+      ),
+    );
   }
 }
