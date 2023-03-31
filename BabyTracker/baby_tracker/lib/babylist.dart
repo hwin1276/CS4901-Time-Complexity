@@ -54,9 +54,7 @@ class _BabyListState extends State<BabyList> {
   }
 
   @override
-  // ignore: duplicate_ignore
   Widget build(BuildContext context) {
-    // ignore: dead_code,
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -143,8 +141,6 @@ class _BabyListState extends State<BabyList> {
                             ),
                     );
                   }
-                  // ignore: dead_code, empty_statements
-                  ;
                 } else if (snapshot.hasError) {
                   return const Text('No data available right now');
                 } else {
@@ -155,51 +151,6 @@ class _BabyListState extends State<BabyList> {
                 }
               },
             ),
-
-            // ListView(children: [
-            //   Container(
-            //     margin: EdgeInsets.only(
-            //       top: 50,
-            //       bottom: 20,
-            //     ),
-            //   ),
-            //   for (Baby kid in babyList)
-            //     BabyCard(
-            //       baby: kid,
-            //       onClick: () {
-            //         Navigator.push(
-            //             context,
-            //             MaterialPageRoute(
-            //                 builder: ((context) => DetailsPages(
-            //                       // pass the baby's name to Detail Page
-            //                       text: kid.name,
-            //                     ))));
-            //       },
-            //     ),
-            //   // Button to add a baby profile to the view
-            //   GestureDetector(
-            //     onTap: () => Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => const CreateBaby())),
-            //     child: Container(
-            //         margin: const EdgeInsets.all(20),
-            //         height: 150,
-            //         decoration: BoxDecoration(
-            //           color: Colors.grey,
-            //           borderRadius: BorderRadius.only(
-            //               topLeft: Radius.circular(10),
-            //               topRight: Radius.circular(10),
-            //               bottomLeft: Radius.circular(10),
-            //               bottomRight: Radius.circular(10)),
-            //         ),
-            //         child: Text(
-            //           '+',
-            //           textAlign: TextAlign.center,
-            //           style: TextStyle(fontSize: 50),
-            //         )),
-            //   ),
-            // ]),
           )
         ],
       ),
