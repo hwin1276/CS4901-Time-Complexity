@@ -33,11 +33,13 @@ class _AddCaretakerState extends State<AddCaretaker> {
   }
 
   getCurrentUserIdandName() async {
-    await HelperFunctions.getUserNameFromSF().then((value) {
-      setState(() {
-        userName = value!;
-      });
-    });
+    await HelperFunctions.getUserNameFromSF().then(
+      (value) {
+        setState(() {
+          userName = value!;
+        });
+      },
+    );
     user = FirebaseAuth.instance.currentUser;
   }
 
@@ -52,56 +54,59 @@ class _AddCaretakerState extends State<AddCaretaker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Add a Caretaker",
-              style: AppTextTheme.h1.copyWith(color: AppColorScheme.white)),
+      appBar: AppBar(
+        title: Text("Add a Caretaker",
+            style: AppTextTheme.h1.copyWith(color: AppColorScheme.white)),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.purple,
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: findParentByEmail(),
+            ),
+            _isLoading ? Center(child: CircularProgressIndicator()) : userList()
+          ],
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.purple,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                          controller: searchController,
-                          style: const TextStyle(color: AppColorScheme.white),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText:
-                                "Search for another user using their email...",
-                            hintStyle: AppTextTheme.subtitle
-                                .copyWith(color: AppColorScheme.lightGray),
-                          )),
-                    ),
-                    GestureDetector(
-                        onTap: () {
-                          initiateSearchMethod();
-                        },
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            color: AppColorScheme.white.withOpacity(0.1),
-                            borderRadius: BorderRadius.circular(40),
-                          ),
-                          child: const Icon(
-                            Icons.search,
-                            color: AppColorScheme.white,
-                          ),
-                        )),
-                  ],
-                ),
-              ),
-              _isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : userList()
-            ],
+      ),
+    );
+  }
+
+  Row findParentByEmail() {
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: searchController,
+            style: const TextStyle(color: AppColorScheme.white),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: "Search for another user using their email...",
+              hintStyle: AppTextTheme.subtitle
+                  .copyWith(color: AppColorScheme.lightGray),
+            ),
           ),
-        ));
+        ),
+        GestureDetector(
+          onTap: () {
+            initiateSearchMethod();
+          },
+          child: Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              color: AppColorScheme.white.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(40),
+            ),
+            child: const Icon(
+              Icons.search,
+              color: AppColorScheme.white,
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   initiateSearchMethod() async {
@@ -109,23 +114,25 @@ class _AddCaretakerState extends State<AddCaretaker> {
       setState(() {
         _isLoading = true;
       });
-      await DatabaseService()
-          .searchByUserName(searchController.text)
-          .then((snapshot) {
-        setState(() {
-          if (snapshot.docs.length == 0) {
-            showDialog(
-              context: context,
-              builder: (context) =>
-                  AlertDialog(title: Text("No one found by that username")),
-            );
-          } else {
-            searchSnapshot = snapshot;
-            hasUserSearched = true;
-          }
-          _isLoading = false;
-        });
-      });
+      await DatabaseService().searchByUserName(searchController.text).then(
+        (snapshot) {
+          setState(
+            () {
+              if (snapshot.docs.length == 0) {
+                showDialog(
+                  context: context,
+                  builder: (context) =>
+                      AlertDialog(title: Text("No one found by that username")),
+                );
+              } else {
+                searchSnapshot = snapshot;
+                hasUserSearched = true;
+              }
+              _isLoading = false;
+            },
+          );
+        },
+      );
     }
   }
 
@@ -141,19 +148,23 @@ class _AddCaretakerState extends State<AddCaretaker> {
               );
             },
           )
-        : Container(child: Text("Search for a user"));
+        : Text("Search for a user");
   }
 
   alreadyCaretaker(String searchEmail) async {
     await DatabaseService(uid: user!.uid)
         .isUserCaretakerWithEmail(searchEmail, widget.babyName, widget.babyId)
-        .then((value) {
-      if (mounted) {
-        setState(() {
-          isJoined = value;
-        });
-      }
-    });
+        .then(
+      (value) {
+        if (mounted) {
+          setState(
+            () {
+              isJoined = value;
+            },
+          );
+        }
+      },
+    );
   }
 
   Widget userTile(String searchUsername, String searchEmail) {
@@ -171,42 +182,44 @@ class _AddCaretakerState extends State<AddCaretaker> {
       title: Text(searchUsername,
           style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text("Email: $searchEmail"),
-      trailing: InkWell(
-          onTap: () async {
-            if (!isJoined) {
-              await DatabaseService(uid: user!.uid).inviteUser(
-                  widget.babyId, widget.babyName, searchEmail, searchUsername);
-              setState(() {
-                isJoined = !isJoined;
-              });
-              showSnackBar(
-                  context, Colors.green, "Succssfully invited $searchUsername");
-            } else {
-              showSnackBar(
-                  context, Colors.red, "You have already invited this person");
-            }
-          },
-          child: isJoined
-              ? Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.black,
-                    border: Border.all(color: Colors.white, width: 1),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: const Text("Invited",
-                      style: TextStyle(color: Colors.white)))
-              : Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.black,
-                    border: Border.all(color: Colors.white, width: 1),
-                  ),
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                  child: const Text("Invite",
-                      style: TextStyle(color: Colors.white)))),
+      trailing: inviteConfirm(searchEmail, searchUsername),
+    );
+  }
+
+  InkWell inviteConfirm(String searchEmail, String searchUsername) {
+    return InkWell(
+      onTap: () async {
+        if (!isJoined) {
+          await DatabaseService(uid: user!.uid).inviteUser(
+              widget.babyId, widget.babyName, searchEmail, searchUsername);
+          setState(() {
+            isJoined = !isJoined;
+          });
+          showSnackBar(
+              context, Colors.green, "Succssfully invited $searchUsername");
+        } else {
+          showSnackBar(
+              context, Colors.red, "You have already invited this person");
+        }
+      },
+      child: isJoined
+          ? inviteConfirmMessage("Invited")
+          : inviteConfirmMessage("Invite"),
+    );
+  }
+
+  Container inviteConfirmMessage(String indicator) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.black,
+        border: Border.all(color: Colors.white, width: 1),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      child: Text(
+        indicator,
+        style: TextStyle(color: Colors.white),
+      ),
     );
   }
 }
