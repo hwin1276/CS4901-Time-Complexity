@@ -232,6 +232,7 @@ class _CreateEventState extends State<CreateEvent> {
                                 endDateButton(context),
                                 SizedBox(width: 10),
                                 endTimeButton(endHours, endMinutes),
+
                               ],
                             ),
                           ],
