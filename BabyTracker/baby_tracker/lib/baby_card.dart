@@ -1,7 +1,6 @@
 import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
-import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
