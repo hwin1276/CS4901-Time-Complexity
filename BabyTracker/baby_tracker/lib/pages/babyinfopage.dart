@@ -3,7 +3,6 @@ import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../widgets/showsnackbar.dart';
 import 'addcaretaker.dart';
 
