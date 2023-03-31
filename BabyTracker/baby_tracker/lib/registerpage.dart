@@ -7,7 +7,6 @@ import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/widgets/textInputDecoration.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-
 import 'helper/helper_functions.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -22,6 +21,8 @@ class _RegisterPageState extends State<RegisterPage> {
   String email = "";
   String userName = "";
   String password = "";
+  String validEmailRegex =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   bool _isLoading = false;
   AuthService authService = AuthService();
 
@@ -72,14 +73,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               style: AppTextTheme.h1
                                   .copyWith(color: AppColorScheme.black)),
                           const SizedBox(height: 5),
-                          Text(
-                            'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
-                            textAlign: TextAlign.center,
-                            style: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.white,
-                              fontSize: 9,
-                            ),
-                          ),
+                          credits(),
                           const SizedBox(height: 20),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -100,9 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 });
                               },
                               validator: (val) {
-                                return RegExp(
-                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                        .hasMatch(val!)
+                                return RegExp(validEmailRegex).hasMatch(val!)
                                     ? null
                                     : "Please enter a valid email";
                               },
@@ -223,6 +215,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ),
             ),
+    );
+  }
+
+  Text credits() {
+    String developers =
+        'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham';
+    return Text(
+      developers,
+      textAlign: TextAlign.center,
+      style: AppTextTheme.subtitle.copyWith(
+        color: AppColorScheme.white,
+        fontSize: 9,
+      ),
     );
   }
 
