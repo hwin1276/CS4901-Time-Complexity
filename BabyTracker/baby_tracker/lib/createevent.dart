@@ -388,6 +388,10 @@ class _CreateEventState extends State<CreateEvent> {
                                     );
 
                                     setState(() => startDateTime = newDateTime);
+
+                                    if (startDateTime.isAfter(endDateTime)) {
+                                      setState(() => endDateTime = startDateTime.add(Duration(minutes: 30)));
+                                    }
                                   },
                                 ),
                               ],
@@ -489,6 +493,10 @@ class _CreateEventState extends State<CreateEvent> {
                                     );
 
                                     setState(() => endDateTime = newDateTime);
+
+                                    if (endDateTime.isBefore(startDateTime)) {
+                                      setState(() => startDateTime = endDateTime.add(Duration(minutes: -30)));
+                                    }
                                   },
                                 ),
                               ],
