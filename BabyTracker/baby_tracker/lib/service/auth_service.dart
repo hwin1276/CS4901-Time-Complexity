@@ -1,6 +1,5 @@
 import 'package:baby_tracker/helper/helper_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'database_service.dart';
 
 class AuthService {
