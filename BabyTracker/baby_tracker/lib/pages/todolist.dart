@@ -1,5 +1,3 @@
-//import 'dart:html';
-
 import 'package:baby_tracker/objects/task.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';

@@ -70,18 +70,7 @@ class EventCard extends StatelessWidget {
 
     // method to display how long ago event was created in hours/days
     timeAgo() {
-      /*
-      if (DateTime.now().day - taskStartTime.day == 0) {
-        return timeago.format(timeAgoHr);
-      } else {
-        return timeago.format(timeAgoDay);
-      }
-      */
-      if (taskType == 'Appointments') {
-        return timeago.format(taskStartTime, allowFromNow: true);
-      } else {
-        return timeago.format(taskStartTime);
-      }
+      return timeago.format(taskStartTime);
     }
 
     // method to display duration depending on how many hours/minutes
@@ -112,16 +101,12 @@ class EventCard extends StatelessWidget {
             builder: (context) => AlertDialog(
               title: Text(taskType),
               content: (taskType == "Diaper Change")
-                  ? Text(
-                      "TITLE: $taskName\nDESCRIPTION: $taskDescription\nTYPE: $babyExcreta\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}")
+                  ? diaperEventDetails()
                   : (taskType == "Meal Time")
-                      ? Text(
-                          "TITLE: $taskName\nDESCRIPTION: $taskDescription\nCALORIES: $calories\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}")
+                      ? mealEventDetails()
                       : (taskType == "Sleep Time")
-                          ? Text(
-                              "TITLE: $taskName\nDESCRIPTION: $taskDescription\nDURATION: ${duration.inMinutes} Minutes\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}")
-                          : Text(
-                              "TITLE: $taskName\nDESCRIPTION: $taskDescription\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}"),
+                          ? sleepEventDetails(duration)
+                          : futureEventDetails(),
               actions: [
                 TextButton(
                   onPressed: () {},
@@ -148,5 +133,25 @@ class EventCard extends StatelessWidget {
         trailing: Text(">", style: TextStyle(color: Colors.black)),
       ),
     );
+  }
+
+  Text futureEventDetails() {
+    return Text(
+        "TITLE: $taskName\nDESCRIPTION: $taskDescription\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}");
+  }
+
+  Text sleepEventDetails(Duration duration) {
+    return Text(
+        "TITLE: $taskName\nDESCRIPTION: $taskDescription\nDURATION: ${duration.inMinutes} Minutes\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}");
+  }
+
+  Text mealEventDetails() {
+    return Text(
+        "TITLE: $taskName\nDESCRIPTION: $taskDescription\nCALORIES: $calories\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}");
+  }
+
+  Text diaperEventDetails() {
+    return Text(
+        "TITLE: $taskName\nDESCRIPTION: $taskDescription\nTYPE: $babyExcreta\nSTART TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskStartTime)}\nEND TIME: ${DateFormat('yyyy-MM-dd - kk:mm').format(taskEndTime)}");
   }
 }

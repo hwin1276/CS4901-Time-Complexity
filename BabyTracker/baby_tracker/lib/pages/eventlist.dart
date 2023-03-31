@@ -3,7 +3,6 @@ import 'package:baby_tracker/themes/text.dart';
 import 'package:baby_tracker/widgets/event_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import '../service/database_service.dart';
 
 class EventList extends StatefulWidget {

@@ -11,7 +11,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -23,6 +22,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final formKey = GlobalKey<FormState>();
   String email = "";
+  String validEmailRegex =
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+";
   String password = "";
   bool _isLoading = false;
   AuthService authService = AuthService();
@@ -71,14 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                           const SizedBox(height: 5),
-                          Text(
-                            'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham',
-                            textAlign: TextAlign.center,
-                            style: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
-                              fontSize: 9,
-                            ),
-                          ),
+                          credits(),
                           const SizedBox(height: 20),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 15),
@@ -95,9 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                                 });
                               },
                               validator: (val) {
-                                return RegExp(
-                                            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                        .hasMatch(val!)
+                                return RegExp(validEmailRegex).hasMatch(val!)
                                     ? null
                                     : "Please enter a valid email";
                               },
@@ -192,6 +184,19 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  Text credits() {
+    String developers =
+        'Developed by: Kennedy Middlebrooks, April Eaton,\nColin McCrory, Hung Nguyen, Cecil Nnodim, Hien Pham';
+    return Text(
+      developers,
+      textAlign: TextAlign.center,
+      style: AppTextTheme.subtitle.copyWith(
+        color: AppColorScheme.white,
+        fontSize: 9,
+      ),
+    );
+  }
+
   login() async {
     if (formKey.currentState!.validate()) {
       setState(() {
@@ -221,29 +226,4 @@ class _LoginPageState extends State<LoginPage> {
       });
     }
   }
-// this is temp view for understanding how events are being populated
-//  //  Widget buildEvents() => StaggeredGridView.countBuilder(
-//         padding: EdgeInsets.all(8),
-//         itemCount: events.length,
-//         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
-//         crossAxisCount: 4,
-//         mainAxisSpacing: 4,
-//         crossAxisSpacing: 4,
-//         itemBuilder: (context, index) {
-//           final event = events[index];
-
-//           // the following calls on event input page. blurred out for now.
-
-//           return GestureDetector(
-//             onTap: () async {
-//              // await Navigator.of(context).push(MaterialPageRoute(
-//                // builder: (context) => NoteDetailPage(noteId: note.id!),
-//            //   ));
-
-//               refreshEvents();
-//             },
-//            // child: EventCardWidget(note: note, index: index),
-//           );
-//         },
-//       );
 }

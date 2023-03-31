@@ -192,106 +192,8 @@ class _CreateEventState extends State<CreateEvent> {
                         ),
                       ),
                       if (eventType == "Diaper Change")
-                        Column(
-                          children: [
-                            SizedBox(height: 15),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              child: DropdownButtonFormField(
-                                icon: Icon(Icons.arrow_downward),
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "What kind of stool did the baby have",
-                                  hintStyle: AppTextTheme.subtitle.copyWith(
-                                    color: AppColorScheme.white,
-                                  ),
-                                ),
-                                value: babyExcreta,
-                                items: [
-                                  DropdownMenuItem<String>(
-                                      value: "",
-                                      child: Text(
-                                          'What kind of stool did the baby have?',
-                                          style: AppTextTheme.h3.copyWith(
-                                            color: AppColorScheme.white,
-                                          ))),
-                                  DropdownMenuItem<String>(
-                                      value: "pee",
-                                      child: Text(
-                                        'pee',
-                                        style: AppTextTheme.h3.copyWith(
-                                          color: AppColorScheme.white,
-                                        ),
-                                      )),
-                                  DropdownMenuItem<String>(
-                                      value: "poop",
-                                      child: Text(
-                                        'poop',
-                                        style: AppTextTheme.h3.copyWith(
-                                          color: AppColorScheme.white,
-                                        ),
-                                      )),
-                                  DropdownMenuItem<String>(
-                                      value: "diarrhea",
-                                      child: Text(
-                                        'diarrhea',
-                                        style: AppTextTheme.h3.copyWith(
-                                          color: AppColorScheme.white,
-                                        ),
-                                      )),
-                                ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    babyExcreta = value!;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (babyExcreta == '') {
-                                    return "Please select a diaper change type";
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      if (eventType == "Meal Time")
-                        Column(
-                          children: [
-                            SizedBox(height: 15),
-                            Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 15),
-                              child: TextFormField(
-                                decoration: InputDecoration(
-                                  hintText:
-                                      "How many calories did the baby eat?",
-                                  hintStyle: AppTextTheme.subtitle.copyWith(
-                                    color: AppColorScheme.lightGray,
-                                  ),
-                                ),
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.digitsOnly
-                                ],
-                                onChanged: (value) {
-                                  setState(() {
-                                    calories = value;
-                                  });
-                                },
-                                validator: (value) {
-                                  if (value == null ||
-                                      value.isEmpty ||
-                                      value == "0") {
-                                    return 'Please enter how many calories did your baby eat';
-                                  } else {
-                                    return null;
-                                  }
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
+                        conditionalDiaperInput(),
+                      if (eventType == "Meal Time") conditionalMealInput(),
                       SizedBox(height: 15),
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
@@ -306,94 +208,9 @@ class _CreateEventState extends State<CreateEvent> {
                             ),
                             Row(
                               children: [
-                                (eventType == 'Appointments')
-                                    ? ElevatedButton(
-                                        child: Text(
-                                          '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
-                                          style: AppTextTheme.h3.copyWith(
-                                            color: AppColorScheme.white,
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          final date = await showDatePicker(
-                                              context: context,
-                                              initialDate: startDateTime,
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime.now()
-                                                  .add(Duration(days: 365)));
-
-                                          if (date == null) return;
-
-                                          final newDateTime = DateTime(
-                                            date.year,
-                                            date.month,
-                                            date.day,
-                                            startDateTime.hour,
-                                            startDateTime.minute,
-                                          );
-
-                                          setState(() =>
-                                              startDateTime = newDateTime);
-                                        },
-                                      )
-                                    : ElevatedButton(
-                                        child: Text(
-                                          '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
-                                          style: AppTextTheme.h3.copyWith(
-                                            color: AppColorScheme.white,
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          final date = await showDatePicker(
-                                              context: context,
-                                              initialDate: startDateTime,
-                                              firstDate: DateTime(2000),
-                                              lastDate: endDateTime);
-
-                                          if (date == null) return;
-
-                                          final newDateTime = DateTime(
-                                            date.year,
-                                            date.month,
-                                            date.day,
-                                            startDateTime.hour,
-                                            startDateTime.minute,
-                                          );
-
-                                          setState(() =>
-                                              startDateTime = newDateTime);
-                                        },
-                                      ),
+                                startDateButton(context),
                                 SizedBox(width: 10),
-                                ElevatedButton(
-                                  child: Text(
-                                    '$hours:$minutes',
-                                    style: AppTextTheme.h3.copyWith(
-                                      color: AppColorScheme.white,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final time = await pickTime(
-                                        startDateTime.hour,
-                                        startDateTime.minute);
-
-                                    if (time == null) return;
-
-                                    final newDateTime = DateTime(
-                                      startDateTime.year,
-                                      startDateTime.month,
-                                      startDateTime.day,
-                                      time.hour,
-                                      time.minute,
-                                    );
-
-                                    setState(() => startDateTime = newDateTime);
-
-                                    if (startDateTime.isAfter(endDateTime)) {
-                                      setState(() => endDateTime = startDateTime.add(Duration(minutes: 30)));
-                                    }
-                                  },
-                                ),
+                                startTimeButton(hours, minutes),
                               ],
                             ),
                           ],
@@ -412,93 +229,10 @@ class _CreateEventState extends State<CreateEvent> {
                             ),
                             Row(
                               children: [
-                                (eventType == 'Appointments')
-                                    ? ElevatedButton(
-                                        child: Text(
-                                          '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
-                                          style: AppTextTheme.h3.copyWith(
-                                            color: AppColorScheme.white,
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          final date = await showDatePicker(
-                                              context: context,
-                                              initialDate: startDateTime,
-                                              firstDate: startDateTime,
-                                              lastDate: DateTime.now()
-                                                  .add(Duration(days: 365)));
-
-                                          if (date == null) return;
-
-                                          final newDateTime = DateTime(
-                                            date.year,
-                                            date.month,
-                                            date.day,
-                                            endDateTime.hour,
-                                            endDateTime.minute,
-                                          );
-
-                                          setState(
-                                              () => endDateTime = newDateTime);
-                                        },
-                                      )
-                                    : ElevatedButton(
-                                        child: Text(
-                                          '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
-                                          style: AppTextTheme.h3.copyWith(
-                                            color: AppColorScheme.white,
-                                          ),
-                                        ),
-                                        onPressed: () async {
-                                          final date = await showDatePicker(
-                                              context: context,
-                                              initialDate: startDateTime,
-                                              firstDate: startDateTime,
-                                              lastDate: DateTime.now());
-
-                                          if (date == null) return;
-
-                                          final newDateTime = DateTime(
-                                            date.year,
-                                            date.month,
-                                            date.day,
-                                            endDateTime.hour,
-                                            endDateTime.minute,
-                                          );
-
-                                          setState(
-                                              () => endDateTime = newDateTime);
-                                        },
-                                      ),
+                                endDateButton(context),
                                 SizedBox(width: 10),
-                                ElevatedButton(
-                                  child: Text(
-                                    '$endHours:$endMinutes',
-                                    style: AppTextTheme.h3.copyWith(
-                                      color: AppColorScheme.white,
-                                    ),
-                                  ),
-                                  onPressed: () async {
-                                    final time = await pickTime(
-                                        endDateTime.hour, endDateTime.minute);
+                                endTimeButton(endHours, endMinutes),
 
-                                    if (time == null) return;
-
-                                    final newDateTime = DateTime(
-                                      endDateTime.year,
-                                      endDateTime.month,
-                                      endDateTime.day,
-                                      time.hour,
-                                      time.minute,
-                                    );
-
-                                    setState(() => endDateTime = newDateTime);
-
-                                    if (endDateTime.isBefore(startDateTime)) {
-                                      setState(() => startDateTime = endDateTime.add(Duration(minutes: -30)));
-                                    }
-                                  },
-                                ),
                               ],
                             ),
                           ],
@@ -528,6 +262,222 @@ class _CreateEventState extends State<CreateEvent> {
                 ),
               ),
             ),
+    );
+  }
+
+  Column conditionalDiaperInput() {
+    return Column(
+      children: [
+        SizedBox(height: 15),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: DropdownButtonFormField(
+            icon: Icon(Icons.arrow_downward),
+            decoration: InputDecoration(
+              hintText: "What kind of stool did the baby have",
+              hintStyle: AppTextTheme.subtitle.copyWith(
+                color: AppColorScheme.white,
+              ),
+            ),
+            value: babyExcreta,
+            items: [
+              DropdownMenuItem<String>(
+                  value: "",
+                  child: Text('What kind of stool did the baby have?',
+                      style: AppTextTheme.h3.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+              DropdownMenuItem<String>(
+                  value: "pee",
+                  child: Text(
+                    'pee',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ),
+                  )),
+              DropdownMenuItem<String>(
+                  value: "poop",
+                  child: Text(
+                    'poop',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ),
+                  )),
+              DropdownMenuItem<String>(
+                  value: "diarrhea",
+                  child: Text(
+                    'diarrhea',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ),
+                  )),
+            ],
+            onChanged: (value) {
+              setState(() {
+                babyExcreta = value!;
+              });
+            },
+            validator: (value) {
+              if (babyExcreta == '') {
+                return "Please select a diaper change type";
+              } else {
+                return null;
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column conditionalMealInput() {
+    return Column(
+      children: [
+        SizedBox(height: 15),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 15),
+          child: TextFormField(
+            decoration: InputDecoration(
+              hintText: "How many calories did the baby eat?",
+              hintStyle: AppTextTheme.subtitle.copyWith(
+                color: AppColorScheme.lightGray,
+              ),
+            ),
+            keyboardType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            onChanged: (value) {
+              setState(() {
+                calories = value;
+              });
+            },
+            validator: (value) {
+              if (value == null || value.isEmpty || value == "0") {
+                return 'Please enter how many calories did your baby eat';
+              } else {
+                return null;
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  ElevatedButton startTimeButton(String hours, String minutes) {
+    return ElevatedButton(
+      child: Text(
+        '$hours:$minutes',
+        style: AppTextTheme.h3.copyWith(
+          color: AppColorScheme.white,
+        ),
+      ),
+      onPressed: () async {
+        final time = await pickTime(startDateTime.hour, startDateTime.minute);
+
+        if (time == null) return;
+
+        final newDateTime = DateTime(
+          startDateTime.year,
+          startDateTime.month,
+          startDateTime.day,
+          time.hour,
+          time.minute,
+        );
+
+        setState(() => startDateTime = newDateTime);
+      },
+    );
+  }
+
+  ElevatedButton startDateButton(BuildContext context) {
+    return ElevatedButton(
+      child: Text(
+        '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
+        style: AppTextTheme.h3.copyWith(
+          color: AppColorScheme.white,
+        ),
+      ),
+      onPressed: () async {
+        final date = await showDatePicker(
+            context: context,
+            initialDate: startDateTime,
+            firstDate: DateTime(2000),
+            lastDate: (eventType == 'Appointments')
+                ? DateTime.now().add(Duration(days: 365))
+                : DateTime.now());
+        // conditonal for date validation
+
+        if (date == null) return;
+
+        final newDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          startDateTime.hour,
+          startDateTime.minute,
+        );
+
+        setState(() => startDateTime = newDateTime);
+      },
+    );
+  }
+
+  ElevatedButton endTimeButton(String endHours, String endMinutes) {
+    return ElevatedButton(
+      child: Text(
+        '$endHours:$endMinutes',
+        style: AppTextTheme.h3.copyWith(
+          color: AppColorScheme.white,
+        ),
+      ),
+      onPressed: () async {
+        final time = await pickTime(endDateTime.hour, endDateTime.minute);
+
+        if (time == null) return;
+
+        final newDateTime = DateTime(
+          endDateTime.year,
+          endDateTime.month,
+          endDateTime.day,
+          time.hour,
+          time.minute,
+        );
+
+        setState(() => endDateTime = newDateTime);
+      },
+    );
+  }
+
+  ElevatedButton endDateButton(BuildContext context) {
+    return ElevatedButton(
+      child: Text(
+        '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
+        style: AppTextTheme.h3.copyWith(
+          color: AppColorScheme.white,
+        ),
+      ),
+      onPressed: () async {
+        final date = await showDatePicker(
+            context: context,
+            initialDate: startDateTime,
+            firstDate: startDateTime,
+            lastDate: (eventType == 'Appointments')
+                ? DateTime.now().add(Duration(days: 365))
+                : DateTime.now());
+        // conditional for date validation
+
+        if (date == null) return;
+
+        final newDateTime = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          endDateTime.hour,
+          endDateTime.minute,
+        );
+
+        setState(() => endDateTime = newDateTime);
+      },
     );
   }
 
