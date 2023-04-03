@@ -124,6 +124,7 @@ class DatabaseService {
       "theme": theme,
       "birthDate": birthDate,
       "caretakers": [],
+      "incompleteEvents": [],
       "babyId": "",
     });
 
@@ -139,8 +140,16 @@ class DatabaseService {
   }
 
   // create an event
-  createEvent(String babyId, Map<String, dynamic> eventData) async {
-    babyCollection.doc(babyId).collection("events").add(eventData);
+  Future createEvent(String babyId, Map<String, dynamic> eventData) async {
+    DocumentReference eventDocumentReference =
+        await babyCollection.doc(babyId).collection("events").add(eventData);
+    if (eventData["type"] == "Appointments") {
+      DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+      babyDocumentReference.update({
+        "incompleteEvents":
+            FieldValue.arrayUnion(["${eventDocumentReference.id}_$babyId"])
+      });
+    }
   }
 
   // Invite user to join as caretaker for baby
