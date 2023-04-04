@@ -1,3 +1,4 @@
+import 'package:baby_tracker/pages/babyinfopage.dart';
 import 'package:baby_tracker/pages/detailspages.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
@@ -114,6 +115,15 @@ class _BabyCardState extends State<BabyCard> {
                       babyId: widget.babyId,
                       theme: babyTheme,
                     )));
+      },
+      onLongPress: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => BabyInfoPage(
+                    babyName: widget.babyName,
+                    babyId: widget.babyId,
+                    userName: widget.userName)));
       },
       child: Container(
           margin: const EdgeInsets.all(20),
