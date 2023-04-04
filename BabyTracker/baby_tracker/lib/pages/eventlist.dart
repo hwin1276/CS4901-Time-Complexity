@@ -23,6 +23,12 @@ class EventList extends StatefulWidget {
 class _EventListState extends State<EventList> {
   Stream<QuerySnapshot>? events;
 
+  TextEditingController searchController = TextEditingController();
+  String searchText = '';
+  String typeFilter = 'All';
+
+  List<DocumentSnapshot> documents = [];
+
   @override
   void initState() {
     super.initState();
@@ -40,43 +46,113 @@ class _EventListState extends State<EventList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder(
-          stream: events,
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  return EventCard(
-                      taskName: snapshot.data.docs[index]['task'],
-                      taskType: snapshot.data.docs[index]['type'],
-                      taskDescription: snapshot.data.docs[index]['description'],
-                      taskStartTime:
-                          snapshot.data.docs[index]['startTime'].toDate(),
-                      taskEndTime:
-                          snapshot.data.docs[index]['endTime'].toDate(),
-                      calories: snapshot.data.docs[index]['calories'],
-                      babyExcreta: snapshot.data.docs[index]['babyExcreta'],
-                      duration: snapshot.data.docs[index]['duration']);
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Text(
-                  'No data available right now',
-                  style: AppTextTheme.body.copyWith(
-                    color: AppColorScheme.white,
-                  ),
-                ),
-              );
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: AppColorScheme.white,
-                ),
-              );
-            }
-          }),
+      body: Column(
+        children: [
+          TextField(
+            controller: searchController,
+            onChanged: (value) {
+              setState(() {
+                searchText = value;
+              });
+            },
+            decoration: InputDecoration(
+              hintText: 'Search...',
+              prefixIcon: Icon(Icons.search),
+              filled: true,
+            ),
+          ),
+          DropdownButton(
+            value: typeFilter,
+            items: const [
+              DropdownMenuItem(
+                value: 'All',
+                child: Text('All')
+              ),
+              DropdownMenuItem(
+                value: 'Diaper Change',
+                child: Text('Diaper Change')
+              ),
+              DropdownMenuItem(
+                value: 'Meal Time',
+                child: Text('Meal Time')
+              ),
+              DropdownMenuItem(
+                value: 'Sleep Time',
+                child: Text('Sleep Time')
+              ),
+              DropdownMenuItem(
+                value: 'Incidents',
+                child: Text('Incidents')
+              ),
+              DropdownMenuItem(
+                value: 'Appointments',
+                child: Text('Appointments')
+              ),
+            ],
+            onChanged: (String? value) {
+              setState(() {
+                typeFilter = value!;
+              });
+            },
+          ),
+          Expanded(
+            child: StreamBuilder(
+                stream: events,
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    documents = snapshot.data.docs;
+                    if (searchText.isNotEmpty) {
+                      documents = documents.where((element) {
+                        return element
+                            .get('task')
+                            .toString()
+                            .toLowerCase()
+                            .contains(searchText.toLowerCase());
+                      }).toList();
+                    }
+                    if (typeFilter != 'All') {
+                      documents = documents.where((element) {
+                        return element
+                            .get('type')
+                            .toString()
+                            == typeFilter;
+                      }).toList();
+                    }
+                    return ListView.builder(
+                      itemCount: documents.length,
+                      itemBuilder: (context, index) {
+                        return EventCard(
+                            taskName: documents[index]['task'],
+                            taskType: documents[index]['type'],
+                            taskDescription: documents[index]['description'],
+                            taskStartTime:
+                                documents[index]['startTime'].toDate(),
+                            taskEndTime: documents[index]['endTime'].toDate(),
+                            calories: documents[index]['calories'],
+                            babyExcreta: documents[index]['babyExcreta'],
+                            duration: documents[index]['duration']);
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'No data available right now',
+                        style: AppTextTheme.body.copyWith(
+                          color: AppColorScheme.white,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColorScheme.white,
+                      ),
+                    );
+                  }
+                }),
+          )
+        ],
+      ),
     );
   }
 }
