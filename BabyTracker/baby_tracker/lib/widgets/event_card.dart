@@ -93,7 +93,7 @@ class EventCard extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.only(bottom: 20),
+      margin: EdgeInsets.only(top: 10, bottom: 10),
       child: ListTile(
         onTap: () {
           showDialog(
