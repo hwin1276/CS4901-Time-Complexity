@@ -74,6 +74,8 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
     return res.substring(0, res.indexOf("_"));
   }
 
+  String theme = "";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,19 +91,79 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
           addEventButton(context),
         ],
       ),
-      body: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              primaryCaretaker(),
-              Divider(
-                color: AppColorScheme.lightGray,
+      body: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  primaryCaretaker(),
+                  Divider(
+                    color: AppColorScheme.lightGray,
+                  ),
+                  allCaretakers(),
+                ],
               ),
-              allCaretakers(),
-            ],
+            ),
           ),
-        ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Reset Baby Theme",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              FormField(builder: (state) {
+                return Column(
+                  children: [
+                    RadioListTile<String>(
+                      value: 'red',
+                      groupValue: theme,
+                      title: Text("Red"),
+                      onChanged: (String? value) => {
+                        setState(() {
+                          theme = value!;
+                        })
+                      },
+                    ),
+                    RadioListTile<String>(
+                      value: 'blue',
+                      groupValue: theme,
+                      title: Text("Blue"),
+                      onChanged: (String? value) => {
+                        setState(() {
+                          theme = value!;
+                        })
+                      },
+                    ),
+                    RadioListTile<String>(
+                      value: 'green',
+                      groupValue: theme,
+                      title: Text("Green"),
+                      onChanged: (String? value) => {
+                        setState(() {
+                          theme = value!;
+                        })
+                      },
+                    ),
+                    RadioListTile<String>(
+                      value: 'yellow',
+                      groupValue: theme,
+                      title: Text("Yellow"),
+                      onChanged: (String? value) => {
+                        setState(() {
+                          theme = value!;
+                        })
+                      },
+                    ),
+                  ],
+                );
+              })
+            ],
+          )
+        ],
       ),
     );
   }
