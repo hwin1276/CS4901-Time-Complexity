@@ -70,7 +70,7 @@ class EventCard extends StatelessWidget {
 
     // method to display how long ago event was created in hours/days
     timeAgo() {
-      return timeago.format(taskStartTime);
+      return timeago.format(taskStartTime, allowFromNow: true);
     }
 
     // method to display duration depending on how many hours/minutes
