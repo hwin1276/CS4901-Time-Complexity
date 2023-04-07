@@ -78,7 +78,7 @@ class DatabaseService {
     }
   }
 
-  //
+  // set eventid as key and babyit as value
   Future<void> getEventId(Map<String, String> eventidBabyid,
       QuerySnapshot eventQuery, babySnapshotId) async {
     //Map<String, String> eventidBabyid = {};
@@ -108,6 +108,9 @@ class DatabaseService {
     */
     return eventidBabyid;
   }
+
+  // set event as completed
+  completeTask(String eventId, String babyId) async {}
 
   // Edit user
 
