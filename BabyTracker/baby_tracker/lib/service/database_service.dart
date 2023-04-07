@@ -106,7 +106,7 @@ class DatabaseService {
         .doc(babyId)
         .collection("events")
         .doc(eventId)
-        .set({"completed": status});
+        .update({"completed": status});
   }
 
   // Edit user
