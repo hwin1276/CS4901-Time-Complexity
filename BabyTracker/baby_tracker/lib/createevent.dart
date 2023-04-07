@@ -498,6 +498,7 @@ class _CreateEventState extends State<CreateEvent> {
         _isLoading = true;
       });
       Map<String, dynamic> eventData = {
+        "babyId": widget.babyId,
         "task": eventTask,
         "type": eventType,
         "description": eventDescription,
