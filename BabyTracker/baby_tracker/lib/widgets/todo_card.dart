@@ -94,9 +94,6 @@ class _TodoCardState extends State<TodoCard> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         contentPadding: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
         tileColor: AppColorScheme.white,
-        // leading: Icon(
-        //     Icons.abc,
-        //     color: Colors.blue),
         title: Text(
           widget.taskName,
           style: AppTextTheme.body.copyWith(
