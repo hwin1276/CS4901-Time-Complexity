@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:baby_tracker/helper/helper_functions.dart';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
+import 'package:baby_tracker/widgets/event_card.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -23,6 +25,10 @@ class _ToDoState extends State<ToDo> {
   String username = "";
   Map<String, String>? eventidBabyid;
   List<DocumentSnapshot> events = [];
+
+  final StreamController<List<DocumentSnapshot>> _controller =
+      StreamController<List<DocumentSnapshot>>();
+  Stream<List<DocumentSnapshot>> get _streamController => _controller.stream;
 
   @override
   void initState() {
@@ -61,6 +67,7 @@ class _ToDoState extends State<ToDo> {
   getEvents() async {
     await getEventIdandBabyIdMap();
     await getEventData();
+    _controller.sink.add(events);
   }
 
   @override
@@ -180,7 +187,44 @@ class _ToDoState extends State<ToDo> {
         title: const Text('To Do List'),
         centerTitle: true,
       ),
-      body: Center(child: Text('Todo View being worked on')),
+      body: Scaffold(
+        body: StreamBuilder<List<DocumentSnapshot>>(
+            stream: _streamController,
+            builder: (scontext, snapshot) {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return EventCard(
+                        taskName: snapshot.data![index]['task'],
+                        taskType: snapshot.data![index]['type'],
+                        taskDescription: snapshot.data![index]['description'],
+                        taskStartTime:
+                            snapshot.data![index]['startTime'].toDate(),
+                        taskEndTime: snapshot.data![index]['endTime'].toDate(),
+                        calories: snapshot.data![index]['calories'],
+                        babyExcreta: snapshot.data![index]['babyExcreta'],
+                        duration: snapshot.data![index]['duration']);
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text(
+                    'No data available right now',
+                    style: AppTextTheme.body.copyWith(
+                      color: AppColorScheme.white,
+                    ),
+                  ),
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: AppColorScheme.white,
+                  ),
+                );
+              }
+            }),
+      ),
       floatingActionButton: FloatingActionButton(onPressed: () {
         //getEvents();
         //getEventIdandBabyIdMap();
