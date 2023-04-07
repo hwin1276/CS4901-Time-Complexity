@@ -205,7 +205,7 @@ class _ToDoState extends State<ToDo> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return TodoCard(
-                          id: snapshot.data![index].id,
+                          eventId: snapshot.data![index].id,
                           taskName: snapshot.data![index]['task'],
                           taskType: snapshot.data![index]['type'],
                           taskDescription: snapshot.data![index]['description'],

@@ -1,3 +1,4 @@
+import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 class TodoCard extends StatefulWidget {
   TodoCard({
     Key? key,
-    required this.id,
+    required this.eventId,
     required this.taskName,
     required this.taskType,
     required this.taskDescription,
@@ -16,7 +17,7 @@ class TodoCard extends StatefulWidget {
     required this.taskEndTime,
     required this.duration,
   }) : super(key: key);
-  final String id;
+  final String eventId;
   final String taskName;
   final String taskType;
   final String taskDescription;

@@ -81,7 +81,6 @@ class DatabaseService {
   // set eventid as key and babyit as value
   Future<void> getEventId(Map<String, String> eventidBabyid,
       QuerySnapshot eventQuery, babySnapshotId) async {
-    //Map<String, String> eventidBabyid = {};
     for (var eventSnapshot in eventQuery.docs) {
       eventidBabyid[eventSnapshot.id] = babySnapshotId;
     }
@@ -97,20 +96,18 @@ class DatabaseService {
     // gets a map of baby id and event ids
     Map<String, String> eventidBabyid = {};
     await getEventBabyId(eventidBabyid, babiesWithFutureEvents);
-    /*
-    babiesWithFutureEvents.docs.forEach((babySnap) async {
-      QuerySnapshot eventQuery =
-          await babyCollection.doc(babySnap.id).collection("events").get();
-      eventQuery.docs.forEach((eventSnap) async {
-        eventidBabyid[eventSnap.id] = babySnap.id;
-      });
-    });
-    */
+
     return eventidBabyid;
   }
 
   // set event as completed
-  completeTask(String eventId, String babyId) async {}
+  setTaskStatus(String eventId, String babyId, bool status) async {
+    babyCollection
+        .doc(babyId)
+        .collection("events")
+        .doc(eventId)
+        .set({"completed": status});
+  }
 
   // Edit user
 
