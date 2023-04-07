@@ -232,7 +232,6 @@ class _CreateEventState extends State<CreateEvent> {
                                 endDateButton(context),
                                 SizedBox(width: 10),
                                 endTimeButton(endHours, endMinutes),
-
                               ],
                             ),
                           ],
@@ -385,6 +384,12 @@ class _CreateEventState extends State<CreateEvent> {
         );
 
         setState(() => startDateTime = newDateTime);
+
+        // if invalid times sets default duration to 30 min
+        if (startDateTime.isAfter(endDateTime)) {
+          setState(
+              () => endDateTime = startDateTime.add(Duration(minutes: 30)));
+        }
       },
     );
   }
@@ -444,6 +449,12 @@ class _CreateEventState extends State<CreateEvent> {
         );
 
         setState(() => endDateTime = newDateTime);
+
+        // if time is invalid sets default time to 30 min
+        if (endDateTime.isBefore(startDateTime)) {
+          setState(
+              () => startDateTime = endDateTime.add(Duration(minutes: -30)));
+        }
       },
     );
   }
