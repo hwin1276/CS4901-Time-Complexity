@@ -82,7 +82,9 @@ class DatabaseService {
   Future<void> getEventId(Map<String, String> eventidBabyid,
       QuerySnapshot eventQuery, babySnapshotId) async {
     for (var eventSnapshot in eventQuery.docs) {
-      eventidBabyid[eventSnapshot.id] = babySnapshotId;
+      if (eventSnapshot["completed"] == false) {
+        eventidBabyid[eventSnapshot.id] = babySnapshotId;
+      }
     }
   }
 
@@ -107,6 +109,13 @@ class DatabaseService {
         .collection("events")
         .doc(eventId)
         .update({"completed": status});
+  }
+
+  // remove event from incomplete task list
+  finishTask(String eventId, String babyId) async {
+    babyCollection.doc(babyId).update({
+      "incompleteEvents": FieldValue.arrayRemove(["${eventId}_$babyId"])
+    });
   }
 
   // Edit user

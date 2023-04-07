@@ -75,9 +75,11 @@ class _TodoCardState extends State<TodoCard> {
       margin: EdgeInsets.only(bottom: 20),
       child: ListTile(
         onTap: () {
+          // checkbox
           setState(() {
             widget.completed = !widget.completed;
           });
+          // change database
           DatabaseService()
               .setTaskStatus(widget.eventId, widget.babyId, widget.completed);
           showSnackBar(context, AppColorScheme.green, "Nice Job!");
@@ -102,7 +104,26 @@ class _TodoCardState extends State<TodoCard> {
           ),
         ),
         subtitle: showTime(),
-        trailing: Text(">", style: TextStyle(color: Colors.black)),
+        trailing: Container(
+          padding: EdgeInsets.all(0),
+          height: 35,
+          width: 35,
+          decoration: BoxDecoration(
+            color: AppColorScheme.red,
+            borderRadius: BorderRadius.circular(5),
+          ),
+          child: IconButton(
+            color: AppColorScheme.white,
+            iconSize: 18,
+            icon: Icon(Icons.delete),
+            onPressed: () {
+              // Delete task from the list
+              DatabaseService().finishTask(widget.eventId, widget.babyId);
+              showSnackBar(
+                  context, AppColorScheme.green, "Removed from Todo List");
+            },
+          ),
+        ),
       ),
     );
   }
