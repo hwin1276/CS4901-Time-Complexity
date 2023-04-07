@@ -64,6 +64,14 @@ class _ToDoState extends State<ToDo> {
     }
   }
 
+  // sorts the events by time
+  sortEvents() {
+    events.sort((a, b) {
+      return a["startTime"].compareTo(b["startTime"]);
+      //return a["startTime"].toDate().isBefore(b["startTime"].toDate());
+    });
+  }
+
   getEvents() async {
     // clears events for refreshing
     eventidBabyid = {};
@@ -72,6 +80,7 @@ class _ToDoState extends State<ToDo> {
     // gets data
     await getEventIdandBabyIdMap();
     await getEventData();
+    sortEvents();
     _controller.sink.add(events);
   }
 
