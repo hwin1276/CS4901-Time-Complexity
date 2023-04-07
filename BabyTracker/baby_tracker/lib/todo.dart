@@ -1,5 +1,9 @@
+import 'package:baby_tracker/helper/helper_functions.dart';
+import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../pages/todolist.dart';
 import '../objects/task.dart';
@@ -12,11 +16,56 @@ class ToDo extends StatefulWidget {
 }
 
 class _ToDoState extends State<ToDo> {
+  /*
   final todoList = Task.todoList();
   final todoController = TextEditingController();
+  */
+  String username = "";
+  Map<String, String>? eventidBabyid;
+  List<DocumentSnapshot> events = [];
+
+  @override
+  void initState() {
+    super.initState();
+    getEvents();
+  }
+
+  // Fills map event eventId keys and babyId values
+  getEventIdandBabyIdMap() async {
+    await HelperFunctions.getUserNameFromSF().then(
+      (value) {
+        setState(() {
+          username = value!;
+        });
+      },
+    );
+    await DatabaseService()
+        .getFutureEvent(FirebaseAuth.instance.currentUser!.uid, username)
+        .then(
+      (snapshot) {
+        setState(() {
+          eventidBabyid = snapshot;
+        });
+      },
+    );
+  }
+
+  // populates list with event query snapshots
+  getEventData() async {
+    for (var eventBabyId in eventidBabyid!.entries) {
+      events.add(await DatabaseService()
+          .getSpecificEventData(eventBabyId.key, eventBabyId.value));
+    }
+  }
+
+  getEvents() async {
+    await getEventIdandBabyIdMap();
+    await getEventData();
+  }
 
   @override
   Widget build(BuildContext context) {
+    /*
     return Scaffold(
       appBar: AppBar(
         title: const Text('To Do List'),
@@ -125,8 +174,26 @@ class _ToDoState extends State<ToDo> {
         ],
       ),
     );
+    */
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('To Do List'),
+        centerTitle: true,
+      ),
+      body: Center(child: Text('Todo View being worked on')),
+      floatingActionButton: FloatingActionButton(onPressed: () {
+        //getEvents();
+        //getEventIdandBabyIdMap();
+        print(eventidBabyid);
+        print(events[0]["task"]);
+        print(events[1]["task"]);
+        print(events[2]["task"]);
+        //print(events[0]["task"]);
+      }),
+    );
   }
 
+  /*
   void completeTask(Task task) {
     setState(() {
       task.isDone = !task.isDone;
@@ -146,4 +213,5 @@ class _ToDoState extends State<ToDo> {
       todoList.removeWhere((item) => item.id == id);
     });
   }
+  */
 }
