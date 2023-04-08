@@ -26,6 +26,8 @@ class _EventListState extends State<EventList> {
   TextEditingController searchController = TextEditingController();
   String searchText = '';
   String typeFilter = 'All';
+  String sortFilter = 'Time';
+  String orderFilter = 'Ascending';
 
   List<DocumentSnapshot> documents = [];
 
@@ -71,51 +73,100 @@ class _EventListState extends State<EventList> {
             color: Theme.of(context).scaffoldBackgroundColor,
             width: MediaQuery.of(context).size.width,
             alignment: Alignment.center,
-            child: DropdownButton(
-              value: typeFilter,
-              items: [
-                DropdownMenuItem(
-                  value: 'All',
-                  child: Text('All',
-                      style: AppTextTheme.body.copyWith(
-                        color: AppColorScheme.white,
-                      ))),
-                DropdownMenuItem(
-                  value: 'Diaper Change',
-                  child: Text('Diaper Change',
-                      style: AppTextTheme.body.copyWith(
-                        color: AppColorScheme.white,
-                      ))),
-                DropdownMenuItem(
-                  value: 'Meal Time',
-                  child: Text('Meal Time',
-                      style: AppTextTheme.body.copyWith(
-                        color: AppColorScheme.white,
-                      ))),
-                DropdownMenuItem(
-                  value: 'Sleep Time',
-                  child: Text('Sleep Time',
-                      style: AppTextTheme.body.copyWith(
-                        color: AppColorScheme.white,
-                      ))),
-                DropdownMenuItem(
-                  value: 'Incidents',
-                  child: Text('Incidents',
-                      style: AppTextTheme.body.copyWith(
-                        color: AppColorScheme.white,
-                      ))),
-                DropdownMenuItem(
-                  value: 'Appointments',
-                  child: Text('Appointments',
-                      style: AppTextTheme.body.copyWith(
-                        color: AppColorScheme.white,
-                      ))),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                DropdownButton(
+                  value: typeFilter,
+                  items: [
+                    DropdownMenuItem(
+                        value: 'All',
+                        child: Text('All',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Diaper Change',
+                        child: Text('Diaper Change',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Meal Time',
+                        child: Text('Meal Time',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Sleep Time',
+                        child: Text('Sleep Time',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Incidents',
+                        child: Text('Incidents',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Appointments',
+                        child: Text('Appointments',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                  ],
+                  onChanged: (String? value) {
+                    setState(() {
+                      typeFilter = value!;
+                    });
+                  },
+                ),
+                DropdownButton(
+                  value: sortFilter,
+                  items: [
+                    DropdownMenuItem(
+                        value: 'Time',
+                        child: Text('Time',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Name',
+                        child: Text('Name',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                  ],
+                  onChanged: (String? value) {
+                    setState(() {
+                      sortFilter = value!;
+                    });
+                  },
+                ),
+                DropdownButton(
+                  value: orderFilter,
+                  items: [
+                    DropdownMenuItem(
+                        value: 'Ascending',
+                        child: Text('Ascending',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                    DropdownMenuItem(
+                        value: 'Descending',
+                        child: Text('Descending',
+                            style: AppTextTheme.body.copyWith(
+                              color: AppColorScheme.white,
+                            ))),
+                  ],
+                  onChanged: (String? value) {
+                    setState(() {
+                      orderFilter = value!;
+                    });
+                  },
+                ),
               ],
-              onChanged: (String? value) {
-                setState(() {
-                  typeFilter = value!;
-                });
-              },
             ),
           ),
           Expanded(
@@ -135,11 +186,28 @@ class _EventListState extends State<EventList> {
                     }
                     if (typeFilter != 'All') {
                       documents = documents.where((element) {
-                        return element
-                            .get('type')
-                            .toString()
-                            == typeFilter;
+                        return element.get('type').toString() == typeFilter;
                       }).toList();
+                    }
+                    if (orderFilter == 'Ascending') {
+                      if (sortFilter == 'Name') {
+                        documents
+                            .sort((a, b) => a['task'].compareTo(b['task']));
+                      }
+                      if (sortFilter == 'Time') {
+                        documents.sort(
+                            (a, b) => a['startTime'].compareTo(b['startTime']));
+                      }
+                    }
+                    if (orderFilter == 'Descending') {
+                      if (sortFilter == 'Name') {
+                        documents
+                            .sort((a, b) => b['task'].compareTo(a['task']));
+                      }
+                      if (sortFilter == 'Time') {
+                        documents.sort(
+                            (a, b) => b['startTime'].compareTo(a['startTime']));
+                      }
                     }
                     return ListView.builder(
                       itemCount: documents.length,
