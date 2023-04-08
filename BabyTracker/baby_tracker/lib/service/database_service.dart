@@ -53,13 +53,69 @@ class DatabaseService {
     return documentSnapshot['birthDate'];
   }
 
-  // get event data
-  getEventData(String babyId) async {
+  // get all event data
+  Future getEventData(String babyId) async {
     return babyCollection
         .doc(babyId)
         .collection("events")
         .orderBy("startTime", descending: true)
         .snapshots();
+  }
+
+  // get specific event data
+  Future getSpecificEventData(String eventId, String babyId) async {
+    return babyCollection.doc(babyId).collection("events").doc(eventId).get();
+  }
+
+  // function for getFutureEvent. Searches through babies and gets event id
+  Future<void> getEventBabyId(Map<String, String> eventidBabyid,
+      QuerySnapshot babiesWithFutureEvents) async {
+    //Map<String, String> eventidBabyid = {};
+    for (var babySnapshot in babiesWithFutureEvents.docs) {
+      QuerySnapshot eventQuery =
+          await babyCollection.doc(babySnapshot.id).collection("events").get();
+      await getEventId(eventidBabyid, eventQuery, babySnapshot.id);
+    }
+  }
+
+  // set eventid as key and babyit as value
+  Future<void> getEventId(Map<String, String> eventidBabyid,
+      QuerySnapshot eventQuery, babySnapshotId) async {
+    for (var eventSnapshot in eventQuery.docs) {
+      if (eventSnapshot["completed"] == false) {
+        eventidBabyid[eventSnapshot.id] = babySnapshotId;
+      }
+    }
+  }
+
+  // get baby id and their incomplete future tasks
+  Future getFutureEvent(String userId, String userName) async {
+    // get baby data with future events
+    QuerySnapshot babiesWithFutureEvents = await babyCollection
+        .where("caretakers", arrayContains: "${userId}_$userName")
+        .where("incompleteEvents", isNotEqualTo: []).get();
+
+    // gets a map of baby id and event ids
+    Map<String, String> eventidBabyid = {};
+    await getEventBabyId(eventidBabyid, babiesWithFutureEvents);
+
+    return eventidBabyid;
+  }
+
+  // set event as completed
+  setTaskStatus(String eventId, String babyId, bool status) async {
+    babyCollection
+        .doc(babyId)
+        .collection("events")
+        .doc(eventId)
+        .update({"completed": status});
+  }
+
+  // remove event from incomplete task list
+  finishTask(String eventId, String babyId) async {
+    babyCollection.doc(babyId).update({
+      "incompleteEvents": FieldValue.arrayRemove(["${eventId}_$babyId"])
+    });
   }
 
   // Edit user
@@ -124,6 +180,7 @@ class DatabaseService {
       "theme": theme,
       "birthDate": birthDate,
       "caretakers": [],
+      "incompleteEvents": [],
       "babyId": "",
     });
 
@@ -139,8 +196,16 @@ class DatabaseService {
   }
 
   // create an event
-  createEvent(String babyId, Map<String, dynamic> eventData) async {
-    babyCollection.doc(babyId).collection("events").add(eventData);
+  Future createEvent(String babyId, Map<String, dynamic> eventData) async {
+    DocumentReference eventDocumentReference =
+        await babyCollection.doc(babyId).collection("events").add(eventData);
+    if (eventData["type"] == "Appointments") {
+      DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+      babyDocumentReference.update({
+        "incompleteEvents":
+            FieldValue.arrayUnion(["${eventDocumentReference.id}_$babyId"])
+      });
+    }
   }
 
   // Invite user to join as caretaker for baby
