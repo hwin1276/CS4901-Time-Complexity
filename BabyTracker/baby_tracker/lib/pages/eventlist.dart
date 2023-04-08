@@ -48,67 +48,75 @@ class _EventListState extends State<EventList> {
     return Scaffold(
       body: Column(
         children: [
-          TextField(
-            controller: searchController,
-            onChanged: (value) {
-              setState(() {
-                searchText = value;
-              });
-            },
-            decoration: InputDecoration(
-              hintText: 'Search...',
-              hintStyle: AppTextTheme.subtitle.copyWith(
-                color: AppColorScheme.lightGray,
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            child: TextField(
+              controller: searchController,
+              onChanged: (value) {
+                setState(() {
+                  searchText = value;
+                });
+              },
+              decoration: InputDecoration(
+                hintText: 'Search...',
+                hintStyle: AppTextTheme.subtitle.copyWith(
+                  color: AppColorScheme.lightGray,
+                ),
+                prefixIcon: Icon(Icons.search),
+                filled: true,
               ),
-              prefixIcon: Icon(Icons.search),
-              filled: true,
             ),
           ),
-          DropdownButton(
-            value: typeFilter,
-            items: [
-              DropdownMenuItem(
-                value: 'All',
-                child: Text('All',
-                    style: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
-                    ))),
-              DropdownMenuItem(
-                value: 'Diaper Change',
-                child: Text('Diaper Change',
-                    style: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
-                    ))),
-              DropdownMenuItem(
-                value: 'Meal Time',
-                child: Text('Meal Time',
-                    style: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
-                    ))),
-              DropdownMenuItem(
-                value: 'Sleep Time',
-                child: Text('Sleep Time',
-                    style: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
-                    ))),
-              DropdownMenuItem(
-                value: 'Incidents',
-                child: Text('Incidents',
-                    style: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
-                    ))),
-              DropdownMenuItem(
-                value: 'Appointments',
-                child: Text('Appointments',
-                    style: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
-                    ))),
-            ],
-            onChanged: (String? value) {
-              setState(() {
-                typeFilter = value!;
-              });
-            },
+          Container(
+            color: Theme.of(context).scaffoldBackgroundColor,
+            width: MediaQuery.of(context).size.width,
+            alignment: Alignment.center,
+            child: DropdownButton(
+              value: typeFilter,
+              items: [
+                DropdownMenuItem(
+                  value: 'All',
+                  child: Text('All',
+                      style: AppTextTheme.body.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+                DropdownMenuItem(
+                  value: 'Diaper Change',
+                  child: Text('Diaper Change',
+                      style: AppTextTheme.body.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+                DropdownMenuItem(
+                  value: 'Meal Time',
+                  child: Text('Meal Time',
+                      style: AppTextTheme.body.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+                DropdownMenuItem(
+                  value: 'Sleep Time',
+                  child: Text('Sleep Time',
+                      style: AppTextTheme.body.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+                DropdownMenuItem(
+                  value: 'Incidents',
+                  child: Text('Incidents',
+                      style: AppTextTheme.body.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+                DropdownMenuItem(
+                  value: 'Appointments',
+                  child: Text('Appointments',
+                      style: AppTextTheme.body.copyWith(
+                        color: AppColorScheme.white,
+                      ))),
+              ],
+              onChanged: (String? value) {
+                setState(() {
+                  typeFilter = value!;
+                });
+              },
+            ),
           ),
           Expanded(
             child: StreamBuilder(
