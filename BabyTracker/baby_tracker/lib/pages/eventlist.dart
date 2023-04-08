@@ -57,37 +57,52 @@ class _EventListState extends State<EventList> {
             },
             decoration: InputDecoration(
               hintText: 'Search...',
+              hintStyle: AppTextTheme.subtitle.copyWith(
+                color: AppColorScheme.lightGray,
+              ),
               prefixIcon: Icon(Icons.search),
               filled: true,
             ),
           ),
           DropdownButton(
             value: typeFilter,
-            items: const [
+            items: [
               DropdownMenuItem(
                 value: 'All',
-                child: Text('All')
-              ),
+                child: Text('All',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ))),
               DropdownMenuItem(
                 value: 'Diaper Change',
-                child: Text('Diaper Change')
-              ),
+                child: Text('Diaper Change',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ))),
               DropdownMenuItem(
                 value: 'Meal Time',
-                child: Text('Meal Time')
-              ),
+                child: Text('Meal Time',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ))),
               DropdownMenuItem(
                 value: 'Sleep Time',
-                child: Text('Sleep Time')
-              ),
+                child: Text('Sleep Time',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ))),
               DropdownMenuItem(
                 value: 'Incidents',
-                child: Text('Incidents')
-              ),
+                child: Text('Incidents',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ))),
               DropdownMenuItem(
                 value: 'Appointments',
-                child: Text('Appointments')
-              ),
+                child: Text('Appointments',
+                    style: AppTextTheme.h3.copyWith(
+                      color: AppColorScheme.white,
+                    ))),
             ],
             onChanged: (String? value) {
               setState(() {
