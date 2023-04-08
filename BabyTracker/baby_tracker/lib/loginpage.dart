@@ -49,27 +49,9 @@ class _LoginPageState extends State<LoginPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          ClipOval(
-                            child: Container(
-                              width: 150,
-                              height: 150,
-                              color: AppColorScheme.pink,
-                              alignment: Alignment.center,
-                              child: Text(
-                                'logo',
-                                style: AppTextTheme.body.copyWith(
-                                  color: AppColorScheme.black,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            'BabyTracker',
-                            textAlign: TextAlign.center,
-                            style: AppTextTheme.h1.copyWith(
-                              color: AppColorScheme.black,
-                            ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 60),
+                            child: Image.asset('assets/logo.png'),
                           ),
                           const SizedBox(height: 5),
                           credits(),
