@@ -26,7 +26,7 @@ class _EventListState extends State<EventList> {
   TextEditingController searchController = TextEditingController();
   String searchText = '';
   String typeFilter = 'All';
-  String sortFilter = 'Time';
+  String sortFilter = 'startTime';
   String orderFilter = 'Ascending';
 
   List<DocumentSnapshot> documents = [];
@@ -126,13 +126,13 @@ class _EventListState extends State<EventList> {
                   value: sortFilter,
                   items: [
                     DropdownMenuItem(
-                        value: 'Time',
+                        value: 'startTime',
                         child: Text('Time',
                             style: AppTextTheme.body.copyWith(
                               color: AppColorScheme.white,
                             ))),
                     DropdownMenuItem(
-                        value: 'Name',
+                        value: 'task',
                         child: Text('Name',
                             style: AppTextTheme.body.copyWith(
                               color: AppColorScheme.white,
@@ -190,24 +190,12 @@ class _EventListState extends State<EventList> {
                       }).toList();
                     }
                     if (orderFilter == 'Ascending') {
-                      if (sortFilter == 'Name') {
-                        documents
-                            .sort((a, b) => a['task'].compareTo(b['task']));
-                      }
-                      if (sortFilter == 'Time') {
-                        documents.sort(
-                            (a, b) => a['startTime'].compareTo(b['startTime']));
-                      }
+                      documents.sort(
+                          (a, b) => a[sortFilter].compareTo(b[sortFilter]));
                     }
                     if (orderFilter == 'Descending') {
-                      if (sortFilter == 'Name') {
-                        documents
-                            .sort((a, b) => b['task'].compareTo(a['task']));
-                      }
-                      if (sortFilter == 'Time') {
-                        documents.sort(
-                            (a, b) => b['startTime'].compareTo(a['startTime']));
-                      }
+                      documents.sort(
+                          (a, b) => b[sortFilter].compareTo(a[sortFilter]));
                     }
                     return ListView.builder(
                       itemCount: documents.length,
