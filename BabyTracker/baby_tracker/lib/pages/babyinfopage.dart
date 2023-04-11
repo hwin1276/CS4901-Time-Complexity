@@ -1,6 +1,7 @@
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/showsnackbar.dart';
@@ -112,7 +113,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Reset Baby Theme",
+                "Reset Baby Theme: Please restart app to after changing.",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               FormField(builder: (state) {
@@ -125,6 +126,10 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                       onChanged: (String? value) => {
                         setState(() {
                           theme = value!;
+                          FirebaseFirestore.instance
+                              .collection("babies")
+                              .doc(widget.babyId)
+                              .update({"theme": value});
                         })
                       },
                     ),
@@ -135,6 +140,10 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                       onChanged: (String? value) => {
                         setState(() {
                           theme = value!;
+                          FirebaseFirestore.instance
+                              .collection("babies")
+                              .doc(widget.babyId)
+                              .update({"theme": value});
                         })
                       },
                     ),
@@ -145,6 +154,10 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                       onChanged: (String? value) => {
                         setState(() {
                           theme = value!;
+                          FirebaseFirestore.instance
+                              .collection("babies")
+                              .doc(widget.babyId)
+                              .update({"theme": value});
                         })
                       },
                     ),
@@ -155,6 +168,10 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                       onChanged: (String? value) => {
                         setState(() {
                           theme = value!;
+                          FirebaseFirestore.instance
+                              .collection("babies")
+                              .doc(widget.babyId)
+                              .update({"theme": value});
                         })
                       },
                     ),
