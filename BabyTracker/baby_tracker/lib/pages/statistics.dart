@@ -1,3 +1,5 @@
+import 'package:baby_tracker/service/database_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -17,6 +19,22 @@ class Statistics extends StatefulWidget {
 }
 
 class _StatisticsState extends State<Statistics> {
+  Stream<QuerySnapshot>? events;
+
+  @override
+  void initState() {
+    super.initState();
+    getEventData();
+  }
+
+  getEventData() {
+    DatabaseService().getEventData(widget.babyId).then((val) => {
+          setState(() {
+            events = val;
+          })
+        });
+  }
+
   Widget buildBarChart(String title, List<BabyStat> data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
