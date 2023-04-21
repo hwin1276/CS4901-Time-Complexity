@@ -1,4 +1,6 @@
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -20,6 +22,8 @@ class Statistics extends StatefulWidget {
 
 class _StatisticsState extends State<Statistics> {
   Stream<QuerySnapshot>? events;
+  List<DocumentSnapshot> documents = [];
+  String eventType = "Sleep Time";
 
   @override
   void initState() {
@@ -80,18 +84,63 @@ class _StatisticsState extends State<Statistics> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Baby Tracker Statistics')),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView(
+      body: SingleChildScrollView(
+        child: Column(
           children: [
-            buildBarChart('Diaper Changes per Day', diaperChangesData),
-            SizedBox(height: 40),
-            buildBarChart('Feeding Times per Day', feedingTimesData),
-            SizedBox(height: 40),
-            buildBarChart(
-                'Sleep Durations per Day (hours)', sleepDurationsData),
-            // Add other statistics widgets here
+            DropdownButton(
+              value: eventType,
+              items: [
+                DropdownMenuItem(
+                    value: 'Diaper Change',
+                    child: Text('Diaper Change',
+                        style: AppTextTheme.body.copyWith(
+                          color: AppColorScheme.white,
+                        ))),
+                DropdownMenuItem(
+                    value: 'Meal Time',
+                    child: Text('Meal Time',
+                        style: AppTextTheme.body.copyWith(
+                          color: AppColorScheme.white,
+                        ))),
+                DropdownMenuItem(
+                    value: 'Sleep Time',
+                    child: Text('Sleep Time',
+                        style: AppTextTheme.body.copyWith(
+                          color: AppColorScheme.white,
+                        ))),
+              ],
+              onChanged: (String? value) {
+                setState(() {
+                  eventType = value!;
+                });
+              },
+            ),
+            StreamBuilder(
+                stream: events,
+                builder: (context, AsyncSnapshot snapshot) {
+                  if (snapshot.hasData) {
+                    documents = snapshot.data.docs;
+                    documents = documents.where((element) {
+                      return element.get('type').toString() == eventType;
+                    }).toList();
+                    return Text("Charts go here");
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'No data available right now',
+                        style: AppTextTheme.body.copyWith(
+                          color: AppColorScheme.white,
+                        ),
+                      ),
+                    );
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColorScheme.white,
+                      ),
+                    );
+                  }
+                }),
           ],
         ),
       ),
