@@ -1,54 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+class Statistics extends StatefulWidget {
+  const Statistics({
+    Key? key,
+    required this.babyName,
+    required this.babyId,
+    required this.userName,
+  }) : super(key: key);
+  final String babyName;
+  final String babyId;
+  final String userName;
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: StatisticsPage(),
-    );
-  }
+  State<Statistics> createState() => _StatisticsState();
 }
 
-class StatisticsPage extends StatelessWidget {
-  final List<BabyStat> diaperChangesData = [
-    BabyStat(label: 'Mon', value: 6),
-    BabyStat(label: 'Tue', value: 8),
-    BabyStat(label: 'Wed', value: 7),
-    BabyStat(label: 'Thu', value: 5),
-    BabyStat(label: 'Fri', value: 6),
-    BabyStat(label: 'Sat', value: 4),
-    BabyStat(label: 'Sun', value: 9),
-  ];
-
-  final List<BabyStat> feedingTimesData = [
-    BabyStat(label: 'Mon', value: 5),
-    BabyStat(label: 'Tue', value: 6),
-    BabyStat(label: 'Wed', value: 7),
-    BabyStat(label: 'Thu', value: 4),
-    BabyStat(label: 'Fri', value: 8),
-    BabyStat(label: 'Sat', value: 6),
-    BabyStat(label: 'Sun', value: 5),
-  ];
-
-  final List<BabyStat> sleepDurationsData = [
-    BabyStat(label: 'Mon', value: 12),
-    BabyStat(label: 'Tue', value: 14),
-    BabyStat(label: 'Wed', value: 11),
-    BabyStat(label: 'Thu', value: 13),
-    BabyStat(label: 'Fri', value: 15),
-    BabyStat(label: 'Sat', value: 10),
-    BabyStat(label: 'Sun', value: 14),
-  ];
-
-  StatisticsPage({Key? key}) : super(key: key);
-
+class _StatisticsState extends State<Statistics> {
   Widget buildBarChart(String title, List<BabyStat> data) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +32,8 @@ class StatisticsPage extends StatelessWidget {
                 show: true,
                 bottomTitles: SideTitles(
                   showTitles: true,
-                  getTextStyles: (value) => const TextStyle(color: Colors.black, fontSize: 12),
+                  getTextStyles: (value) =>
+                      const TextStyle(color: Colors.black, fontSize: 12),
                   getTitles: (double value) {
                     return data[value.toInt()].label;
                   },
@@ -102,18 +71,12 @@ class StatisticsPage extends StatelessWidget {
             SizedBox(height: 40),
             buildBarChart('Feeding Times per Day', feedingTimesData),
             SizedBox(height: 40),
-                       buildBarChart('Sleep Durations per Day (hours)', sleepDurationsData),
+            buildBarChart(
+                'Sleep Durations per Day (hours)', sleepDurationsData),
             // Add other statistics widgets here
           ],
         ),
       ),
     );
   }
-}
-
-class BabyStat {
-  final String label;
-  final int value;
-
-  BabyStat({required this.label, required this.value});
 }
