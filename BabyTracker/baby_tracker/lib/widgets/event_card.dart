@@ -1,3 +1,4 @@
+import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class EventCard extends StatelessWidget {
     required this.calories,
     required this.babyExcreta,
     required this.duration,
+    required this.babyId,
+    required this.eventId,
   }) : super(key: key);
   final String taskName;
   final String taskType;
@@ -24,6 +27,8 @@ class EventCard extends StatelessWidget {
   final String calories;
   final String babyExcreta;
   final int duration;
+  final String babyId;
+  final String eventId;
 
   // Display appropriate icon for each task type
   eventIcon() {
@@ -57,13 +62,6 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // display how long ago the event was created
-    DateTime timeAgoDay = DateTime.now()
-        .subtract(Duration(days: (DateTime.now().day - taskStartTime.day)));
-
-    DateTime timeAgoHr = DateTime.now()
-        .subtract(Duration(hours: (DateTime.now().hour - taskStartTime.hour)));
-
     Duration duration = Duration(
         hours: taskEndTime.hour - taskStartTime.hour,
         minutes: taskEndTime.minute - taskStartTime.minute);
@@ -111,6 +109,13 @@ class EventCard extends StatelessWidget {
                 TextButton(
                   onPressed: () {},
                   child: const Text("Edit"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    DatabaseService().deleteEvent(babyId, eventId);
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Delete"),
                 ),
               ],
             ),

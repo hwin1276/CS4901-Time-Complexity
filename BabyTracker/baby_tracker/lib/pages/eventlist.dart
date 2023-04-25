@@ -209,7 +209,9 @@ class _EventListState extends State<EventList> {
                             taskEndTime: documents[index]['endTime'].toDate(),
                             calories: documents[index]['calories'],
                             babyExcreta: documents[index]['babyExcreta'],
-                            duration: documents[index]['duration']);
+                            duration: documents[index]['duration'],
+                            babyId: widget.babyId,
+                            eventId: documents[index].id);
                       },
                     );
                   } else if (snapshot.hasError) {

@@ -49,14 +49,6 @@ class _CalendarState extends State<Calendar> {
   }
 
   getEventData() async {
-    /*
-    DatabaseService().getEventData(widget.babyId).then((val) {
-      setState(() {
-        eventData = val;
-      });
-    });
-    */
-
     final snap = await FirebaseFirestore.instance
         .collection("babies")
         .doc(widget.babyId)
@@ -65,6 +57,7 @@ class _CalendarState extends State<Calendar> {
         .get();
     for (var doc in snap.docs) {
       final event = doc.data();
+      event["id"] = doc.id;
       final day = DateTime.utc(event["startTime"].toDate().year,
           event["startTime"].toDate().month, event["startTime"].toDate().day);
       if (_events[day] == null) {
@@ -144,7 +137,9 @@ class _CalendarState extends State<Calendar> {
         taskEndTime: event["endTime"].toDate(),
         calories: event["calories"],
         babyExcreta: event["babyExcreta"],
-        duration: event["duration"]);
+        duration: event["duration"],
+        babyId: widget.babyId,
+        eventId: event["id"]);
   }
 
   CalendarBuilders<Object?> calendarBase() {

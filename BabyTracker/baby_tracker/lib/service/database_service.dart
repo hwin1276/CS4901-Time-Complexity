@@ -208,6 +208,11 @@ class DatabaseService {
     }
   }
 
+  // delete an event
+  Future deleteEvent(String babyId, String eventId) async {
+    await babyCollection.doc(babyId).collection("events").doc(eventId).delete();
+  }
+
   // Invite user to join as caretaker for baby
   Future inviteUser(String babyId, String babyName, String searchEmail,
       String searchUsername) async {
