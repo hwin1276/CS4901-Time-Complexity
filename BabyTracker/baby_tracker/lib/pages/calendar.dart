@@ -5,6 +5,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:collection';
 import 'package:baby_tracker/widgets/event_card.dart';
+import '../service/database_service.dart';
 
 class Calendar extends StatefulWidget {
   const Calendar({
@@ -26,7 +27,8 @@ class _CalendarState extends State<Calendar> {
   late DateTime _selectedDay;
   late CalendarFormat _calendarFormat;
   late Map<DateTime, List<dynamic>> _events;
-  Stream<QuerySnapshot>? eventData;
+  Stream<QuerySnapshot>? events;
+  List<DocumentSnapshot> documents = [];
 
   @override
   void initState() {
@@ -49,6 +51,11 @@ class _CalendarState extends State<Calendar> {
   }
 
   getEventData() async {
+    DatabaseService().getEventData(widget.babyId).then((val) {
+      setState(() {
+        events = val;
+      });
+    });
     final snap = await FirebaseFirestore.instance
         .collection("babies")
         .doc(widget.babyId)
@@ -79,67 +86,112 @@ class _CalendarState extends State<Calendar> {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: ListView(
+        child: Column(
           children: [
-            TableCalendar(
-              focusedDay: _focusedDay,
-              firstDay: DateTime.utc(2020, 1, 1),
-              lastDay: DateTime.utc(2030, 12, 25),
-              calendarFormat: _calendarFormat,
-              selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
-              calendarStyle: CalendarStyle(
-                  isTodayHighlighted: true,
-                  selectedTextStyle: AppTextTheme.body.copyWith(
-                    color: AppColorScheme.white,
-                  ),
-                  markersAlignment: Alignment.bottomRight),
-              availableGestures: AvailableGestures.horizontalSwipe,
-              onDaySelected: (selectedDay, focusedDay) {
-                setState(
-                  () {
-                    _selectedDay = selectedDay;
-                    _focusedDay = focusedDay;
-                  },
-                );
-              },
-              onFormatChanged: (format) {
-                setState(
-                  () {
-                    _calendarFormat = format;
-                  },
-                );
-              },
-              eventLoader: _getEventsForTheDay,
-              // Custom marker to display number instead of dots
-              calendarBuilders: calendarBase(),
-            ),
-            Text(
-              "Events for: ${_focusedDay.toString().split(" ")[0]}",
-              style: AppTextTheme.h3.copyWith(
-                color: AppColorScheme.white,
+            Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: TableCalendar(
+                focusedDay: _focusedDay,
+                firstDay: DateTime.utc(2020, 1, 1),
+                lastDay: DateTime.utc(2030, 12, 25),
+                calendarFormat: _calendarFormat,
+                selectedDayPredicate: (day) => isSameDay(day, _selectedDay),
+                calendarStyle: CalendarStyle(
+                    isTodayHighlighted: true,
+                    selectedTextStyle: AppTextTheme.body.copyWith(
+                      color: AppColorScheme.white,
+                    ),
+                    markersAlignment: Alignment.bottomRight),
+                availableGestures: AvailableGestures.horizontalSwipe,
+                onDaySelected: (selectedDay, focusedDay) {
+                  setState(
+                    () {
+                      _selectedDay = selectedDay;
+                      _focusedDay = focusedDay;
+                    },
+                  );
+                },
+                onFormatChanged: (format) {
+                  setState(
+                    () {
+                      _calendarFormat = format;
+                    },
+                  );
+                },
+                eventLoader: _getEventsForTheDay,
+                // Custom marker to display number instead of dots
+                calendarBuilders: calendarBase(),
               ),
             ),
-            // Event List
-            for (var event in _getEventsForTheDay(_selectedDay))
-              displayCalendarEventCard(event)
+            Container(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              width: MediaQuery.of(context).size.width,
+              alignment: Alignment.center,
+              child: Text(
+                "Events for: ${_focusedDay.toString().split(" ")[0]}",
+                style: AppTextTheme.h3.copyWith(
+                  color: AppColorScheme.white,
+                ),
+              ),
+            ),
+            Expanded(
+              child: StreamBuilder(
+                  stream: events,
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      documents = snapshot.data.docs;
+                      documents = documents.where((element) {
+                        final day = DateTime.utc(
+                            element.get("startTime").toDate().year,
+                            element.get("startTime").toDate().month,
+                            element.get("startTime").toDate().day);
+                        if (day == _selectedDay) {
+                          return true;
+                        } else {
+                          return false;
+                        }
+                      }).toList();
+                      return ListView.builder(
+                        itemCount: documents.length,
+                        itemBuilder: (context, index) {
+                          return EventCard(
+                              taskName: documents[index]['task'],
+                              taskType: documents[index]['type'],
+                              taskDescription: documents[index]['description'],
+                              taskStartTime:
+                                  documents[index]['startTime'].toDate(),
+                              taskEndTime: documents[index]['endTime'].toDate(),
+                              calories: documents[index]['calories'],
+                              babyExcreta: documents[index]['babyExcreta'],
+                              duration: documents[index]['duration'],
+                              babyId: widget.babyId,
+                              eventId: documents[index].id);
+                        },
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'No data available right now',
+                          style: AppTextTheme.body.copyWith(
+                            color: AppColorScheme.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColorScheme.white,
+                        ),
+                      );
+                    }
+                  }),
+            )
           ],
         ),
       ),
     );
-  }
-
-  EventCard displayCalendarEventCard(event) {
-    return EventCard(
-        taskName: event["task"],
-        taskType: event["type"],
-        taskDescription: event["description"],
-        taskStartTime: event["startTime"].toDate(),
-        taskEndTime: event["endTime"].toDate(),
-        calories: event["calories"],
-        babyExcreta: event["babyExcreta"],
-        duration: event["duration"],
-        babyId: widget.babyId,
-        eventId: event["id"]);
   }
 
   CalendarBuilders<Object?> calendarBase() {

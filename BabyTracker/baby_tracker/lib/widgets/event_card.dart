@@ -1,4 +1,5 @@
 import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
@@ -114,6 +115,7 @@ class EventCard extends StatelessWidget {
                   onPressed: () {
                     DatabaseService().deleteEvent(babyId, eventId);
                     Navigator.pop(context);
+                    showSnackBar(context, AppColorScheme.green, "Event Successfully Deleted");
                   },
                   child: const Text("Delete"),
                 ),
