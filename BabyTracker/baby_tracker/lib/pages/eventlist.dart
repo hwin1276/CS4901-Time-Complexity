@@ -190,12 +190,24 @@ class _EventListState extends State<EventList> {
                       }).toList();
                     }
                     if (orderFilter == 'Ascending') {
-                      documents.sort(
-                          (a, b) => a[sortFilter].compareTo(b[sortFilter]));
+                      if (sortFilter == 'task') {
+                        documents.sort((a, b) => a['task'].toLowerCase()
+                            .compareTo(b['task'].toLowerCase()));
+                      }
+                      else {
+                        documents.sort((a, b) => a['startTime']
+                          .compareTo(b['startTime']));
+                      }
                     }
                     if (orderFilter == 'Descending') {
-                      documents.sort(
-                          (a, b) => b[sortFilter].compareTo(a[sortFilter]));
+                      if (sortFilter == 'task') {
+                        documents.sort((a, b) => b['task'].toLowerCase()
+                            .compareTo(a['task'].toLowerCase()));
+                      }
+                      else {
+                        documents.sort((a, b) => b['startTime']
+                          .compareTo(a['startTime']));
+                      }
                     }
                     return ListView.builder(
                       itemCount: documents.length,
@@ -209,6 +221,7 @@ class _EventListState extends State<EventList> {
                             taskEndTime: documents[index]['endTime'].toDate(),
                             calories: documents[index]['calories'],
                             babyExcreta: documents[index]['babyExcreta'],
+                            completed: documents[index]['completed'],
                             duration: documents[index]['duration'],
                             babyId: widget.babyId,
                             eventId: documents[index].id);

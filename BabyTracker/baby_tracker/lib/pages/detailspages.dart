@@ -66,8 +66,6 @@ class _DetailsPagesState extends State<DetailsPages> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CreateEvent(
-                            userName: widget.userName,
-                            babyName: widget.babyName,
                             babyId: widget.babyId)));
               },
               child: const Icon(Icons.add)),

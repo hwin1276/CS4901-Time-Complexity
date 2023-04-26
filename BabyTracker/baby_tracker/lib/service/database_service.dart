@@ -208,6 +208,25 @@ class DatabaseService {
     }
   }
 
+  // edit an event
+  Future editEvent(
+      String babyId, String eventId, Map<String, dynamic> eventData) async {
+    DocumentReference eventDocumentReference =
+        babyCollection.doc(babyId).collection("events").doc(eventId);
+    eventDocumentReference.update({
+      "babyId": eventData["babyId"],
+      "task": eventData["task"],
+      "type": eventData["type"],
+      "description": eventData["description"],
+      "babyExcreta": eventData["babyExcreta"],
+      "calories": eventData["calories"],
+      "duration": eventData["duration"],
+      "startTime": eventData["startTime"],
+      "endTime": eventData["endTime"],
+      "completed": eventData["completed"],
+    });
+  }
+
   // delete an event
   Future deleteEvent(String babyId, String eventId) async {
     await babyCollection.doc(babyId).collection("events").doc(eventId).delete();

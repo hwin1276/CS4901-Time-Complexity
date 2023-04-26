@@ -5,18 +5,36 @@ import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class CreateEvent extends StatefulWidget {
+class EditEvent extends StatefulWidget {
   final String babyId;
-  const CreateEvent(
+  final String taskName;
+  final String taskType;
+  final String taskDescription;
+  final DateTime taskStartTime;
+  final DateTime taskEndTime;
+  final String calories;
+  final String babyExcreta;
+  final bool completed;
+  final String eventId;
+  const EditEvent(
       {Key? key,
-      required this.babyId})
+      required this.babyId,
+      required this.taskName,
+      required this.taskType,
+      required this.taskDescription,
+      required this.taskStartTime,
+      required this.taskEndTime,
+      required this.calories,
+      required this.babyExcreta,
+      required this.completed,
+      required this.eventId})
       : super(key: key);
 
   @override
-  State<CreateEvent> createState() => _CreateEventState();
+  State<EditEvent> createState() => _EditEventState();
 }
 
-class _CreateEventState extends State<CreateEvent> {
+class _EditEventState extends State<EditEvent> {
   bool _isLoading = false;
   DateTime startDateTime = DateTime.now();
   DateTime endDateTime = DateTime.now();
@@ -30,7 +48,13 @@ class _CreateEventState extends State<CreateEvent> {
   @override
   void initState() {
     super.initState();
-    startDateTime = startDateTime.add(Duration(minutes: -30));
+    startDateTime = widget.taskStartTime;
+    endDateTime = widget.taskEndTime;
+    eventType = widget.taskType;
+    eventTask = widget.taskName;
+    eventDescription = widget.taskDescription;
+    babyExcreta = widget.babyExcreta;
+    calories = widget.calories;
   }
 
   @override
@@ -42,7 +66,7 @@ class _CreateEventState extends State<CreateEvent> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add an Event'),
+        title: const Text('Edit Event'),
       ),
       body: _isLoading
           ? Center(
@@ -64,18 +88,12 @@ class _CreateEventState extends State<CreateEvent> {
                           padding: EdgeInsets.symmetric(horizontal: 15),
                           child: DropdownButtonFormField(
                             icon: Icon(Icons.arrow_downward),
-                            hint: Text(
-                              'What kind of task are you adding?',
-                              style: AppTextTheme.subtitle.copyWith(
-                                color: AppColorScheme.white,
-                              ),
-                            ),
                             value: eventType,
                             items: [
                               DropdownMenuItem<String>(
                                 value: "",
                                 child: Text(
-                                  'What kind of task are you adding?',
+                                  'What kind of task?',
                                   style: AppTextTheme.h3.copyWith(
                                     color: AppColorScheme.white,
                                   ),
@@ -146,6 +164,7 @@ class _CreateEventState extends State<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
+                          initialValue: eventTask,
                           decoration: InputDecoration(
                             hintText: "What is your task?",
                             hintStyle: AppTextTheme.subtitle.copyWith(
@@ -172,6 +191,7 @@ class _CreateEventState extends State<CreateEvent> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 15),
                         child: TextFormField(
+                          initialValue: eventDescription,
                           decoration: InputDecoration(
                             hintText: "Describe your event",
                             hintStyle: AppTextTheme.subtitle.copyWith(
@@ -243,7 +263,7 @@ class _CreateEventState extends State<CreateEvent> {
                           ),
                           child: TextButton(
                             onPressed: () {
-                              addEvent();
+                              updateEvent();
                             },
                             child: Text(
                               'Confirm',
@@ -488,7 +508,7 @@ class _CreateEventState extends State<CreateEvent> {
     );
   }
 
-  Future addEvent() async {
+  Future updateEvent() async {
     if (formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -503,13 +523,15 @@ class _CreateEventState extends State<CreateEvent> {
         "duration": endDateTime.difference(startDateTime).inMinutes,
         "startTime": startDateTime,
         "endTime": endDateTime,
-        "completed": (eventType == 'Appointments') ? false : true,
+        "completed": widget.completed,
       };
-      DatabaseService().createEvent(widget.babyId, eventData).whenComplete(() {
+      DatabaseService()
+          .editEvent(widget.babyId, widget.eventId, eventData)
+          .whenComplete(() {
         _isLoading = false;
       });
       Navigator.of(context).pop();
-      showSnackBar(context, AppColorScheme.green, "Event Successfully Created");
+      showSnackBar(context, AppColorScheme.green, "Event Successfully Updated");
     }
   }
 

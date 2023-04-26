@@ -23,7 +23,7 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  DateTime _focusedDay = DateTime.now();
+  late DateTime _focusedDay;
   late DateTime _selectedDay;
   late CalendarFormat _calendarFormat;
   late Map<DateTime, List<dynamic>> _events;
@@ -33,6 +33,7 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
+    _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
     _calendarFormat = CalendarFormat.month;
     _events = LinkedHashMap(
@@ -62,6 +63,7 @@ class _CalendarState extends State<Calendar> {
         .collection("events")
         .orderBy("startTime", descending: true)
         .get();
+    _events.clear();
     for (var doc in snap.docs) {
       final event = doc.data();
       event["id"] = doc.id;
@@ -108,6 +110,7 @@ class _CalendarState extends State<Calendar> {
                 onDaySelected: (selectedDay, focusedDay) {
                   setState(
                     () {
+                      getEventData();
                       _selectedDay = selectedDay;
                       _focusedDay = focusedDay;
                     },
@@ -116,6 +119,7 @@ class _CalendarState extends State<Calendar> {
                 onFormatChanged: (format) {
                   setState(
                     () {
+                      getEventData();
                       _calendarFormat = format;
                     },
                   );
@@ -165,6 +169,7 @@ class _CalendarState extends State<Calendar> {
                               taskEndTime: documents[index]['endTime'].toDate(),
                               calories: documents[index]['calories'],
                               babyExcreta: documents[index]['babyExcreta'],
+                              completed: documents[index]['completed'],
                               duration: documents[index]['duration'],
                               babyId: widget.babyId,
                               eventId: documents[index].id);

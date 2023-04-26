@@ -5,6 +5,7 @@ import 'package:baby_tracker/themes/text.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import '../editevent.dart';
 
 class EventCard extends StatelessWidget {
   const EventCard({
@@ -16,6 +17,7 @@ class EventCard extends StatelessWidget {
     required this.taskEndTime,
     required this.calories,
     required this.babyExcreta,
+    required this.completed,
     required this.duration,
     required this.babyId,
     required this.eventId,
@@ -27,6 +29,7 @@ class EventCard extends StatelessWidget {
   final DateTime taskEndTime;
   final String calories;
   final String babyExcreta;
+  final bool completed;
   final int duration;
   final String babyId;
   final String eventId;
@@ -108,14 +111,32 @@ class EventCard extends StatelessWidget {
                           : futureEventDetails(),
               actions: [
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditEvent(
+                                  babyId: babyId,
+                                  taskName: taskName,
+                                  taskType: taskType,
+                                  taskDescription: taskDescription,
+                                  taskStartTime: taskStartTime,
+                                  taskEndTime: taskEndTime,
+                                  calories: calories,
+                                  babyExcreta: babyExcreta,
+                                  completed: completed,
+                                  eventId: eventId,
+                                )));
+                  },
                   child: const Text("Edit"),
                 ),
                 TextButton(
                   onPressed: () {
                     DatabaseService().deleteEvent(babyId, eventId);
                     Navigator.pop(context);
-                    showSnackBar(context, AppColorScheme.green, "Event Successfully Deleted");
+                    showSnackBar(context, AppColorScheme.green,
+                        "Event Successfully Deleted");
                   },
                   child: const Text("Delete"),
                 ),
