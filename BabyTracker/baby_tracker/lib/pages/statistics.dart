@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:math';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
@@ -26,6 +27,16 @@ class _StatisticsState extends State<Statistics> {
   Stream<QuerySnapshot>? events;
   List<DocumentSnapshot> documents = [];
   final List<SleepDataByDay> sleepData = <SleepDataByDay>[];
+  final List<SleepDataByDayInt> sleepDataInt = <SleepDataByDayInt>[];
+  final List<String> weekDays = [
+    'Mon',
+    'Tues',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun'
+  ];
   String eventType = "Sleep Time";
 
   @override
@@ -42,6 +53,8 @@ class _StatisticsState extends State<Statistics> {
         });
   }
 
+  // Solution calculated using 86400 as a day
+  // Not recommended because 86400 is not always a day (there are leap seconds)
   // combineDataByDay() {
   //   int dataCount = 0;
   //   final List<SleepDataByDay> sleepData = <SleepDataByDay>[];
@@ -85,40 +98,56 @@ class _StatisticsState extends State<Statistics> {
   //           duration: documents[i]["duration"]));
   //     }
   //   }
-  //   for (var data in sleepData) {
-  //     print(data.epochTime);
-  //     print(DateFormat.yMMMd()
-  //         .format(DateTime.fromMillisecondsSinceEpoch(data.epochTime.toInt())));
-  //     print(data.duration);
-  //   }
-  //   print("done");
   //   return sleepData;
   // }
 
+  // Solution using DateTime for days. Stores Datetime in a map with sleep duration
+  // combineDataByDay() {
+  //   Map<DateTime, int> sleepDailyData = {};
+  //   for (var data in documents) {
+  //     final timestamp = data["startTime"].toDate();
+  //     final date = DateTime(timestamp.year, timestamp.month, timestamp.day);
+  //     if (sleepDailyData.containsKey(date)) {
+  //       sleepDailyData[date] = (sleepDailyData[date] ?? 0) +
+  //           int.parse(data["duration"].toString());
+  //     } else {
+  //       sleepDailyData[date] = int.parse(data["duration"].toString());
+  //     }
+  //   }
+  //   for (var data in sleepDailyData.entries) {
+  //     sleepData.add(SleepDataByDay(data.key, data.value));
+  //   }
+  // }
+
   combineDataByDay() {
-    Map<DateTime, int> sleepDailyData = {};
-    for (var data in documents) {
-      final timestamp = data["startTime"].toDate();
-      final date = DateTime(timestamp.year, timestamp.month, timestamp.day);
-      if (sleepDailyData.containsKey(date)) {
-        sleepDailyData[date] = (sleepDailyData[date] ?? 0) +
-            int.parse(data["duration"].toString());
-      } else {
-        sleepDailyData[date] = int.parse(data["duration"].toString());
-      }
-    }
-    // for (var data in sleepDailyData.entries) {
-    //   print(data.key);
-    //   print(data.value);
-    // }
-    for (var data in sleepDailyData.entries) {
-      sleepData.add(SleepDataByDay(data.key, data.value));
+    Map<int, int> result = {};
+
+    DateTime currentDate = DateTime.now().subtract(Duration(days: 6));
+    int dayIndex = 0;
+    // sets initial sleep duration to zero for the entire week.
+    while (currentDate.isBefore(DateTime.now())) {
+      result[dayIndex] = 0;
+      dayIndex++;
+      currentDate = currentDate.add(Duration(days: 1));
     }
 
-    // for (var data in sleepData) {
-    //   print(data.time);
-    //   print(data.duration);
-    // }
+    // fills result with numbered duration
+    for (var data in documents) {
+      final timestamp = data["startTime"].toDate();
+      DateTime date = DateTime(timestamp.year, timestamp.month, timestamp.day);
+      if (date.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
+        int offset = DateTime.now().difference(date).inDays;
+        if (offset < 7) {
+          result[6 - offset] = (result[6 - offset] ?? 0) +
+              int.parse(data["duration"].toString());
+        }
+      }
+    }
+
+    //fill sleep data
+    for (var data in result.entries) {
+      sleepDataInt.add(SleepDataByDayInt(data.key, data.value));
+    }
   }
 
   @override
@@ -178,18 +207,13 @@ class _StatisticsState extends State<Statistics> {
     return AspectRatio(
       aspectRatio: 1,
       child: LineChart(LineChartData(
-        minX: double.parse(DateTime(DateTime.now().year, DateTime.now().month,
-                DateTime.now().day - 7, DateTime.now().second + 2)
-            .millisecondsSinceEpoch
-            .toString()),
-        maxX: double.parse(DateTime(
-                DateTime.now().year, DateTime.now().month, DateTime.now().day)
-            .millisecondsSinceEpoch
-            .toString()),
+        minX: 0,
+        maxX: 6,
         minY: 0,
         maxY: 500.toDouble(),
         clipData: FlClipData.all(),
         lineBarsData: [
+          // epoch day 86400 solution
           // LineChartBarData(
           //     spots: documents
           //         .map((e) => FlSpot(
@@ -198,29 +222,35 @@ class _StatisticsState extends State<Statistics> {
           //                 .toDouble(),
           //             double.parse(e["duration"].toString())))
           //         .toList())
+
+          // date time as key
+          // LineChartBarData(
+          //     spots: sleepData
+          //         .map((e) => FlSpot(
+          //             DateTime.parse(e.time.toString())
+          //                 .millisecondsSinceEpoch
+          //                 .toDouble(),
+          //             double.parse(e.duration.toString())))
+          //         .toList())
+
+          // steps as key
           LineChartBarData(
-              spots: sleepData
-                  .map((e) => FlSpot(
-                      DateTime.parse(e.time.toString())
-                          .millisecondsSinceEpoch
-                          .toDouble(),
+              spots: sleepDataInt
+                  .map((e) => FlSpot(double.parse(e.day.toString()).toDouble(),
                       double.parse(e.duration.toString())))
                   .toList())
         ],
-        gridData: FlGridData(horizontalInterval: 864000),
+        gridData: FlGridData(horizontalInterval: null),
         titlesData: FlTitlesData(
           show: true,
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              interval: 86400000,
+              interval: 1,
               getTitlesWidget: (value, meta) {
-                return SideTitleWidget(
-                    axisSide: meta.axisSide,
-                    space: 0,
-                    angle: pi / 2,
-                    child: Text(DateFormat.yMMMd().format(
-                        DateTime.fromMillisecondsSinceEpoch(value.toInt()))));
+                // kinda jank solution but works
+                return Text(
+                    "${weekDays[((DateTime.now().add(Duration(days: value.toInt() + 1)).weekday - 1))]}");
               },
             ),
           ),
@@ -268,4 +298,11 @@ class SleepDataByDay {
   int duration;
 
   SleepDataByDay(this.time, this.duration);
+}
+
+class SleepDataByDayInt {
+  int day;
+  int duration;
+
+  SleepDataByDayInt(this.day, this.duration);
 }
