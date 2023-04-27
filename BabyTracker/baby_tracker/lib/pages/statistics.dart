@@ -26,7 +26,7 @@ class Statistics extends StatefulWidget {
 class _StatisticsState extends State<Statistics> {
   Stream<QuerySnapshot>? events;
   List<DocumentSnapshot> documents = [];
-  final List<SleepDataByDay> sleepData = <SleepDataByDay>[];
+  final List<DataByDay> eventData = <DataByDay>[];
   final List<String> weekDays = [
     'Mon',
     'Tues',
@@ -119,7 +119,7 @@ class _StatisticsState extends State<Statistics> {
   //   }
   // }
 
-  combineDataByDay(String range) {
+  combineDataByDay(String range, String eventType) {
     int dataLength = 0;
     if (range == "1 Week") {
       dataLength = 7;
@@ -146,9 +146,15 @@ class _StatisticsState extends State<Statistics> {
       if (date.isAfter(DateTime.now().subtract(Duration(days: dataLength)))) {
         int offset = DateTime.now().difference(date).inDays;
         if (offset < dataLength) {
-          result[dataLength - 1 - offset] =
-              (result[dataLength - 1 - offset] ?? 0) +
-                  int.parse(data["duration"].toString());
+          if (eventType == "Sleep Time") {
+            result[dataLength - 1 - offset] =
+                (result[dataLength - 1 - offset] ?? 0) +
+                    int.parse(data["duration"].toString());
+          } else {
+            result[dataLength - 1 - offset] =
+                (result[dataLength - 1 - offset] ?? 0) +
+                    int.parse(data["calories"].toString());
+          }
         }
       }
     }
@@ -166,10 +172,10 @@ class _StatisticsState extends State<Statistics> {
     //   }
     // }
 
-    sleepData.clear();
+    eventData.clear();
     //fill sleep data
     for (var data in result.entries) {
-      sleepData.add(SleepDataByDay(data.key, data.value));
+      eventData.add(DataByDay(data.key, data.value));
     }
   }
 
@@ -198,9 +204,9 @@ class _StatisticsState extends State<Statistics> {
                         return a["startTime"].compareTo(b["startTime"]);
                       });
                       if (eventType == "Sleep Time") {
-                        return sleepChart(rangeFilter);
+                        return chart(rangeFilter, eventType);
                       } else if (eventType == "Meal Time") {
-                        return Text("Meal Time Chart");
+                        return chart(rangeFilter, eventType);
                       } else {
                         return Text("Diaper Change Chart");
                       }
@@ -228,9 +234,11 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  AspectRatio sleepChart(String range) {
+  AspectRatio chart(String range, String eventType) {
     double minX = 0.0;
     double maxX = 0.0;
+    double minY = 0.0;
+    double maxY = 0.0;
     double interval = 0.0;
     // max is decreased by one because you start counting at 0.
     if (range == "1 Week") {
@@ -240,14 +248,21 @@ class _StatisticsState extends State<Statistics> {
       maxX = 27;
       interval = 4.0;
     }
-    combineDataByDay(range);
+
+    if (eventType == "Meal Time") {
+      maxY = 1200;
+    } else {
+      maxY = 1000;
+    }
+
+    combineDataByDay(range, eventType);
     return AspectRatio(
       aspectRatio: 1,
       child: LineChart(LineChartData(
         minX: minX,
         maxX: maxX,
-        minY: 0,
-        maxY: 1000.toDouble(),
+        minY: minY,
+        maxY: maxY,
         clipData: FlClipData.all(),
         lineBarsData: [
           // epoch day 86400 solution
@@ -272,9 +287,9 @@ class _StatisticsState extends State<Statistics> {
 
           // steps as key
           LineChartBarData(
-              spots: sleepData
+              spots: eventData
                   .map((e) => FlSpot(double.parse(e.day.toString()).toDouble(),
-                      double.parse(e.duration.toString())))
+                      double.parse(e.data.toString())))
                   .toList())
         ],
         lineTouchData: LineTouchData(
@@ -297,11 +312,19 @@ class _StatisticsState extends State<Statistics> {
                           .subtract(Duration(days: 7))
                           .add(Duration(days: flSpot.x.toInt() + 1));
                     }
-                    return LineTooltipItem(
-                        "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} minutes",
-                        TextStyle(
-                            color: AppColorScheme.black,
-                            fontWeight: FontWeight.bold));
+                    if (eventType == "Meal Time") {
+                      return LineTooltipItem(
+                          "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} calories",
+                          TextStyle(
+                              color: AppColorScheme.black,
+                              fontWeight: FontWeight.bold));
+                    } else {
+                      return LineTooltipItem(
+                          "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} minutes",
+                          TextStyle(
+                              color: AppColorScheme.black,
+                              fontWeight: FontWeight.bold));
+                    }
                   }).toList();
                 })),
         gridData: FlGridData(verticalInterval: interval),
@@ -400,9 +423,9 @@ class _StatisticsState extends State<Statistics> {
 //   SleepDataByDay(this.time, this.duration);
 // }
 
-class SleepDataByDay {
+class DataByDay {
   int day;
-  int duration;
+  int data;
 
-  SleepDataByDay(this.day, this.duration);
+  DataByDay(this.day, this.data);
 }
