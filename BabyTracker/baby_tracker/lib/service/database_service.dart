@@ -16,6 +16,7 @@ class DatabaseService {
       "userName": userName,
       "email": email,
       "babies": [],
+      "alert": [],
       "uid": uid,
     });
   }
@@ -27,8 +28,8 @@ class DatabaseService {
     return snapshot;
   }
 
-  // get user babies
-  getUserBabies() async {
+  // get user data
+  Future getUserData() async {
     return userCollection.doc(uid).snapshots();
   }
 

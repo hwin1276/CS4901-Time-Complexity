@@ -45,7 +45,7 @@ class _BabyListState extends State<BabyList> {
       });
     });
     await DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-        .getUserBabies()
+        .getUserData()
         .then((snapshot) {
       setState(() {
         babies = snapshot;
