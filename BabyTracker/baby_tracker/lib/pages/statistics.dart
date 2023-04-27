@@ -1,8 +1,10 @@
-import 'package:flutter/material.dart';
+import 'dart:math';
+import 'package:baby_tracker/service/database_service.dart';
+import 'package:baby_tracker/themes/colors.dart';
+import 'package:baby_tracker/themes/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../service/database_service.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:fl_chart/fl_chart.dart';
 
 class Statistics extends StatefulWidget {
   const Statistics({
@@ -21,252 +23,326 @@ class Statistics extends StatefulWidget {
 
 class _StatisticsState extends State<Statistics> {
   Stream<QuerySnapshot>? events;
-  late List<_ChartData> sleepData = [];
-  late List<_ChartData> eatData = [];
-  late List<_ChartData> diaperData = [];
-  late TooltipBehavior _tooltip;
-  late TooltipBehavior _tooltip2;
-  late TooltipBehavior _tooltip3;
-
-  // Methods to call each chart
-  sleepChart() {
-    return SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
-        primaryYAxis: NumericAxis(
-            minimum: 0,
-            maximum: sleepData.length.toDouble() + 10,
-            interval: 10),
-        tooltipBehavior: _tooltip,
-        series: <ChartSeries<_ChartData, String>>[
-          ColumnSeries<_ChartData, String>(
-              dataSource: sleepData,
-              xValueMapper: (_ChartData data, _) => data.x,
-              yValueMapper: (_ChartData data, _) => data.y,
-              name: '# Naps',
-              color: Colors.green)
-        ]);
-  }
-
-  eatChart() {
-    return SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
-        primaryYAxis: NumericAxis(
-            minimum: 0, maximum: eatData.length.toDouble() + 10, interval: 10),
-        tooltipBehavior: _tooltip2,
-        series: <ChartSeries<_ChartData, String>>[
-          ColumnSeries<_ChartData, String>(
-              dataSource: eatData,
-              xValueMapper: (_ChartData data, _) => data.x,
-              yValueMapper: (_ChartData data, _) => data.y,
-              name: '# Meals',
-              color: Color.fromRGBO(8, 142, 255, 1))
-        ]);
-  }
-
-  diaperChart() {
-    return SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
-        primaryYAxis: NumericAxis(
-            minimum: 0,
-            maximum: diaperData.length.toDouble() + 10,
-            interval: 10),
-        tooltipBehavior: _tooltip3,
-        series: <ChartSeries<_ChartData, String>>[
-          ColumnSeries<_ChartData, String>(
-              dataSource: diaperData,
-              xValueMapper: (_ChartData data, _) => data.x,
-              yValueMapper: (_ChartData data, _) => data.y,
-              name: '# Diapers',
-              color: Colors.brown)
-        ]);
-  }
+  List<DocumentSnapshot> documents = [];
+  final List<DataByDay> eventData = <DataByDay>[];
+  final List<String> weekDays = [
+    'Mon',
+    'Tues',
+    'Wed',
+    'Thu',
+    'Fri',
+    'Sat',
+    'Sun'
+  ];
+  String eventType = "Sleep Time";
+  String rangeFilter = "1 Week";
 
   @override
   void initState() {
     super.initState();
     getEventData();
-    _tooltip = TooltipBehavior(enable: true);
-    _tooltip2 = TooltipBehavior(enable: true);
-    _tooltip3 = TooltipBehavior(enable: true);
   }
 
   getEventData() {
-    DatabaseService().getEventData(widget.babyId).then((val) {
-      setState(() {
-        events = val;
-      });
-    });
+    DatabaseService().getEventData(widget.babyId).then((val) => {
+          setState(() {
+            events = val;
+          })
+        });
   }
 
-  // methods to query data from each week day
-  napsPerDay(AsyncSnapshot snapshot) {
-    int Sunday = 0,
-        Monday = 0,
-        Tuesday = 0,
-        Wednesday = 0,
-        Thursday = 0,
-        Friday = 0,
-        Saturday = 0;
-    for (var index = 0; index < snapshot.data.docs.length; index++) {
-      var weekDate = DateFormat('EEEE')
-          .format(snapshot.data.docs[index]['startTime'].toDate());
-      if (snapshot.data.docs[index]['type'] == "Sleep Time") {
-        if (weekDate == "Sunday") {
-          Sunday++;
-        } else if (weekDate == "Monday") {
-          Monday++;
-        } else if (weekDate == "Tuesday") {
-          Tuesday++;
-        } else if (weekDate == "Wednesday") {
-          Wednesday++;
-        } else if (weekDate == "Thursday") {
-          Thursday++;
-        } else if (weekDate == "Friday") {
-          Friday++;
-        } else if (weekDate == "Saturday") {
-          Saturday++;
+  // Combines data in cases where an event can happen multiple times a day.
+  // The combined data has both of it's values combined.
+  combineDataByDay(String range, String eventType) {
+    // check for range
+    int dataLength = 0;
+    if (range == "1 Week") {
+      dataLength = 7;
+    } else {
+      dataLength = 28;
+    }
+
+    // sets initial data value to zero
+    Map<int, int> result = {};
+    DateTime currentDate =
+        DateTime.now().subtract(Duration(days: dataLength - 1));
+    int dayIndex = 0;
+    while (currentDate.isBefore(DateTime.now())) {
+      result[dayIndex] = 0;
+      dayIndex++;
+      currentDate = currentDate.add(Duration(days: 1));
+    }
+
+    // fills result with the duration
+    // The current date is subtracted by the range (4 weeks or 1 week). Then the
+    // days are iterated through adding the data.values together that are on the
+    // same day until today is reached.
+    for (var data in documents) {
+      final timestamp = data["startTime"].toDate();
+      DateTime date = DateTime(timestamp.year, timestamp.month, timestamp.day);
+      if (date.isAfter(DateTime.now().subtract(Duration(days: dataLength)))) {
+        int offset = DateTime.now().difference(date).inDays;
+        if (offset < dataLength) {
+          if (eventType == "Sleep Time") {
+            result[dataLength - 1 - offset] =
+                (result[dataLength - 1 - offset] ?? 0) +
+                    int.parse(data["duration"].toString());
+          } else if (eventType == "Meal Time") {
+            result[dataLength - 1 - offset] =
+                (result[dataLength - 1 - offset] ?? 0) +
+                    int.parse(data["calories"].toString());
+          } else {
+            result[dataLength - 1 - offset] =
+                (result[dataLength - 1 - offset] ?? 0) + 1;
+          }
         }
       }
     }
-    sleepData.add(_ChartData("SUN", Sunday));
-    sleepData.add(_ChartData("MON", Monday));
-    sleepData.add(_ChartData("TUE", Tuesday));
-    sleepData.add(_ChartData("WED", Wednesday));
-    sleepData.add(_ChartData("THU", Thursday));
-    sleepData.add(_ChartData("FRI", Friday));
-    sleepData.add(_ChartData("SAT", Saturday));
-  }
 
-  mealsPerDay(AsyncSnapshot snapshot) {
-    int Sunday = 0,
-        Monday = 0,
-        Tuesday = 0,
-        Wednesday = 0,
-        Thursday = 0,
-        Friday = 0,
-        Saturday = 0;
-    for (var index = 0; index < snapshot.data.docs.length; index++) {
-      var weekDate = DateFormat('EEEE')
-          .format(snapshot.data.docs[index]['startTime'].toDate());
-      if (snapshot.data.docs[index]['type'] == "Meal Time") {
-        if (weekDate == "Sunday") {
-          Sunday++;
-        } else if (weekDate == "Monday") {
-          Monday++;
-        } else if (weekDate == "Tuesday") {
-          Tuesday++;
-        } else if (weekDate == "Wednesday") {
-          Wednesday++;
-        } else if (weekDate == "Thursday") {
-          Thursday++;
-        } else if (weekDate == "Friday") {
-          Friday++;
-        } else if (weekDate == "Saturday") {
-          Saturday++;
-        }
-      }
-    }
-    eatData.add(_ChartData("SUN", Sunday));
-    eatData.add(_ChartData("MON", Monday));
-    eatData.add(_ChartData("TUE", Tuesday));
-    eatData.add(_ChartData("WED", Wednesday));
-    eatData.add(_ChartData("THU", Thursday));
-    eatData.add(_ChartData("FRI", Friday));
-    eatData.add(_ChartData("SAT", Saturday));
-  }
+    // clears data for when the user switches the filter or range
+    eventData.clear();
 
-  diapersPerDay(AsyncSnapshot snapshot) {
-    int Sunday = 0,
-        Monday = 0,
-        Tuesday = 0,
-        Wednesday = 0,
-        Thursday = 0,
-        Friday = 0,
-        Saturday = 0;
-    for (var index = 0; index < snapshot.data.docs.length; index++) {
-      var weekDate = DateFormat('EEEE')
-          .format(snapshot.data.docs[index]['startTime'].toDate());
-      if (snapshot.data.docs[index]['type'] == "Diaper Change") {
-        if (weekDate == "Sunday") {
-          Sunday++;
-        } else if (weekDate == "Monday") {
-          Monday++;
-        } else if (weekDate == "Tuesday") {
-          Tuesday++;
-        } else if (weekDate == "Wednesday") {
-          Wednesday++;
-        } else if (weekDate == "Thursday") {
-          Thursday++;
-        } else if (weekDate == "Friday") {
-          Friday++;
-        } else if (weekDate == "Saturday") {
-          Saturday++;
-        }
-      }
+    // fill data into a list.
+    for (var data in result.entries) {
+      eventData.add(DataByDay(data.key, data.value));
     }
-    diaperData.add(_ChartData("SUN", Sunday));
-    diaperData.add(_ChartData("MON", Monday));
-    diaperData.add(_ChartData("TUE", Tuesday));
-    diaperData.add(_ChartData("WED", Wednesday));
-    diaperData.add(_ChartData("THU", Thursday));
-    diaperData.add(_ChartData("FRI", Friday));
-    diaperData.add(_ChartData("SAT", Saturday));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SingleChildScrollView(
-      child: StreamBuilder(
-          stream: events,
-          builder: (context, AsyncSnapshot snapshot) {
-            if (snapshot.hasData) {
-              napsPerDay(snapshot);
-              mealsPerDay(snapshot);
-              diapersPerDay(snapshot);
-              return Column(children: [
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.crib, color: Colors.green),
-                    Text(" Naps"),
-                  ],
-                ),
-                Container(
-                  child: sleepChart(),
-                ),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.dining, color: Colors.blue),
-                    Text(" Meals"),
-                  ],
-                ),
-                Container(child: eatChart()),
-                SizedBox(height: 40),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.baby_changing_station, color: Colors.brown),
-                    Text(" Diaper Changes"),
-                  ],
-                ),
-                Container(child: diaperChart()),
-              ]);
-            }
-            return Center(
-              child: CircularProgressIndicator(color: Colors.white),
-            );
-          }),
-    ));
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.only(right: 15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                eventDropDown(),
+                rangeDropDown(),
+              ]),
+              StreamBuilder(
+                  stream: events,
+                  builder: (context, AsyncSnapshot snapshot) {
+                    if (snapshot.hasData) {
+                      // fiters and sorts events
+                      documents = snapshot.data.docs;
+                      documents = documents.where((element) {
+                        return element.get('type').toString() == eventType;
+                      }).toList();
+                      documents.sort((a, b) {
+                        return a["startTime"].compareTo(b["startTime"]);
+                      });
+
+                      if (eventType == "Sleep Time") {
+                        return chart(rangeFilter, eventType);
+                      } else if (eventType == "Meal Time") {
+                        return chart(rangeFilter, eventType);
+                      } else {
+                        return chart(rangeFilter, eventType);
+                      }
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                          'No data available right now',
+                          style: AppTextTheme.body.copyWith(
+                            color: AppColorScheme.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          color: AppColorScheme.white,
+                        ),
+                      );
+                    }
+                  }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  AspectRatio chart(String range, String eventType) {
+    double minX = 0.0;
+    double maxX = 0.0;
+    double minY = 0.0;
+    double maxY = 0.0;
+    double interval = 0.0;
+    // check for range
+    if (range == "1 Week") {
+      maxX = 6;
+      interval = 1.0;
+    } else {
+      maxX = 27;
+      interval = 4.0;
+    }
+
+    // filters events
+    if (eventType == "Meal Time") {
+      maxY = 1200;
+    } else if (eventType == "Sleep Time") {
+      maxY = 1000;
+    } else {
+      maxY = 20;
+    }
+
+    // Combines data in cases where an event can happen multiple times a day.
+    combineDataByDay(range, eventType);
+
+    return AspectRatio(
+      aspectRatio: 1,
+      child: LineChart(LineChartData(
+        minX: minX,
+        maxX: maxX,
+        minY: minY,
+        maxY: maxY,
+        clipData: FlClipData.all(),
+        lineBarsData: [
+          // uses the event data as y and the numbered key as x
+          LineChartBarData(
+              spots: eventData
+                  .map((e) => FlSpot(double.parse(e.day.toString()).toDouble(),
+                      double.parse(e.data.toString())))
+                  .toList())
+        ],
+        lineTouchData: LineTouchData(
+            enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+                fitInsideHorizontally: true,
+                getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                  return touchedBarSpots.map((barSpot) {
+                    // default tooltip
+                    final flSpot = barSpot;
+
+                    // calculates the date from x value
+                    DateTime date = DateTime.now();
+                    if (range == "4 Weeks") {
+                      date = DateTime.now()
+                          .subtract(Duration(days: 28))
+                          .add(Duration(days: flSpot.x.toInt() + 1));
+                    } else {
+                      date = DateTime.now()
+                          .subtract(Duration(days: 7))
+                          .add(Duration(days: flSpot.x.toInt() + 1));
+                    }
+
+                    // create new tooltip
+                    if (eventType == "Meal Time") {
+                      return LineTooltipItem(
+                          "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} calories",
+                          TextStyle(
+                              color: AppColorScheme.black,
+                              fontWeight: FontWeight.bold));
+                    } else if (eventType == "Sleep Time") {
+                      return LineTooltipItem(
+                          "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} minutes",
+                          TextStyle(
+                              color: AppColorScheme.black,
+                              fontWeight: FontWeight.bold));
+                    } else {
+                      return LineTooltipItem(
+                          "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} diaper changes",
+                          TextStyle(
+                              color: AppColorScheme.black,
+                              fontWeight: FontWeight.bold));
+                    }
+                  }).toList();
+                })),
+        gridData: FlGridData(verticalInterval: interval),
+        titlesData: FlTitlesData(
+          show: true,
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              interval: interval,
+              getTitlesWidget: (value, meta) {
+                if (range == "1 Week") {
+                  return Text(weekDays[((DateTime.now()
+                          .add(Duration(days: value.toInt() + 1))
+                          .weekday -
+                      1))]);
+                } else {
+                  DateTime date = DateTime.now()
+                      .subtract(Duration(days: 28))
+                      .add(Duration(days: value.toInt() + 1));
+                  return SideTitleWidget(
+                      angle: pi / 2,
+                      axisSide: meta.axisSide,
+                      child: Text("     ${date.month}/${date.day}"));
+                }
+              },
+            ),
+          ),
+          rightTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
+        ),
+      )),
+    );
+  }
+
+  DropdownButton<String> rangeDropDown() {
+    return DropdownButton(
+      value: rangeFilter,
+      items: [
+        DropdownMenuItem(
+            value: '1 Week',
+            child: Text('1 Week',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+        DropdownMenuItem(
+            value: '4 Weeks',
+            child: Text('4 Weeks',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+      ],
+      onChanged: (String? value) {
+        setState(() {
+          rangeFilter = value!;
+        });
+      },
+    );
+  }
+
+  DropdownButton<String> eventDropDown() {
+    return DropdownButton(
+      value: eventType,
+      items: [
+        DropdownMenuItem(
+            value: 'Diaper Change',
+            child: Text('Diaper Change',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+        DropdownMenuItem(
+            value: 'Meal Time',
+            child: Text('Meal Time',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+        DropdownMenuItem(
+            value: 'Sleep Time',
+            child: Text('Sleep Time',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+      ],
+      onChanged: (String? value) {
+        setState(() {
+          eventType = value!;
+        });
+      },
+    );
   }
 }
 
-class _ChartData {
-  _ChartData(this.x, this.y);
+class DataByDay {
+  int day;
+  int data;
 
-  final String x;
-  final int y;
+  DataByDay(this.day, this.data);
 }
