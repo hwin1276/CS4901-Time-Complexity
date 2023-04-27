@@ -1,10 +1,8 @@
-import 'dart:collection';
 import 'dart:math';
 import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import "package:intl/intl.dart";
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 
@@ -53,73 +51,10 @@ class _StatisticsState extends State<Statistics> {
         });
   }
 
-  // Solution calculated using 86400 as a day
-  // Not recommended because 86400 is not always a day (there are leap seconds)
-  // combineDataByDay() {
-  //   int dataCount = 0;
-  //   final List<SleepDataByDay> sleepData = <SleepDataByDay>[];
-  //   sleepData.add(SleepDataByDay(
-  //       epochTime: DateTime.parse(documents[0]["startTime"].toDate().toString())
-  //               .millisecondsSinceEpoch
-  //               .toDouble() -
-  //           DateTime.parse(documents[0]["startTime"].toDate().toString())
-  //                   .millisecondsSinceEpoch
-  //                   .toDouble() %
-  //               86400000,
-  //       duration: documents[0]["duration"]));
-  //   for (int i = 1; i < documents.length; i++) {
-  //     if (DateTime.parse(documents[i - 1]["startTime"].toDate().toString())
-  //                 .millisecondsSinceEpoch
-  //                 .toDouble() -
-  //             DateTime.parse(documents[i - 1]["startTime"].toDate().toString())
-  //                     .millisecondsSinceEpoch
-  //                     .toDouble() %
-  //                 86400000 ==
-  //         DateTime.parse(documents[i]["startTime"].toDate().toString())
-  //                 .millisecondsSinceEpoch
-  //                 .toDouble() -
-  //             DateTime.parse(documents[i]["startTime"].toDate().toString())
-  //                     .millisecondsSinceEpoch
-  //                     .toDouble() %
-  //                 86400000) {
-  //       sleepData[dataCount].duration +=
-  //           int.parse(documents[i]["duration"].toString());
-  //     } else {
-  //       dataCount++;
-  //       sleepData.add(SleepDataByDay(
-  //           epochTime: DateTime.parse(
-  //                       documents[i]["startTime"].toDate().toString())
-  //                   .millisecondsSinceEpoch
-  //                   .toDouble() -
-  //               DateTime.parse(documents[i]["startTime"].toDate().toString())
-  //                       .millisecondsSinceEpoch
-  //                       .toDouble() %
-  //                   86400000,
-  //           duration: documents[i]["duration"]));
-  //     }
-  //   }
-  //   return sleepData;
-  // }
-
-  // Solution using DateTime for days. Stores Datetime in a map with sleep duration
-  // combineDataByDay() {
-  //   Map<DateTime, int> sleepDailyData = {};
-  //   for (var data in documents) {
-  //     final timestamp = data["startTime"].toDate();
-  //     final date = DateTime(timestamp.year, timestamp.month, timestamp.day);
-  //     if (sleepDailyData.containsKey(date)) {
-  //       sleepDailyData[date] = (sleepDailyData[date] ?? 0) +
-  //           int.parse(data["duration"].toString());
-  //     } else {
-  //       sleepDailyData[date] = int.parse(data["duration"].toString());
-  //     }
-  //   }
-  //   for (var data in sleepDailyData.entries) {
-  //     sleepData.add(SleepDataByDay(data.key, data.value));
-  //   }
-  // }
-
+  // Combines data in cases where an event can happen multiple times a day.
+  // The combined data has both of it's values combined.
   combineDataByDay(String range, String eventType) {
+    // check for range
     int dataLength = 0;
     if (range == "1 Week") {
       dataLength = 7;
@@ -127,19 +62,21 @@ class _StatisticsState extends State<Statistics> {
       dataLength = 28;
     }
 
+    // sets initial data value to zero
     Map<int, int> result = {};
-
     DateTime currentDate =
         DateTime.now().subtract(Duration(days: dataLength - 1));
     int dayIndex = 0;
-    // sets initial sleep duration to zero for the entire week.
     while (currentDate.isBefore(DateTime.now())) {
       result[dayIndex] = 0;
       dayIndex++;
       currentDate = currentDate.add(Duration(days: 1));
     }
 
-    // fills result with numbered duration
+    // fills result with the duration
+    // The current date is subtracted by the range (4 weeks or 1 week). Then the
+    // days are iterated through adding the data.values together that are on the
+    // same day until today is reached.
     for (var data in documents) {
       final timestamp = data["startTime"].toDate();
       DateTime date = DateTime(timestamp.year, timestamp.month, timestamp.day);
@@ -162,21 +99,10 @@ class _StatisticsState extends State<Statistics> {
       }
     }
 
-    // // fills result with numbered duration
-    // for (var data in documents) {
-    //   final timestamp = data["startTime"].toDate();
-    //   DateTime date = DateTime(timestamp.year, timestamp.month, timestamp.day);
-    //   if (date.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
-    //     int offset = DateTime.now().difference(date).inDays;
-    //     if (offset < 7) {
-    //       result[6 - offset] = (result[6 - offset] ?? 0) +
-    //           int.parse(data["duration"].toString());
-    //     }
-    //   }
-    // }
-
+    // clears data for when the user switches the filter or range
     eventData.clear();
-    //fill sleep data
+
+    // fill data into a list.
     for (var data in result.entries) {
       eventData.add(DataByDay(data.key, data.value));
     }
@@ -199,6 +125,7 @@ class _StatisticsState extends State<Statistics> {
                   stream: events,
                   builder: (context, AsyncSnapshot snapshot) {
                     if (snapshot.hasData) {
+                      // fiters and sorts events
                       documents = snapshot.data.docs;
                       documents = documents.where((element) {
                         return element.get('type').toString() == eventType;
@@ -206,6 +133,7 @@ class _StatisticsState extends State<Statistics> {
                       documents.sort((a, b) {
                         return a["startTime"].compareTo(b["startTime"]);
                       });
+
                       if (eventType == "Sleep Time") {
                         return chart(rangeFilter, eventType);
                       } else if (eventType == "Meal Time") {
@@ -243,7 +171,7 @@ class _StatisticsState extends State<Statistics> {
     double minY = 0.0;
     double maxY = 0.0;
     double interval = 0.0;
-    // max is decreased by one because you start counting at 0.
+    // check for range
     if (range == "1 Week") {
       maxX = 6;
       interval = 1.0;
@@ -252,6 +180,7 @@ class _StatisticsState extends State<Statistics> {
       interval = 4.0;
     }
 
+    // filters events
     if (eventType == "Meal Time") {
       maxY = 1200;
     } else if (eventType == "Sleep Time") {
@@ -260,7 +189,9 @@ class _StatisticsState extends State<Statistics> {
       maxY = 20;
     }
 
+    // Combines data in cases where an event can happen multiple times a day.
     combineDataByDay(range, eventType);
+
     return AspectRatio(
       aspectRatio: 1,
       child: LineChart(LineChartData(
@@ -270,27 +201,7 @@ class _StatisticsState extends State<Statistics> {
         maxY: maxY,
         clipData: FlClipData.all(),
         lineBarsData: [
-          // epoch day 86400 solution
-          // LineChartBarData(
-          //     spots: documents
-          //         .map((e) => FlSpot(
-          //             DateTime.parse(e["startTime"].toDate().toString())
-          //                 .millisecondsSinceEpoch
-          //                 .toDouble(),
-          //             double.parse(e["duration"].toString())))
-          //         .toList())
-
-          // date time as key
-          // LineChartBarData(
-          //     spots: sleepData
-          //         .map((e) => FlSpot(
-          //             DateTime.parse(e.time.toString())
-          //                 .millisecondsSinceEpoch
-          //                 .toDouble(),
-          //             double.parse(e.duration.toString())))
-          //         .toList())
-
-          // steps as key
+          // uses the event data as y and the numbered key as x
           LineChartBarData(
               spots: eventData
                   .map((e) => FlSpot(double.parse(e.day.toString()).toDouble(),
@@ -303,10 +214,10 @@ class _StatisticsState extends State<Statistics> {
                 fitInsideHorizontally: true,
                 getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
                   return touchedBarSpots.map((barSpot) {
+                    // default tooltip
                     final flSpot = barSpot;
-                    // DateTime date = DateTime.now()
-                    //     .subtract(Duration(days: 28))
-                    //     .add(Duration(days: flSpot.x.toInt() + 1));
+
+                    // calculates the date from x value
                     DateTime date = DateTime.now();
                     if (range == "4 Weeks") {
                       date = DateTime.now()
@@ -317,6 +228,8 @@ class _StatisticsState extends State<Statistics> {
                           .subtract(Duration(days: 7))
                           .add(Duration(days: flSpot.x.toInt() + 1));
                     }
+
+                    // create new tooltip
                     if (eventType == "Meal Time") {
                       return LineTooltipItem(
                           "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} calories",
@@ -426,13 +339,6 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 }
-
-// class SleepDataByDay {
-//   final DateTime time;
-//   int duration;
-
-//   SleepDataByDay(this.time, this.duration);
-// }
 
 class DataByDay {
   int day;
