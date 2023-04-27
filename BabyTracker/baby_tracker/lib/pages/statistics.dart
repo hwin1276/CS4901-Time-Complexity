@@ -150,10 +150,13 @@ class _StatisticsState extends State<Statistics> {
             result[dataLength - 1 - offset] =
                 (result[dataLength - 1 - offset] ?? 0) +
                     int.parse(data["duration"].toString());
-          } else {
+          } else if (eventType == "Meal Time") {
             result[dataLength - 1 - offset] =
                 (result[dataLength - 1 - offset] ?? 0) +
                     int.parse(data["calories"].toString());
+          } else {
+            result[dataLength - 1 - offset] =
+                (result[dataLength - 1 - offset] ?? 0) + 1;
           }
         }
       }
@@ -208,7 +211,7 @@ class _StatisticsState extends State<Statistics> {
                       } else if (eventType == "Meal Time") {
                         return chart(rangeFilter, eventType);
                       } else {
-                        return Text("Diaper Change Chart");
+                        return chart(rangeFilter, eventType);
                       }
                     } else if (snapshot.hasError) {
                       return Center(
@@ -251,8 +254,10 @@ class _StatisticsState extends State<Statistics> {
 
     if (eventType == "Meal Time") {
       maxY = 1200;
-    } else {
+    } else if (eventType == "Sleep Time") {
       maxY = 1000;
+    } else {
+      maxY = 20;
     }
 
     combineDataByDay(range, eventType);
@@ -318,9 +323,15 @@ class _StatisticsState extends State<Statistics> {
                           TextStyle(
                               color: AppColorScheme.black,
                               fontWeight: FontWeight.bold));
-                    } else {
+                    } else if (eventType == "Sleep Time") {
                       return LineTooltipItem(
                           "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} minutes",
+                          TextStyle(
+                              color: AppColorScheme.black,
+                              fontWeight: FontWeight.bold));
+                    } else {
+                      return LineTooltipItem(
+                          "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} diaper changes",
                           TextStyle(
                               color: AppColorScheme.black,
                               fontWeight: FontWeight.bold));
