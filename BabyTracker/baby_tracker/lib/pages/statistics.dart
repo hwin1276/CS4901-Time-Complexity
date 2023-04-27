@@ -37,7 +37,7 @@ class _StatisticsState extends State<Statistics> {
     'Sun'
   ];
   String eventType = "Sleep Time";
-  String rangeFilter = "4 Weeks";
+  String rangeFilter = "1 Week";
 
   @override
   void initState() {
@@ -166,6 +166,7 @@ class _StatisticsState extends State<Statistics> {
     //   }
     // }
 
+    sleepData.clear();
     //fill sleep data
     for (var data in result.entries) {
       sleepData.add(SleepDataByDay(data.key, data.value));
@@ -233,11 +234,11 @@ class _StatisticsState extends State<Statistics> {
     double interval = 0.0;
     // max is decreased by one because you start counting at 0.
     if (range == "1 Week") {
-      maxX = 6.0;
+      maxX = 6;
       interval = 1.0;
     } else {
-      maxX = 27.0;
-      interval = 2.0;
+      maxX = 27;
+      interval = 4.0;
     }
     combineDataByDay(range);
     return AspectRatio(
@@ -276,7 +277,34 @@ class _StatisticsState extends State<Statistics> {
                       double.parse(e.duration.toString())))
                   .toList())
         ],
-        gridData: FlGridData(horizontalInterval: null),
+        lineTouchData: LineTouchData(
+            enabled: true,
+            touchTooltipData: LineTouchTooltipData(
+                fitInsideHorizontally: true,
+                getTooltipItems: (List<LineBarSpot> touchedBarSpots) {
+                  return touchedBarSpots.map((barSpot) {
+                    final flSpot = barSpot;
+                    // DateTime date = DateTime.now()
+                    //     .subtract(Duration(days: 28))
+                    //     .add(Duration(days: flSpot.x.toInt() + 1));
+                    DateTime date = DateTime.now();
+                    if (range == "4 Weeks") {
+                      date = DateTime.now()
+                          .subtract(Duration(days: 28))
+                          .add(Duration(days: flSpot.x.toInt() + 1));
+                    } else {
+                      date = DateTime.now()
+                          .subtract(Duration(days: 7))
+                          .add(Duration(days: flSpot.x.toInt() + 1));
+                    }
+                    return LineTooltipItem(
+                        "${weekDays[date.weekday - 1]} ${date.month}/${date.day}\n${flSpot.y.toInt()} minutes",
+                        TextStyle(
+                            color: AppColorScheme.black,
+                            fontWeight: FontWeight.bold));
+                  }).toList();
+                })),
+        gridData: FlGridData(verticalInterval: interval),
         titlesData: FlTitlesData(
           show: true,
           bottomTitles: AxisTitles(
