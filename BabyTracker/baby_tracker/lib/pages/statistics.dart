@@ -27,7 +27,6 @@ class _StatisticsState extends State<Statistics> {
   Stream<QuerySnapshot>? events;
   List<DocumentSnapshot> documents = [];
   final List<SleepDataByDay> sleepData = <SleepDataByDay>[];
-  final List<SleepDataByDayInt> sleepDataInt = <SleepDataByDayInt>[];
   final List<String> weekDays = [
     'Mon',
     'Tues',
@@ -38,6 +37,7 @@ class _StatisticsState extends State<Statistics> {
     'Sun'
   ];
   String eventType = "Sleep Time";
+  String rangeFilter = "4 Weeks";
 
   @override
   void initState() {
@@ -119,10 +119,18 @@ class _StatisticsState extends State<Statistics> {
   //   }
   // }
 
-  combineDataByDay() {
+  combineDataByDay(String range) {
+    int dataLength = 0;
+    if (range == "1 Week") {
+      dataLength = 7;
+    } else {
+      dataLength = 28;
+    }
+
     Map<int, int> result = {};
 
-    DateTime currentDate = DateTime.now().subtract(Duration(days: 6));
+    DateTime currentDate =
+        DateTime.now().subtract(Duration(days: dataLength - 1));
     int dayIndex = 0;
     // sets initial sleep duration to zero for the entire week.
     while (currentDate.isBefore(DateTime.now())) {
@@ -135,18 +143,32 @@ class _StatisticsState extends State<Statistics> {
     for (var data in documents) {
       final timestamp = data["startTime"].toDate();
       DateTime date = DateTime(timestamp.year, timestamp.month, timestamp.day);
-      if (date.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
+      if (date.isAfter(DateTime.now().subtract(Duration(days: dataLength)))) {
         int offset = DateTime.now().difference(date).inDays;
-        if (offset < 7) {
-          result[6 - offset] = (result[6 - offset] ?? 0) +
-              int.parse(data["duration"].toString());
+        if (offset < dataLength) {
+          result[dataLength - 1 - offset] =
+              (result[dataLength - 1 - offset] ?? 0) +
+                  int.parse(data["duration"].toString());
         }
       }
     }
 
+    // // fills result with numbered duration
+    // for (var data in documents) {
+    //   final timestamp = data["startTime"].toDate();
+    //   DateTime date = DateTime(timestamp.year, timestamp.month, timestamp.day);
+    //   if (date.isAfter(DateTime.now().subtract(Duration(days: 7)))) {
+    //     int offset = DateTime.now().difference(date).inDays;
+    //     if (offset < 7) {
+    //       result[6 - offset] = (result[6 - offset] ?? 0) +
+    //           int.parse(data["duration"].toString());
+    //     }
+    //   }
+    // }
+
     //fill sleep data
     for (var data in result.entries) {
-      sleepDataInt.add(SleepDataByDayInt(data.key, data.value));
+      sleepData.add(SleepDataByDay(data.key, data.value));
     }
   }
 
@@ -155,11 +177,14 @@ class _StatisticsState extends State<Statistics> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(right: 10),
+          padding: EdgeInsets.only(right: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              dropdownFilter(),
+              Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, children: [
+                eventDropDown(),
+                rangeDropDown(),
+              ]),
               StreamBuilder(
                   stream: events,
                   builder: (context, AsyncSnapshot snapshot) {
@@ -172,7 +197,7 @@ class _StatisticsState extends State<Statistics> {
                         return a["startTime"].compareTo(b["startTime"]);
                       });
                       if (eventType == "Sleep Time") {
-                        return sleepChart();
+                        return sleepChart(rangeFilter);
                       } else if (eventType == "Meal Time") {
                         return Text("Meal Time Chart");
                       } else {
@@ -202,15 +227,26 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  AspectRatio sleepChart() {
-    combineDataByDay();
+  AspectRatio sleepChart(String range) {
+    double minX = 0.0;
+    double maxX = 0.0;
+    double interval = 0.0;
+    // max is decreased by one because you start counting at 0.
+    if (range == "1 Week") {
+      maxX = 6.0;
+      interval = 1.0;
+    } else {
+      maxX = 27.0;
+      interval = 2.0;
+    }
+    combineDataByDay(range);
     return AspectRatio(
       aspectRatio: 1,
       child: LineChart(LineChartData(
-        minX: 0,
-        maxX: 6,
+        minX: minX,
+        maxX: maxX,
         minY: 0,
-        maxY: 500.toDouble(),
+        maxY: 1000.toDouble(),
         clipData: FlClipData.all(),
         lineBarsData: [
           // epoch day 86400 solution
@@ -235,7 +271,7 @@ class _StatisticsState extends State<Statistics> {
 
           // steps as key
           LineChartBarData(
-              spots: sleepDataInt
+              spots: sleepData
                   .map((e) => FlSpot(double.parse(e.day.toString()).toDouble(),
                       double.parse(e.duration.toString())))
                   .toList())
@@ -246,11 +282,22 @@ class _StatisticsState extends State<Statistics> {
           bottomTitles: AxisTitles(
             sideTitles: SideTitles(
               showTitles: true,
-              interval: 1,
+              interval: interval,
               getTitlesWidget: (value, meta) {
-                // kinda jank solution but works
-                return Text(
-                    "${weekDays[((DateTime.now().add(Duration(days: value.toInt() + 1)).weekday - 1))]}");
+                if (range == "1 Week") {
+                  return Text(weekDays[((DateTime.now()
+                          .add(Duration(days: value.toInt() + 1))
+                          .weekday -
+                      1))]);
+                } else {
+                  DateTime date = DateTime.now()
+                      .subtract(Duration(days: 28))
+                      .add(Duration(days: value.toInt() + 1));
+                  return SideTitleWidget(
+                      angle: pi / 2,
+                      axisSide: meta.axisSide,
+                      child: Text("     ${date.month}/${date.day}"));
+                }
               },
             ),
           ),
@@ -261,7 +308,32 @@ class _StatisticsState extends State<Statistics> {
     );
   }
 
-  DropdownButton<String> dropdownFilter() {
+  DropdownButton<String> rangeDropDown() {
+    return DropdownButton(
+      value: rangeFilter,
+      items: [
+        DropdownMenuItem(
+            value: '1 Week',
+            child: Text('1 Week',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+        DropdownMenuItem(
+            value: '4 Weeks',
+            child: Text('4 Weeks',
+                style: AppTextTheme.body.copyWith(
+                  color: AppColorScheme.white,
+                ))),
+      ],
+      onChanged: (String? value) {
+        setState(() {
+          rangeFilter = value!;
+        });
+      },
+    );
+  }
+
+  DropdownButton<String> eventDropDown() {
     return DropdownButton(
       value: eventType,
       items: [
@@ -293,16 +365,16 @@ class _StatisticsState extends State<Statistics> {
   }
 }
 
+// class SleepDataByDay {
+//   final DateTime time;
+//   int duration;
+
+//   SleepDataByDay(this.time, this.duration);
+// }
+
 class SleepDataByDay {
-  final DateTime time;
-  int duration;
-
-  SleepDataByDay(this.time, this.duration);
-}
-
-class SleepDataByDayInt {
   int day;
   int duration;
 
-  SleepDataByDayInt(this.day, this.duration);
+  SleepDataByDay(this.day, this.duration);
 }
