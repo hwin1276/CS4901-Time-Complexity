@@ -61,8 +61,12 @@ class _LoginPageState extends State<LoginPage> {
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Email",
+                                labelStyle: AppTextTheme.h2.copyWith(
+                                  color: AppColorScheme.lightGray
+                                ),
                                 prefixIcon: Icon(
                                   Icons.email,
+                                  color: AppColorScheme.lightGray
                                 ),
                               ),
                               onChanged: (val) {
@@ -84,8 +88,12 @@ class _LoginPageState extends State<LoginPage> {
                               obscureText: true,
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Password",
+                                labelStyle: AppTextTheme.h2.copyWith(
+                                  color: AppColorScheme.lightGray
+                                ),
                                 prefixIcon: Icon(
                                   Icons.lock,
+                                  color: AppColorScheme.lightGray
                                 ),
                               ),
                               onChanged: (val) {

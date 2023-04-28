@@ -66,11 +66,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Email",
                                 labelStyle: AppTextTheme.h2.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray
                                 ),
                                 prefixIcon: Icon(
                                   Icons.email,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray,
                                 ),
                               ),
                               onChanged: (val) {
@@ -92,11 +92,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Username",
                                 labelStyle: AppTextTheme.h2.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray
                                 ),
                                 prefixIcon: Icon(
                                   Icons.person,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray,
                                 ),
                               ),
                               onChanged: (val) {
@@ -123,11 +123,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Password",
                                 labelStyle: AppTextTheme.h2.copyWith(
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray
                                 ),
                                 prefixIcon: Icon(
                                   Icons.lock,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray,
                                 ),
                               ),
                               onChanged: (val) {
