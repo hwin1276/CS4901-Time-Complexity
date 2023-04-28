@@ -32,19 +32,15 @@ class _AlertState extends State<Alert> {
     });
   }
 
-  fillAlertList(AsyncSnapshot snapshot) {
+  fillAlertList(AsyncSnapshot snapshot) async {
     alerts.clear();
-    //alert string form is "status_user_baby"
+    //alert string form is "status_userid_username_babyid_babyname"
     for (int i = 0; i < snapshot.data["alert"].length; i++) {
       String alertString = snapshot.data["alert"][i];
-      String userbabyString =
-          alertString.substring(alertString.indexOf("_") + 1);
-      String statusString = alertString.substring(0, alertString.indexOf("_"));
-      String userString =
-          userbabyString.substring(0, userbabyString.indexOf("_"));
-      String babyString =
-          userbabyString.substring(userbabyString.indexOf("_") + 1);
-      alerts.add(AlertData(babyString, userString, statusString));
+      List<String> splitString = alertString.split("_");
+
+      alerts.add(AlertData(splitString[0], splitString[1], splitString[2],
+          splitString[3], splitString[4]));
     }
   }
 
@@ -93,17 +89,22 @@ class _AlertState extends State<Alert> {
         itemCount: alerts.length,
         itemBuilder: (context, index) {
           return AlertCard(
-              babyName: alerts[index].babyName,
+              status: alerts[index].status,
+              userId: alerts[index].userId,
               userName: alerts[index].userName,
-              status: alerts[index].status);
+              babyId: alerts[index].babyId,
+              babyName: alerts[index].babyName);
         });
   }
 }
 
 class AlertData {
-  String babyName;
-  String userName;
   String status;
+  String userId;
+  String userName;
+  String babyId;
+  String babyName;
 
-  AlertData(this.babyName, this.userName, this.status);
+  AlertData(
+      this.status, this.userId, this.userName, this.babyId, this.babyName);
 }

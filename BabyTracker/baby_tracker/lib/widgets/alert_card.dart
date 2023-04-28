@@ -1,18 +1,25 @@
+import 'package:baby_tracker/service/database_service.dart';
 import 'package:baby_tracker/themes/colors.dart';
 import 'package:baby_tracker/themes/text.dart';
+import 'package:baby_tracker/widgets/showsnackbar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class AlertCard extends StatelessWidget {
   const AlertCard(
       {Key? key,
-      required this.babyName,
+      required this.status,
+      required this.userId,
       required this.userName,
-      required this.status})
+      required this.babyId,
+      required this.babyName})
       : super(key: key);
 
-  final String babyName;
-  final String userName;
   final String status;
+  final String userId;
+  final String userName;
+  final String babyId;
+  final String babyName;
 
   textOutput() {
     if (status == "received") {
@@ -37,12 +44,12 @@ class AlertCard extends StatelessWidget {
             style: AppTextTheme.body.copyWith(
               color: AppColorScheme.black,
             )),
-        trailing: response(),
+        trailing: response(context),
       ),
     );
   }
 
-  response() {
+  response(BuildContext context) {
     if (status == "received") {
       return Row(mainAxisSize: MainAxisSize.min, children: [
         Container(
@@ -57,7 +64,15 @@ class AlertCard extends StatelessWidget {
             color: AppColorScheme.white,
             iconSize: 18,
             icon: Icon(Icons.check_box),
-            onPressed: () {},
+            onPressed: () {
+              DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .acceptInvite(babyId, userId);
+              DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .removeAlert(
+                      "${status}_${userId}_${userName}_${babyId}_$babyName");
+              showSnackBar(
+                  context, Colors.green, "You are now caring for $babyName");
+            },
           ),
         ),
         SizedBox(width: 10),
@@ -73,7 +88,12 @@ class AlertCard extends StatelessWidget {
             color: AppColorScheme.white,
             iconSize: 18,
             icon: Icon(Icons.clear_rounded),
-            onPressed: () {},
+            onPressed: () {
+              DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                  .removeAlert(
+                      "${status}_${userId}_${userName}_${babyId}_$babyName");
+              showSnackBar(context, Colors.red, "Declining invitation");
+            },
           ),
         ),
       ]);
@@ -90,7 +110,12 @@ class AlertCard extends StatelessWidget {
           color: AppColorScheme.white,
           iconSize: 18,
           icon: Icon(Icons.delete),
-          onPressed: () {},
+          onPressed: () {
+            DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
+                .removeAlert(
+                    "${status}_${userId}_${userName}_${babyId}_$babyName");
+            showSnackBar(context, Colors.red, "Removing alert");
+          },
         ),
       );
     }

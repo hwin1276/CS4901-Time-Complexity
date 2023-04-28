@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseService {
   final String? uid;
@@ -233,7 +234,26 @@ class DatabaseService {
     await babyCollection.doc(babyId).collection("events").doc(eventId).delete();
   }
 
-  // Invite user to join as caretaker for baby
+  // // Invite user to join as caretaker for baby
+  // Future inviteUser(String babyId, String babyName, String searchEmail,
+  //     String searchUsername) async {
+  //   // get the searched user's uid
+  //   var document =
+  //       await userCollection.where("email", isEqualTo: searchEmail).get();
+  //   var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
+
+  //   // document references
+  //   DocumentReference userDocumentReference = userCollection.doc(data['uid']);
+  //   DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+
+  //   await userDocumentReference.update({
+  //     'babies': FieldValue.arrayUnion(["${babyId}_$babyName"])
+  //   });
+  //   await babyDocumentReference.update({
+  //     'caretakers': FieldValue.arrayUnion(["${data['uid']}_$searchUsername"])
+  //   });
+  // }
+
   Future inviteUser(String babyId, String babyName, String searchEmail,
       String searchUsername) async {
     // get the searched user's uid
@@ -241,15 +261,47 @@ class DatabaseService {
         await userCollection.where("email", isEqualTo: searchEmail).get();
     var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
 
-    // document references
+    // document reference
     DocumentReference userDocumentReference = userCollection.doc(data['uid']);
-    DocumentReference babyDocumentReference = babyCollection.doc(babyId);
 
     await userDocumentReference.update({
-      'babies': FieldValue.arrayUnion(["${babyId}_$babyName"])
+      'alert': FieldValue.arrayUnion(
+          ["received_${data['uid']}_${searchUsername}_${babyId}_$babyName"])
+    });
+  }
+
+  Future removeAlert(String alertString) async {
+    // document references
+    DocumentReference userDocumentReference =
+        userCollection.doc(FirebaseAuth.instance.currentUser!.uid);
+
+    // document snapshots
+    DocumentSnapshot userDocumentSnapshot = await userDocumentReference.get();
+    List<dynamic> alerts = await userDocumentSnapshot['alert'];
+
+    if (alerts.contains(alertString)) {
+      await userDocumentReference.update({
+        'alert': FieldValue.arrayRemove([alertString])
+      });
+    }
+  }
+
+  Future acceptInvite(String babyId, String userId) async {
+    // document references
+    DocumentReference userDocumentReference = userCollection.doc(userId);
+    DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+
+    // document snapshots
+    DocumentSnapshot userDocumentSnapshot = await userDocumentReference.get();
+    DocumentSnapshot babyDocumentSnapshot = await babyDocumentReference.get();
+
+    await userDocumentReference.update({
+      'babies': FieldValue.arrayUnion(
+          ["${babyId}_${babyDocumentSnapshot["babyName"]}"])
     });
     await babyDocumentReference.update({
-      'caretakers': FieldValue.arrayUnion(["${data['uid']}_$searchUsername"])
+      'caretakers': FieldValue.arrayUnion(
+          ["${userId}_${userDocumentSnapshot["userName"]}"])
     });
   }
 
