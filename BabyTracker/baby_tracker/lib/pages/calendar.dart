@@ -103,7 +103,7 @@ class _CalendarState extends State<Calendar> {
                 calendarStyle: CalendarStyle(
                     isTodayHighlighted: true,
                     selectedTextStyle: AppTextTheme.body.copyWith(
-                      color: AppColorScheme.white,
+                      color: Theme.of(context).textTheme.bodySmall?.color,
                     ),
                     markersAlignment: Alignment.bottomRight),
                 availableGestures: AvailableGestures.horizontalSwipe,
@@ -136,7 +136,7 @@ class _CalendarState extends State<Calendar> {
               child: Text(
                 "Events for: ${_focusedDay.toString().split(" ")[0]}",
                 style: AppTextTheme.h3.copyWith(
-                  color: AppColorScheme.white,
+                  color: Theme.of(context).textTheme.titleSmall?.color,
                 ),
               ),
             ),
@@ -180,7 +180,8 @@ class _CalendarState extends State<Calendar> {
                         child: Text(
                           'No data available right now',
                           style: AppTextTheme.body.copyWith(
-                            color: AppColorScheme.white,
+                            color:
+                                Theme.of(context).textTheme.bodyMedium?.color,
                           ),
                         ),
                       );

@@ -60,7 +60,7 @@ class _BabyListState extends State<BabyList> {
         title: Text(
           'Baby View',
           style: AppTextTheme.h1.copyWith(
-            color: AppColorScheme.black,
+            color: Theme.of(context).textTheme.titleLarge?.color,
             fontSize: 20,
           ),
         ),

@@ -95,7 +95,10 @@ class _EditEventState extends State<EditEvent> {
                                 child: Text(
                                   'What kind of task?',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -104,7 +107,10 @@ class _EditEventState extends State<EditEvent> {
                                 child: Text(
                                   'Diaper Change',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -113,7 +119,10 @@ class _EditEventState extends State<EditEvent> {
                                 child: Text(
                                   'Meal Time',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -122,7 +131,10 @@ class _EditEventState extends State<EditEvent> {
                                 child: Text(
                                   'Sleep Time',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -131,7 +143,10 @@ class _EditEventState extends State<EditEvent> {
                                 child: Text(
                                   'Incidents',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -140,7 +155,10 @@ class _EditEventState extends State<EditEvent> {
                                 child: Text(
                                   'Appointments',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -168,7 +186,8 @@ class _EditEventState extends State<EditEvent> {
                           decoration: InputDecoration(
                             hintText: "What is your task?",
                             hintStyle: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                             ),
                           ),
                           onChanged: (value) {
@@ -195,7 +214,8 @@ class _EditEventState extends State<EditEvent> {
                           decoration: InputDecoration(
                             hintText: "Describe your event",
                             hintStyle: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                             ),
                           ),
                           onChanged: (value) {
@@ -219,7 +239,10 @@ class _EditEventState extends State<EditEvent> {
                             Text(
                               'Start Time:',
                               style: AppTextTheme.h3.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.color,
                               ),
                             ),
                             Row(
@@ -240,7 +263,10 @@ class _EditEventState extends State<EditEvent> {
                             Text(
                               'End Time:',
                               style: AppTextTheme.h3.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.color,
                               ),
                             ),
                             Row(
@@ -268,7 +294,10 @@ class _EditEventState extends State<EditEvent> {
                             child: Text(
                               'Confirm',
                               style: AppTextTheme.body.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color,
                               ),
                             ),
                           ))
@@ -291,7 +320,7 @@ class _EditEventState extends State<EditEvent> {
             decoration: InputDecoration(
               hintText: "What kind of stool did the baby have",
               hintStyle: AppTextTheme.subtitle.copyWith(
-                color: AppColorScheme.white,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             value: babyExcreta,
@@ -300,14 +329,14 @@ class _EditEventState extends State<EditEvent> {
                   value: "",
                   child: Text('What kind of stool did the baby have?',
                       style: AppTextTheme.h3.copyWith(
-                        color: AppColorScheme.white,
+                        color: Theme.of(context).textTheme.titleSmall?.color,
                       ))),
               DropdownMenuItem<String>(
                   value: "pee",
                   child: Text(
                     'pee',
                     style: AppTextTheme.h3.copyWith(
-                      color: AppColorScheme.white,
+                      color: Theme.of(context).textTheme.titleSmall?.color,
                     ),
                   )),
               DropdownMenuItem<String>(
@@ -315,7 +344,7 @@ class _EditEventState extends State<EditEvent> {
                   child: Text(
                     'poop',
                     style: AppTextTheme.h3.copyWith(
-                      color: AppColorScheme.white,
+                      color: Theme.of(context).textTheme.titleSmall?.color,
                     ),
                   )),
               DropdownMenuItem<String>(
@@ -355,7 +384,7 @@ class _EditEventState extends State<EditEvent> {
             decoration: InputDecoration(
               hintText: "How many calories did the baby eat?",
               hintStyle: AppTextTheme.subtitle.copyWith(
-                color: AppColorScheme.lightGray,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             keyboardType: TextInputType.number,
@@ -383,7 +412,7 @@ class _EditEventState extends State<EditEvent> {
       child: Text(
         '$hours:$minutes',
         style: AppTextTheme.h3.copyWith(
-          color: AppColorScheme.white,
+          color: Theme.of(context).textTheme.titleSmall?.color,
         ),
       ),
       onPressed: () async {

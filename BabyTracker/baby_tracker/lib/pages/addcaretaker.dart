@@ -55,8 +55,12 @@ class _AddCaretakerState extends State<AddCaretaker> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Add a Caretaker",
-            style: AppTextTheme.h1.copyWith(color: AppColorScheme.white)),
+        title: Text(
+          "Add a Caretaker",
+          style: AppTextTheme.h1.copyWith(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -83,8 +87,9 @@ class _AddCaretakerState extends State<AddCaretaker> {
             decoration: InputDecoration(
               border: InputBorder.none,
               hintText: "Search for another user using their email...",
-              hintStyle: AppTextTheme.subtitle
-                  .copyWith(color: AppColorScheme.lightGray),
+              hintStyle: AppTextTheme.subtitle.copyWith(
+                color: Theme.of(context).textTheme.bodySmall?.color,
+              ),
             ),
           ),
         ),

@@ -39,10 +39,10 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Tab(text: 'Statistics'),
               ],
               labelStyle: AppTextTheme.h3.copyWith(
-                color: AppColorScheme.white,
+                color: Theme.of(context).textTheme.titleSmall?.color,
               ),
               unselectedLabelStyle: AppTextTheme.h3.copyWith(
-                color: AppColorScheme.lightGray,
+                color: Theme.of(context).textTheme.titleSmall?.color,
               ),
             ),
             actions: [
@@ -65,8 +65,8 @@ class _DetailsPagesState extends State<DetailsPages> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CreateEvent(
-                            babyId: widget.babyId)));
+                        builder: (context) =>
+                            CreateEvent(babyId: widget.babyId)));
               },
               child: const Icon(Icons.add)),
           body: TabBarView(children: [

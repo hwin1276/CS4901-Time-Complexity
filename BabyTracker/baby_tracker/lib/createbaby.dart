@@ -72,7 +72,8 @@ class _CreateBabyState extends State<CreateBaby> {
                           decoration: InputDecoration(
                             hintText: "Name",
                             hintStyle: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                             ),
                           ),
                           onChanged: (val) {
@@ -238,7 +239,10 @@ class _CreateBabyState extends State<CreateBaby> {
                             Text(
                               '${birthDate.month}/${birthDate.day}/${birthDate.year}',
                               style: AppTextTheme.h2.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.color,
                               ),
                             ),
                             ElevatedButton(
@@ -280,7 +284,8 @@ class _CreateBabyState extends State<CreateBaby> {
                           child: Text(
                             'Confirm',
                             style: AppTextTheme.body.copyWith(
-                              color: AppColorScheme.white,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                             ),
                           ),
                         ),

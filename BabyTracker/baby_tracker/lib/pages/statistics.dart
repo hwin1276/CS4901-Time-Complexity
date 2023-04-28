@@ -146,7 +146,7 @@ class _StatisticsState extends State<Statistics> {
                         child: Text(
                           'No data available right now',
                           style: AppTextTheme.body.copyWith(
-                            color: AppColorScheme.white,
+                            color: Theme.of(context).textTheme.bodySmall?.color,
                           ),
                         ),
                       );
@@ -291,13 +291,13 @@ class _StatisticsState extends State<Statistics> {
             value: '1 Week',
             child: Text('1 Week',
                 style: AppTextTheme.body.copyWith(
-                  color: AppColorScheme.white,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ))),
         DropdownMenuItem(
             value: '4 Weeks',
             child: Text('4 Weeks',
                 style: AppTextTheme.body.copyWith(
-                  color: AppColorScheme.white,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ))),
       ],
       onChanged: (String? value) {
@@ -316,19 +316,19 @@ class _StatisticsState extends State<Statistics> {
             value: 'Diaper Change',
             child: Text('Diaper Change',
                 style: AppTextTheme.body.copyWith(
-                  color: AppColorScheme.white,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ))),
         DropdownMenuItem(
             value: 'Meal Time',
             child: Text('Meal Time',
                 style: AppTextTheme.body.copyWith(
-                  color: AppColorScheme.white,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ))),
         DropdownMenuItem(
             value: 'Sleep Time',
             child: Text('Sleep Time',
                 style: AppTextTheme.body.copyWith(
-                  color: AppColorScheme.white,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ))),
       ],
       onChanged: (String? value) {

@@ -123,7 +123,10 @@ class _LoginPageState extends State<LoginPage> {
                               child: Text(
                                 'Login',
                                 style: AppTextTheme.h2.copyWith(
-                                  color: AppColorScheme.white,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.color,
                                 ),
                               ),
                             ),
@@ -133,13 +136,19 @@ class _LoginPageState extends State<LoginPage> {
                             TextSpan(
                               text: "Don't have an account?",
                               style: AppTextTheme.body.copyWith(
-                                color: AppColorScheme.black,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: " Register here",
                                   style: AppTextTheme.body.copyWith(
-                                    color: AppColorScheme.black,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
@@ -173,7 +182,7 @@ class _LoginPageState extends State<LoginPage> {
       developers,
       textAlign: TextAlign.center,
       style: AppTextTheme.subtitle.copyWith(
-        color: AppColorScheme.white,
+        color: Theme.of(context).textTheme.bodySmall?.color,
         fontSize: 9,
       ),
     );
