@@ -330,7 +330,7 @@ class DatabaseService {
 
     await userDocumentReference.update({
       'alert': FieldValue.arrayUnion([
-        "accepted_${userDocumentSnapshot["uid"]}_${userDocumentSnapshot["userName"]}_${babyDocumentSnapshot["babyId"]}_${babyDocumentSnapshot["babyName"]}"
+        "accepted_${currentUserDocumentSnapshot["uid"]}_${currentUserDocumentSnapshot["userName"]}_${babyDocumentSnapshot["babyId"]}_${babyDocumentSnapshot["babyName"]}"
       ])
     });
   }
@@ -339,14 +339,18 @@ class DatabaseService {
     // document references
     DocumentReference babyDocumentReference = babyCollection.doc(babyId);
     DocumentReference userDocumentReference = userCollection.doc(userId);
+    DocumentReference currentUserDocumentReference =
+        userCollection.doc(FirebaseAuth.instance.currentUser!.uid);
 
     // document snapshots
     DocumentSnapshot userDocumentSnapshot = await userDocumentReference.get();
+    DocumentSnapshot currentUserDocumentSnapshot =
+        await currentUserDocumentReference.get();
     DocumentSnapshot babyDocumentSnapshot = await babyDocumentReference.get();
 
     await userDocumentReference.update({
       'alert': FieldValue.arrayUnion([
-        "declined_${userDocumentSnapshot["uid"]}_${userDocumentSnapshot["userName"]}_${babyDocumentSnapshot["babyId"]}_${babyDocumentSnapshot["babyName"]}"
+        "declined_${currentUserDocumentSnapshot["uid"]}_${currentUserDocumentSnapshot["userName"]}_${babyDocumentSnapshot["babyId"]}_${babyDocumentSnapshot["babyName"]}"
       ])
     });
   }
