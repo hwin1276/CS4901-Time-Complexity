@@ -92,11 +92,11 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
           addEventButton(context),
         ],
       ),
-      body: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-            child: SingleChildScrollView(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: Column(
                 children: [
                   primaryCaretaker(),
@@ -107,9 +107,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                 ],
               ),
             ),
-          ),
-          SingleChildScrollView(
-            child: Column(
+            Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -180,9 +178,9 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
                   );
                 })
               ],
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
