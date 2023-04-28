@@ -148,11 +148,21 @@ class DatabaseService {
         await userCollection.where("email", isEqualTo: searchEmail).get();
     var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
 
+    // get current user's username
+    DocumentReference currentUserDocumentReference =
+        userCollection.doc(FirebaseAuth.instance.currentUser!.uid);
+    DocumentSnapshot currentUserDocumentSnapshot =
+        await currentUserDocumentReference.get();
+
     DocumentReference userDocumentReference = userCollection.doc(data['uid']);
     DocumentSnapshot documentSnapshot = await userDocumentReference.get();
 
+    List<dynamic> alerts = await documentSnapshot['alert'];
     List<dynamic> babies = await documentSnapshot['babies'];
-    if (babies.contains("${babyId}_$babyName")) {
+
+    if (alerts.contains(
+            "received_${currentUserDocumentSnapshot["uid"]}_${currentUserDocumentSnapshot["userName"]}_${babyId}_$babyName") ||
+        babies.contains("${babyId}_$babyName")) {
       return true;
     } else {
       return false;
@@ -261,12 +271,19 @@ class DatabaseService {
         await userCollection.where("email", isEqualTo: searchEmail).get();
     var data = Map<String, dynamic>.from(document.docs[0].data() as Map);
 
+    // get current user's username
+    DocumentReference currentUserDocumentReference =
+        userCollection.doc(FirebaseAuth.instance.currentUser!.uid);
+    DocumentSnapshot currentUserDocumentSnapshot =
+        await currentUserDocumentReference.get();
+
     // document reference
     DocumentReference userDocumentReference = userCollection.doc(data['uid']);
 
     await userDocumentReference.update({
-      'alert': FieldValue.arrayUnion(
-          ["received_${data['uid']}_${searchUsername}_${babyId}_$babyName"])
+      'alert': FieldValue.arrayUnion([
+        "received_${currentUserDocumentSnapshot["uid"]}_${currentUserDocumentSnapshot["userName"]}_${babyId}_$babyName"
+      ])
     });
   }
 
@@ -288,20 +305,49 @@ class DatabaseService {
 
   Future acceptInvite(String babyId, String userId) async {
     // document references
-    DocumentReference userDocumentReference = userCollection.doc(userId);
+    DocumentReference currentUserDocumentReference =
+        userCollection.doc(FirebaseAuth.instance.currentUser!.uid);
     DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+
+    // document snapshots
+    DocumentSnapshot currentUserDocumentSnapshot =
+        await currentUserDocumentReference.get();
+    DocumentSnapshot babyDocumentSnapshot = await babyDocumentReference.get();
+
+    await currentUserDocumentReference.update({
+      'babies': FieldValue.arrayUnion(
+          ["${babyId}_${babyDocumentSnapshot["babyName"]}"])
+    });
+    await babyDocumentReference.update({
+      'caretakers': FieldValue.arrayUnion([
+        "${currentUserDocumentSnapshot["uid"]}_${currentUserDocumentSnapshot["userName"]}"
+      ])
+    });
+
+    // send accept
+    DocumentReference userDocumentReference = userCollection.doc(userId);
+    DocumentSnapshot userDocumentSnapshot = await userDocumentReference.get();
+
+    await userDocumentReference.update({
+      'alert': FieldValue.arrayUnion([
+        "accepted_${userDocumentSnapshot["uid"]}_${userDocumentSnapshot["userName"]}_${babyDocumentSnapshot["babyId"]}_${babyDocumentSnapshot["babyName"]}"
+      ])
+    });
+  }
+
+  Future declineInvite(String babyId, String userId) async {
+    // document references
+    DocumentReference babyDocumentReference = babyCollection.doc(babyId);
+    DocumentReference userDocumentReference = userCollection.doc(userId);
 
     // document snapshots
     DocumentSnapshot userDocumentSnapshot = await userDocumentReference.get();
     DocumentSnapshot babyDocumentSnapshot = await babyDocumentReference.get();
 
     await userDocumentReference.update({
-      'babies': FieldValue.arrayUnion(
-          ["${babyId}_${babyDocumentSnapshot["babyName"]}"])
-    });
-    await babyDocumentReference.update({
-      'caretakers': FieldValue.arrayUnion(
-          ["${userId}_${userDocumentSnapshot["userName"]}"])
+      'alert': FieldValue.arrayUnion([
+        "declined_${userDocumentSnapshot["uid"]}_${userDocumentSnapshot["userName"]}_${babyDocumentSnapshot["babyId"]}_${babyDocumentSnapshot["babyName"]}"
+      ])
     });
   }
 

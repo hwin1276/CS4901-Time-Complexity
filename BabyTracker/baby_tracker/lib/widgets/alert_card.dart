@@ -90,8 +90,7 @@ class AlertCard extends StatelessWidget {
             icon: Icon(Icons.clear_rounded),
             onPressed: () {
               DatabaseService(uid: FirebaseAuth.instance.currentUser!.uid)
-                  .removeAlert(
-                      "${status}_${userId}_${userName}_${babyId}_$babyName");
+                  .declineInvite(babyId, userId);
               showSnackBar(context, Colors.red, "Declining invitation");
             },
           ),
