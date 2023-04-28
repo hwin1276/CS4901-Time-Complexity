@@ -108,77 +108,79 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
               ),
             ),
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Reset Baby Theme: Please restart app to after changing.",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              FormField(builder: (state) {
-                return Column(
-                  children: [
-                    RadioListTile<String>(
-                      value: 'red',
-                      groupValue: theme,
-                      title: Text("Red"),
-                      onChanged: (String? value) => {
-                        setState(() {
-                          theme = value!;
-                          FirebaseFirestore.instance
-                              .collection("babies")
-                              .doc(widget.babyId)
-                              .update({"theme": value});
-                        })
-                      },
-                    ),
-                    RadioListTile<String>(
-                      value: 'blue',
-                      groupValue: theme,
-                      title: Text("Blue"),
-                      onChanged: (String? value) => {
-                        setState(() {
-                          theme = value!;
-                          FirebaseFirestore.instance
-                              .collection("babies")
-                              .doc(widget.babyId)
-                              .update({"theme": value});
-                        })
-                      },
-                    ),
-                    RadioListTile<String>(
-                      value: 'green',
-                      groupValue: theme,
-                      title: Text("Green"),
-                      onChanged: (String? value) => {
-                        setState(() {
-                          theme = value!;
-                          FirebaseFirestore.instance
-                              .collection("babies")
-                              .doc(widget.babyId)
-                              .update({"theme": value});
-                        })
-                      },
-                    ),
-                    RadioListTile<String>(
-                      value: 'yellow',
-                      groupValue: theme,
-                      title: Text("Yellow"),
-                      onChanged: (String? value) => {
-                        setState(() {
-                          theme = value!;
-                          FirebaseFirestore.instance
-                              .collection("babies")
-                              .doc(widget.babyId)
-                              .update({"theme": value});
-                        })
-                      },
-                    ),
-                  ],
-                );
-              })
-            ],
+          SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Reset Baby Theme: Please restart app to after changing.",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                FormField(builder: (state) {
+                  return Column(
+                    children: [
+                      RadioListTile<String>(
+                        value: 'red',
+                        groupValue: theme,
+                        title: Text("Red"),
+                        onChanged: (String? value) => {
+                          setState(() {
+                            theme = value!;
+                            FirebaseFirestore.instance
+                                .collection("babies")
+                                .doc(widget.babyId)
+                                .update({"theme": value});
+                          })
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'blue',
+                        groupValue: theme,
+                        title: Text("Blue"),
+                        onChanged: (String? value) => {
+                          setState(() {
+                            theme = value!;
+                            FirebaseFirestore.instance
+                                .collection("babies")
+                                .doc(widget.babyId)
+                                .update({"theme": value});
+                          })
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'green',
+                        groupValue: theme,
+                        title: Text("Green"),
+                        onChanged: (String? value) => {
+                          setState(() {
+                            theme = value!;
+                            FirebaseFirestore.instance
+                                .collection("babies")
+                                .doc(widget.babyId)
+                                .update({"theme": value});
+                          })
+                        },
+                      ),
+                      RadioListTile<String>(
+                        value: 'yellow',
+                        groupValue: theme,
+                        title: Text("Yellow"),
+                        onChanged: (String? value) => {
+                          setState(() {
+                            theme = value!;
+                            FirebaseFirestore.instance
+                                .collection("babies")
+                                .doc(widget.babyId)
+                                .update({"theme": value});
+                          })
+                        },
+                      ),
+                    ],
+                  );
+                })
+              ],
+            ),
           )
         ],
       ),
