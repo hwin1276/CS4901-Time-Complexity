@@ -81,14 +81,14 @@ class EventCard extends StatelessWidget {
         return Text(
           "${duration.inMinutes}min • ${timeAgo()}",
           style: AppTextTheme.subtitle.copyWith(
-            color: AppColorScheme.black,
+            color: Theme.of(context).textTheme.bodySmall?.color,
           ),
         );
       } else {
         return Text(
           "${duration.inHours}hr ${duration.inMinutes}min • ${timeAgo()}}",
           style: AppTextTheme.subtitle.copyWith(
-            color: AppColorScheme.black,
+            color: Theme.of(context).textTheme.bodySmall?.color,
           ),
         );
       }
@@ -154,7 +154,7 @@ class EventCard extends StatelessWidget {
         title: Text(
           taskName,
           style: AppTextTheme.body.copyWith(
-            color: AppColorScheme.black,
+            color: Theme.of(context).textTheme.bodySmall?.color,
           ),
         ),
         subtitle: showTime(),

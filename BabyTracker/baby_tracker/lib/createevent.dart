@@ -7,10 +7,7 @@ import 'package:flutter/services.dart';
 
 class CreateEvent extends StatefulWidget {
   final String babyId;
-  const CreateEvent(
-      {Key? key,
-      required this.babyId})
-      : super(key: key);
+  const CreateEvent({Key? key, required this.babyId}) : super(key: key);
 
   @override
   State<CreateEvent> createState() => _CreateEventState();
@@ -67,7 +64,10 @@ class _CreateEventState extends State<CreateEvent> {
                             hint: Text(
                               'What kind of task are you adding?',
                               style: AppTextTheme.subtitle.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodySmall
+                                    ?.color,
                               ),
                             ),
                             value: eventType,
@@ -77,7 +77,10 @@ class _CreateEventState extends State<CreateEvent> {
                                 child: Text(
                                   'What kind of task are you adding?',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -86,7 +89,10 @@ class _CreateEventState extends State<CreateEvent> {
                                 child: Text(
                                   'Diaper Change',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -95,7 +101,10 @@ class _CreateEventState extends State<CreateEvent> {
                                 child: Text(
                                   'Meal Time',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -104,7 +113,10 @@ class _CreateEventState extends State<CreateEvent> {
                                 child: Text(
                                   'Sleep Time',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -113,7 +125,10 @@ class _CreateEventState extends State<CreateEvent> {
                                 child: Text(
                                   'Incidents',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -122,7 +137,10 @@ class _CreateEventState extends State<CreateEvent> {
                                 child: Text(
                                   'Appointments',
                                   style: AppTextTheme.h3.copyWith(
-                                    color: AppColorScheme.white,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .titleSmall
+                                        ?.color,
                                   ),
                                 ),
                               ),
@@ -149,7 +167,8 @@ class _CreateEventState extends State<CreateEvent> {
                           decoration: InputDecoration(
                             hintText: "What is your task?",
                             hintStyle: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                             ),
                           ),
                           onChanged: (value) {
@@ -175,7 +194,8 @@ class _CreateEventState extends State<CreateEvent> {
                           decoration: InputDecoration(
                             hintText: "Describe your event",
                             hintStyle: AppTextTheme.subtitle.copyWith(
-                              color: AppColorScheme.lightGray,
+                              color:
+                                  Theme.of(context).textTheme.bodySmall?.color,
                             ),
                           ),
                           onChanged: (value) {
@@ -199,7 +219,10 @@ class _CreateEventState extends State<CreateEvent> {
                             Text(
                               'Start Time:',
                               style: AppTextTheme.h3.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.color,
                               ),
                             ),
                             Row(
@@ -220,7 +243,10 @@ class _CreateEventState extends State<CreateEvent> {
                             Text(
                               'End Time:',
                               style: AppTextTheme.h3.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .titleSmall
+                                    ?.color,
                               ),
                             ),
                             Row(
@@ -248,7 +274,10 @@ class _CreateEventState extends State<CreateEvent> {
                             child: Text(
                               'Confirm',
                               style: AppTextTheme.body.copyWith(
-                                color: AppColorScheme.white,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.color,
                               ),
                             ),
                           ))
@@ -271,7 +300,7 @@ class _CreateEventState extends State<CreateEvent> {
             decoration: InputDecoration(
               hintText: "What kind of stool did the baby have",
               hintStyle: AppTextTheme.subtitle.copyWith(
-                color: AppColorScheme.white,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             value: babyExcreta,
@@ -280,14 +309,14 @@ class _CreateEventState extends State<CreateEvent> {
                   value: "",
                   child: Text('What kind of stool did the baby have?',
                       style: AppTextTheme.h3.copyWith(
-                        color: AppColorScheme.white,
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
                       ))),
               DropdownMenuItem<String>(
                   value: "pee",
                   child: Text(
                     'pee',
                     style: AppTextTheme.h3.copyWith(
-                      color: AppColorScheme.white,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                   )),
               DropdownMenuItem<String>(
@@ -295,7 +324,7 @@ class _CreateEventState extends State<CreateEvent> {
                   child: Text(
                     'poop',
                     style: AppTextTheme.h3.copyWith(
-                      color: AppColorScheme.white,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                   )),
               DropdownMenuItem<String>(
@@ -303,7 +332,7 @@ class _CreateEventState extends State<CreateEvent> {
                   child: Text(
                     'diarrhea',
                     style: AppTextTheme.h3.copyWith(
-                      color: AppColorScheme.white,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
                     ),
                   )),
             ],
@@ -335,7 +364,7 @@ class _CreateEventState extends State<CreateEvent> {
             decoration: InputDecoration(
               hintText: "How many calories did the baby eat?",
               hintStyle: AppTextTheme.subtitle.copyWith(
-                color: AppColorScheme.lightGray,
+                color: Theme.of(context).textTheme.bodySmall?.color,
               ),
             ),
             keyboardType: TextInputType.number,
@@ -363,7 +392,7 @@ class _CreateEventState extends State<CreateEvent> {
       child: Text(
         '$hours:$minutes',
         style: AppTextTheme.h3.copyWith(
-          color: AppColorScheme.white,
+          color: Theme.of(context).textTheme.titleSmall?.color,
         ),
       ),
       onPressed: () async {
@@ -395,7 +424,7 @@ class _CreateEventState extends State<CreateEvent> {
       child: Text(
         '${startDateTime.year}/${startDateTime.month}/${startDateTime.day}',
         style: AppTextTheme.h3.copyWith(
-          color: AppColorScheme.white,
+          color: Theme.of(context).textTheme.bodySmall?.color,
         ),
       ),
       onPressed: () async {
@@ -428,7 +457,7 @@ class _CreateEventState extends State<CreateEvent> {
       child: Text(
         '$endHours:$endMinutes',
         style: AppTextTheme.h3.copyWith(
-          color: AppColorScheme.white,
+          color: Theme.of(context).textTheme.bodySmall?.color,
         ),
       ),
       onPressed: () async {
@@ -460,7 +489,7 @@ class _CreateEventState extends State<CreateEvent> {
       child: Text(
         '${endDateTime.year}/${endDateTime.month}/${endDateTime.day}',
         style: AppTextTheme.h3.copyWith(
-          color: AppColorScheme.white,
+          color: Theme.of(context).textTheme.bodySmall?.color,
         ),
       ),
       onPressed: () async {

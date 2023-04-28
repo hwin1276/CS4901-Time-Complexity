@@ -85,7 +85,7 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
         title: Text(
           "${widget.babyName}'s Caretakers",
           style: AppTextTheme.h2.copyWith(
-            color: AppColorScheme.white,
+            color: Theme.of(context).textTheme.titleMedium?.color,
           ),
         ),
         actions: [
@@ -229,13 +229,16 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
               children: [
                 Text(
                   "Primary Caretaker",
-                  style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
+                  style: AppTextTheme.h3.copyWith(
+                    color: Theme.of(context).textTheme.titleSmall?.color,
+                  ),
                 ),
                 const SizedBox(height: 10),
                 Text(
                   getName(admin),
-                  style:
-                      AppTextTheme.body.copyWith(color: AppColorScheme.white),
+                  style: AppTextTheme.body.copyWith(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
                 ),
               ],
             ),
@@ -273,12 +276,16 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
         backgroundColor: AppColorScheme.red,
         child: Text(
           getName(caretakers[index]).substring(0, 1).toUpperCase(),
-          style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
+          style: AppTextTheme.h3.copyWith(
+            color: Theme.of(context).textTheme.titleSmall?.color,
+          ),
         ),
       ),
       title: Text(
         getName(caretakers[index]),
-        style: AppTextTheme.h3.copyWith(color: AppColorScheme.white),
+        style: AppTextTheme.h3.copyWith(
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
       ),
     );
   }
@@ -290,12 +297,12 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
         backgroundColor: AppColorScheme.red,
         child: Text(getName(caretakers[index]).substring(0, 1).toUpperCase(),
             style: AppTextTheme.h3.copyWith(
-              color: AppColorScheme.white,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             )),
       ),
       title: Text(getName(caretakers[index]),
           style: AppTextTheme.h3.copyWith(
-            color: AppColorScheme.white,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
           )),
       trailing: InkWell(
         onTap: () async {
@@ -316,7 +323,9 @@ class _BabyInfoPageState extends State<BabyInfoPage> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Text(
             "Kick",
-            style: AppTextTheme.body.copyWith(color: AppColorScheme.white),
+            style: AppTextTheme.body.copyWith(
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
           ),
         ),
       ),

@@ -26,7 +26,7 @@ GestureDetector buildAccount(BuildContext context, String title) {
           Text(
             title,
             style: AppTextTheme.h2.copyWith(
-              color: AppColorScheme.lightGray,
+              color: Theme.of(context).textTheme.titleMedium?.color,
             ),
           ),
           Icon(Icons.arrow_forward_ios, color: AppColorScheme.darkGray)
@@ -131,7 +131,9 @@ class _SettingsState extends State<Settings> {
                 icon: Icon(Icons.logout),
                 label: Text(
                   'Sign Out',
-                  style: AppTextTheme.h2.copyWith(color: AppColorScheme.white),
+                  style: AppTextTheme.h2.copyWith(
+                    color: Theme.of(context).textTheme.titleMedium?.color,
+                  ),
                 ),
               ),
             ),
