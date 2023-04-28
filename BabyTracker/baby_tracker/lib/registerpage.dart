@@ -33,7 +33,7 @@ class _RegisterPageState extends State<RegisterPage> {
         title: Text(
           'Register Page',
           style: AppTextTheme.h1.copyWith(
-            color: AppColorScheme.white,
+            color: Theme.of(context).textTheme.titleLarge?.color,
             fontSize: 20,
           ),
         ),
@@ -161,7 +161,10 @@ class _RegisterPageState extends State<RegisterPage> {
                               child: Text(
                                 'Register',
                                 style: AppTextTheme.body.copyWith(
-                                  color: AppColorScheme.white,
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.color,
                                 ),
                               ),
                             ),
@@ -171,13 +174,19 @@ class _RegisterPageState extends State<RegisterPage> {
                             TextSpan(
                               text: "Already have an account?",
                               style: AppTextTheme.body.copyWith(
-                                color: AppColorScheme.black,
+                                color: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.color,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
                                   text: "Login now",
                                   style: AppTextTheme.body.copyWith(
-                                    color: AppColorScheme.black,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.color,
                                     decoration: TextDecoration.underline,
                                   ),
                                   recognizer: TapGestureRecognizer()
@@ -210,7 +219,7 @@ class _RegisterPageState extends State<RegisterPage> {
       developers,
       textAlign: TextAlign.center,
       style: AppTextTheme.subtitle.copyWith(
-        color: AppColorScheme.white,
+        color: Theme.of(context).textTheme.bodySmall?.color,
         fontSize: 9,
       ),
     );

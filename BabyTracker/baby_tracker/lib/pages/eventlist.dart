@@ -62,7 +62,7 @@ class _EventListState extends State<EventList> {
               decoration: InputDecoration(
                 hintText: 'Search...',
                 hintStyle: AppTextTheme.subtitle.copyWith(
-                  color: AppColorScheme.lightGray,
+                  color: Theme.of(context).textTheme.bodySmall?.color,
                 ),
                 prefixIcon: Icon(Icons.search),
                 filled: true,
@@ -191,22 +191,22 @@ class _EventListState extends State<EventList> {
                     }
                     if (orderFilter == 'Ascending') {
                       if (sortFilter == 'task') {
-                        documents.sort((a, b) => a['task'].toLowerCase()
+                        documents.sort((a, b) => a['task']
+                            .toLowerCase()
                             .compareTo(b['task'].toLowerCase()));
-                      }
-                      else {
-                        documents.sort((a, b) => a['startTime']
-                          .compareTo(b['startTime']));
+                      } else {
+                        documents.sort(
+                            (a, b) => a['startTime'].compareTo(b['startTime']));
                       }
                     }
                     if (orderFilter == 'Descending') {
                       if (sortFilter == 'task') {
-                        documents.sort((a, b) => b['task'].toLowerCase()
+                        documents.sort((a, b) => b['task']
+                            .toLowerCase()
                             .compareTo(a['task'].toLowerCase()));
-                      }
-                      else {
-                        documents.sort((a, b) => b['startTime']
-                          .compareTo(a['startTime']));
+                      } else {
+                        documents.sort(
+                            (a, b) => b['startTime'].compareTo(a['startTime']));
                       }
                     }
                     return ListView.builder(
