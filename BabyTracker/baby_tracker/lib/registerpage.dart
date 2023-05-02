@@ -65,9 +65,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Email",
-                                labelStyle: AppTextTheme.h2.copyWith(
-                                  color: AppColorScheme.lightGray
-                                ),
+                                labelStyle: AppTextTheme.h2
+                                    .copyWith(color: AppColorScheme.lightGray),
                                 prefixIcon: Icon(
                                   Icons.email,
                                   color: AppColorScheme.lightGray,
@@ -91,9 +90,8 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Username",
-                                labelStyle: AppTextTheme.h2.copyWith(
-                                  color: AppColorScheme.lightGray
-                                ),
+                                labelStyle: AppTextTheme.h2
+                                    .copyWith(color: AppColorScheme.lightGray),
                                 prefixIcon: Icon(
                                   Icons.person,
                                   color: AppColorScheme.lightGray,
@@ -122,9 +120,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               obscureText: true,
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Password",
-                                labelStyle: AppTextTheme.h2.copyWith(
-                                  color: AppColorScheme.lightGray
-                                ),
+                                labelStyle: AppTextTheme.h2
+                                    .copyWith(color: AppColorScheme.lightGray),
                                 prefixIcon: Icon(
                                   Icons.lock,
                                   color: AppColorScheme.lightGray,
@@ -191,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => LoginPage(),
@@ -243,7 +240,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => Home(),
+                builder: (context) => const Home(),
               ),
             );
           } else {
