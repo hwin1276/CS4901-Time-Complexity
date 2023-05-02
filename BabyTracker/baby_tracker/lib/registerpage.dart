@@ -65,12 +65,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Email",
-                                labelStyle: AppTextTheme.h2.copyWith(
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                                labelStyle: AppTextTheme.h2
+                                    .copyWith(color: AppColorScheme.lightGray),
                                 prefixIcon: Icon(
                                   Icons.email,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray,
                                 ),
                               ),
                               onChanged: (val) {
@@ -91,12 +90,11 @@ class _RegisterPageState extends State<RegisterPage> {
                             child: TextFormField(
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Username",
-                                labelStyle: AppTextTheme.h2.copyWith(
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                                labelStyle: AppTextTheme.h2
+                                    .copyWith(color: AppColorScheme.lightGray),
                                 prefixIcon: Icon(
                                   Icons.person,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray,
                                 ),
                               ),
                               onChanged: (val) {
@@ -122,12 +120,11 @@ class _RegisterPageState extends State<RegisterPage> {
                               obscureText: true,
                               decoration: textInputDecoration.copyWith(
                                 labelText: "Password",
-                                labelStyle: AppTextTheme.h2.copyWith(
-                                  color: Theme.of(context).primaryColor,
-                                ),
+                                labelStyle: AppTextTheme.h2
+                                    .copyWith(color: AppColorScheme.lightGray),
                                 prefixIcon: Icon(
                                   Icons.lock,
-                                  color: Theme.of(context).primaryColor,
+                                  color: AppColorScheme.lightGray,
                                 ),
                               ),
                               onChanged: (val) {
@@ -191,7 +188,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                   ),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      Navigator.push(
+                                      Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
                                           builder: (context) => LoginPage(),
@@ -243,7 +240,7 @@ class _RegisterPageState extends State<RegisterPage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => Home(),
+                builder: (context) => const Home(),
               ),
             );
           } else {
