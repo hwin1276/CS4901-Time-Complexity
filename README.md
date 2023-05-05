@@ -27,6 +27,15 @@ The goal of BabyTracker is:
 - Install APK on android device.
 - Register an account
 - Manage your baby
-![Screenshot_1683254082](https://user-images.githubusercontent.com/89870604/236366935-97d8b8ce-0981-419a-933c-5e8c1cb4b833.png) ![Screenshot_1683254124](https://user-images.githubusercontent.com/89870604/236366955-6dfc81b5-d66a-410b-ad45-ae14725e1f1d.png) ![Screenshot_1683254140](https://user-images.githubusercontent.com/89870604/236366976-3690b9ed-de00-4697-ad49-bc8ca7610587.png)
-![Screenshot_1683253989](https://user-images.githubusercontent.com/89870604/236366989-95b88794-d8b1-4c80-93ed-31742119c51d.png)
-![Screenshot_1683254080](https://user-images.githubusercontent.com/89870604/236367015-837e44e6-0ff7-4aa0-8c6a-919321b41d9e.png)
+
+# Contact Information
+Sponsor
+- Dr Stephanie Ludi - stephanie.ludi@unt.edu
+
+Team Members
+- April Eaton - neaton12416@gmail.com
+- Colin McCrory - colinmccrory@my.unt.edu
+- Kennedy Middlebrooks - kennedymiddlebrooks@my.unt.edu
+- Hung Nguyen - hungnguyen4@my.unt.edu
+- Cecil Nnodim - cecilnnodim@my.unt.edu
+- Hien Pham - hpham474@gmail.com
