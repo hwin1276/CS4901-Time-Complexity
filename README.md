@@ -11,7 +11,6 @@ The goal of BabyTracker is:
 - Be able to easily share this information between parents or other caretakers.
 
 # Features
-- Compatatible with both IOS and Android.
 - Track multiple babies.
 - Input events such as naps, meals, diaper changes.
 - Sort events by date and display in a chart.
